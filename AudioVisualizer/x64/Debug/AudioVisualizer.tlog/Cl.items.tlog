@@ -1,3 +1,6 @@
-C:\Users\super\source\repos\Audio-Visualizer\AudioVisualizer\AudioVisualizer.cpp;C:\Users\super\source\repos\Audio-Visualizer\AudioVisualizer\x64\Debug\AudioVisualizer.obj
-C:\Users\super\source\repos\Audio-Visualizer\AudioVisualizer\LoopbackCapture.cpp;C:\Users\super\source\repos\Audio-Visualizer\AudioVisualizer\x64\Debug\LoopbackCapture.obj
-C:\Users\super\source\repos\Audio-Visualizer\AudioVisualizer\ProcessHandling.cpp;C:\Users\super\source\repos\Audio-Visualizer\AudioVisualizer\x64\Debug\ProcessHandling.obj
+C:\Users\super\source\repos\Audio-Visualizer\AudioVisualizer\src\AudioVisualizer.cpp;C:\Users\super\source\repos\Audio-Visualizer\AudioVisualizer\x64\Debug\AudioVisualizer.obj
+C:\Users\super\source\repos\Audio-Visualizer\AudioVisualizer\src\AudioVisualizerApp.cpp;C:\Users\super\source\repos\Audio-Visualizer\AudioVisualizer\x64\Debug\AudioVisualizerApp.obj
+C:\Users\super\source\repos\Audio-Visualizer\AudioVisualizer\src\LoopbackCapture.cpp;C:\Users\super\source\repos\Audio-Visualizer\AudioVisualizer\x64\Debug\LoopbackCapture.obj
+C:\Users\super\source\repos\Audio-Visualizer\AudioVisualizer\src\MainApp.cpp;C:\Users\super\source\repos\Audio-Visualizer\AudioVisualizer\x64\Debug\MainApp.obj
+C:\Users\super\source\repos\Audio-Visualizer\AudioVisualizer\src\ProcessHandling.cpp;C:\Users\super\source\repos\Audio-Visualizer\AudioVisualizer\x64\Debug\ProcessHandling.obj
+C:\Users\super\source\repos\Audio-Visualizer\AudioVisualizer\src\ProcessWindow.cpp;C:\Users\super\source\repos\Audio-Visualizer\AudioVisualizer\x64\Debug\ProcessWindow.obj
