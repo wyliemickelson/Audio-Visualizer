@@ -16,7 +16,7 @@
 #define SAMPLE_RATE 44100
 #define BITS_PER_SAMPLE 16
 #define N_CHANNELS 2
-#define FRAMES_PER_BUFFER SAMPLE_RATE / 100
+#define FRAMES_PER_BUFFER SAMPLE_RATE / 256
 
 #define SPECTRO_FREQ_START 20  // Lower bound of the displayed spectrogram (Hz)
 #define SPECTRO_FREQ_END 20000 // Upper bound of the displayed spectrogram (Hz)
@@ -341,7 +341,7 @@ HRESULT CLoopbackCapture::OnAudioSampleRequested()
         //printf("\n\n"); // separate two visualizers
         //VolumeVisualizer(FramesAvailable, Data);
 
-        printf("\033[1A\033[1A\033[1A"); // cursor back three lines
+        //printf("\033[1A\033[1A\033[1A"); // cursor back three lines
 
         // Release buffer back
         m_AudioCaptureClient->ReleaseBuffer(FramesAvailable);
@@ -379,42 +379,60 @@ void CLoopbackCapture::SpectrogramVisualizer(UINT32 FramesAvailable, BYTE* Data)
     fftw_execute(fft_data_left->p);
     fftw_execute(fft_data_right->p);
 
-    int dispSize = 100;
-    printf("\33[?25l");
+    int dispSize = 50;
+    //printf("\33[?25l");
+
     // Draw the spectrogram
     for (int i = 0; i < dispSize; i++) {
         // Sample frequency data logarithmically
         double proportion = std::pow(i / (double)dispSize, 1.5);
-        double freq = fft_data_left->out[(int)(fft_data_left->startIndex
+        double magnitude_left = fft_data_left->out[(int)(fft_data_left->startIndex
             + proportion * fft_data_left->spectroSize)];
-        freq = std::abs(freq);
+        magnitude_left = std::abs(magnitude_left);
+
+        double magnitude_right = fft_data_right->out[(int)(fft_data_right->startIndex
+            + proportion * fft_data_right->spectroSize)];
+        magnitude_right = std::abs(magnitude_right);
+
+        
 
         //printf("%d", (int) freq);
+        // 
+        //TODO: rolling average to reduce noise - theres a lot
+
+        double diff = magnitude_right - magnitude_left;
+        double sum = (magnitude_left + magnitude_right )/2;
+        float direction = diff / sum /2;// range -1-1 
+        int di = int((direction*100 + 100));
+        //printf("%f: ", direction);
+        //printf("%d", di);
+        std::cout << std::string(di, ' ');
 
         // display full block characters with heights based on frequency intensity
-        if (freq < 0.125) {
-            printf("_");
+
+        if (sum < 0.125) {
+            printf(" \n");
         }
-        else if (freq < 0.25) {
-            printf("-");
+        else if (sum < 0.25) {
+            printf("_\n");
         }
-        else if (freq < 0.375) {
-            printf("=");
+        else if (sum < 0.375) {
+            printf("-\n");
         }
-        else if (freq < 0.5) {
-            printf("o");
+        else if (sum < 0.5) {
+            printf("=\n");
         }
-        else if (freq < 0.625) {
-            printf("O");
+        else if (sum < 0.625) {
+            printf("o\n");
         }
-        else if (freq < 0.75) {
-            printf("0");
+        else if (sum < 0.75) {
+            printf("O\n");
         }
-        else if (freq < 0.875) {
-            printf("M");
+        else if (sum < 0.875) {
+            printf("0\n");
         }
         else {
-            printf("#");
+            printf("#\n");
         }
     }
 
