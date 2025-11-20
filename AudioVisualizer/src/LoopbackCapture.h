@@ -23,7 +23,8 @@ typedef struct {
     int spectroSize;
 }fft_callback_data;
 
-static fft_callback_data* fft_data;
+static fft_callback_data* fft_data_left;
+static fft_callback_data* fft_data_right;
 
 class CLoopbackCapture :
     public RuntimeClass< RuntimeClassFlags< ClassicCom >, FtmBase, IActivateAudioInterfaceCompletionHandler >

@@ -245,10 +245,15 @@ HRESULT CLoopbackCapture::OnFinishCapture(IMFAsyncResult* pResult)
     m_DeviceState = DeviceState::Stopped;
 
     // Free allocated resources used for FFT calculation
-    fftw_destroy_plan(fft_data->p);
-    fftw_free(fft_data->in);
-    fftw_free(fft_data->out);
-    free(fft_data);
+    fftw_destroy_plan(fft_data_left->p);
+    fftw_free(fft_data_left->in);
+    fftw_free(fft_data_left->out);
+    free(fft_data_left);
+
+    fftw_destroy_plan(fft_data_right->p);
+    fftw_free(fft_data_right->in);
+    fftw_free(fft_data_right->out);
+    free(fft_data_right);
 
     m_hCaptureStopped.SetEvent();
 
@@ -328,14 +333,13 @@ HRESULT CLoopbackCapture::OnAudioSampleRequested()
 
         // Get sample buffer
         RETURN_IF_FAILED(m_AudioCaptureClient->GetBuffer(&Data, &FramesAvailable, &dwCaptureFlags, &u64DevicePosition, &u64QPCPosition));
-
         // reset cursor to write over previous output
         printf("\r"); // cursor to beginning of current line
 
         printf("\n"); // whitespace
         SpectrogramVisualizer(FramesAvailable, Data);
-        printf("\n\n"); // separate two visualizers
-        VolumeVisualizer(FramesAvailable, Data);
+        //printf("\n\n"); // separate two visualizers
+        //VolumeVisualizer(FramesAvailable, Data);
 
         printf("\033[1A\033[1A\033[1A"); // cursor back three lines
 
@@ -357,21 +361,23 @@ HRESULT CLoopbackCapture::OnAudioSampleRequested()
 void CLoopbackCapture::SpectrogramVisualizer(UINT32 FramesAvailable, BYTE* Data)
 {
     // Declare a double array of the same size
-    double* in = (double*)malloc(FramesAvailable * 2 * sizeof(double));
+    double* fullSamples = (double*)malloc(FramesAvailable * 2 * sizeof(double)); // name subject to change, but "in" was confusing
     INT16* inSamples = (INT16*)Data;
 
     // Convert UINT16 data to doubles for FTT
     for (int i = 0; i < FRAMES_PER_BUFFER * 2; i++) {
-        in[i] = (double)(inSamples[i]) / SHORT_MAX;
+        fullSamples[i] = (double)(inSamples[i]) / SHORT_MAX;
     }
 
     // Copy audio sample to FFTW's input buffer
     for (int i = 0; i < FRAMES_PER_BUFFER; i++) {
-        fft_data->in[i] = in[i * 2]; // take one channel only
+        fft_data_left->in[i] = fullSamples[i * 2]; // split the two channels
+        fft_data_right->in[i] = fullSamples[(i * 2) + 1];
     }
 
     // Perform FFT on fft_data->in (results will be stored in fft_data->out)
-    fftw_execute(fft_data->p);
+    fftw_execute(fft_data_left->p);
+    fftw_execute(fft_data_right->p);
 
     int dispSize = 100;
     printf("\33[?25l");
@@ -379,41 +385,43 @@ void CLoopbackCapture::SpectrogramVisualizer(UINT32 FramesAvailable, BYTE* Data)
     for (int i = 0; i < dispSize; i++) {
         // Sample frequency data logarithmically
         double proportion = std::pow(i / (double)dispSize, 1.5);
-        double freq = fft_data->out[(int)(fft_data->startIndex
-            + proportion * fft_data->spectroSize)];
+        double freq = fft_data_left->out[(int)(fft_data_left->startIndex
+            + proportion * fft_data_left->spectroSize)];
         freq = std::abs(freq);
+
+        //printf("%d", (int) freq);
 
         // display full block characters with heights based on frequency intensity
         if (freq < 0.125) {
-            printf("▁");
+            printf("_");
         }
         else if (freq < 0.25) {
-            printf("▂");
+            printf("-");
         }
         else if (freq < 0.375) {
-            printf("▃");
+            printf("=");
         }
         else if (freq < 0.5) {
-            printf("▄");
+            printf("o");
         }
         else if (freq < 0.625) {
-            printf("▅");
+            printf("O");
         }
         else if (freq < 0.75) {
-            printf("▆");
+            printf("0");
         }
         else if (freq < 0.875) {
-            printf("▇");
+            printf("M");
         }
         else {
-            printf("█");
+            printf("#");
         }
     }
 
     // Display the buffered changes to stdout in the terminal
     fflush(stdout);
 
-    free(in);
+    free(fullSamples);
     return;
 }
 
@@ -474,23 +482,39 @@ void CLoopbackCapture::VolumeVisualizer(UINT32 FramesAvailable, BYTE* Data)
 void CLoopbackCapture::InitializeFFT()
 {
     // initialize data object used for fft
-    fft_data = (fft_callback_data*)malloc(sizeof(fft_callback_data));
+    fft_data_left = (fft_callback_data*)malloc(sizeof(fft_callback_data));
+    fft_data_right = (fft_callback_data*)malloc(sizeof(fft_callback_data));
+
+
 
     // allocate memory for fft buffers
-    fft_data->in = (double*)malloc(sizeof(double) * FRAMES_PER_BUFFER);
-    fft_data->out = (double*)malloc(sizeof(double) * FRAMES_PER_BUFFER);
+    fft_data_left->in = (double*)malloc(sizeof(double) * FRAMES_PER_BUFFER);
+    fft_data_left->out = (double*)malloc(sizeof(double) * FRAMES_PER_BUFFER);
+
+    fft_data_right->in = (double*)malloc(sizeof(double) * FRAMES_PER_BUFFER);
+    fft_data_right->out = (double*)malloc(sizeof(double) * FRAMES_PER_BUFFER);
 
     // initialize spectrograph variables
     double sampleRatio = FRAMES_PER_BUFFER / (SAMPLE_RATE * 1.0);
-    fft_data->startIndex = std::ceil(sampleRatio * SPECTRO_FREQ_START);
-    fft_data->spectroSize = min(
+    fft_data_left->startIndex = std::ceil(sampleRatio * SPECTRO_FREQ_START);
+    fft_data_left->spectroSize = min(
         std::ceil(sampleRatio * SPECTRO_FREQ_END),
         FRAMES_PER_BUFFER / 2.0
-    ) - fft_data->startIndex;
+    ) - fft_data_left->startIndex;
+
+    fft_data_right->startIndex = std::ceil(sampleRatio * SPECTRO_FREQ_START);
+    fft_data_right->spectroSize = min(
+        std::ceil(sampleRatio * SPECTRO_FREQ_END),
+        FRAMES_PER_BUFFER / 2.0
+    ) - fft_data_right->startIndex;
 
     // set up fftw plan
-    fft_data->p = fftw_plan_r2r_1d(
-        FRAMES_PER_BUFFER, fft_data->in, fft_data->out, FFTW_R2HC, FFTW_ESTIMATE
+    fft_data_left->p = fftw_plan_r2r_1d(
+        FRAMES_PER_BUFFER, fft_data_left->in, fft_data_left->out, FFTW_R2HC, FFTW_ESTIMATE
+    );
+
+    fft_data_right->p = fftw_plan_r2r_1d(
+        FRAMES_PER_BUFFER, fft_data_right->in, fft_data_right->out, FFTW_R2HC, FFTW_ESTIMATE
     );
 
     return;
