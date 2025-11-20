@@ -19,7 +19,7 @@ class App : public wxApp
 bool App::OnInit()
 {
 	// set console to the one that started the .exe
-	AttachConsole(ATTACH_PARENT_PROCESS);
+	AllocConsole();
 	freopen("CONOUT$", "w", stdout);
 
 	ProcessWindow* process_selection = new ProcessWindow(NULL);
@@ -40,11 +40,9 @@ void populateProcessList(wxListBox *process_list)
 		std::vector<process_info> processes_info = getCurrentProcesses(getDefaultAudioDevice());
 		int len = processes_info.size();
 
-		std::cout << "Process List:" << std::endl;
 		for (int i = 0; i < len; ++i)
 		{
 			process_info process_info = processes_info.at(i);
-			std::cout << process_info.name << std::endl;
 
 			process_list->Append(process_info.name, new ClientData(process_info.name, process_info.id));
 			
