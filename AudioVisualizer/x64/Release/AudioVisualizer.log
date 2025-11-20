@@ -1,10 +1,8 @@
-﻿  AudioVisualizer.cpp
-C:\Users\super\source\repos\Audio-Visualizer\AudioVisualizer\src\LoopbackCapture.h(13,10): error C1083: Cannot open include file: 'fftw3.h': No such file or directory
-  (compiling source file 'src/AudioVisualizer.cpp')
-  
-  LoopbackCapture.cpp
-C:\Users\super\source\repos\Audio-Visualizer\AudioVisualizer\src\LoopbackCapture.cpp(5,10): error C1083: Cannot open include file: 'fftw3.h': No such file or directory
-  MainApp.cpp
-C:\Users\super\source\repos\Audio-Visualizer\AudioVisualizer\src\MainApp.cpp(1,10): error C1083: Cannot open include file: 'wx/wx.h': No such file or directory
-  ProcessHandling.cpp
-C:\Users\super\source\repos\Audio-Visualizer\AudioVisualizer\src\ProcessHandling.cpp(11,10): error C1083: Cannot open include file: 'ProcessHandling.h': No such file or directory
+﻿  VisualizerWindow.cpp
+  Generating code
+  12 of 485 functions ( 2.5%) were compiled, the rest were copied from previous compilation.
+    4 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  AudioVisualizer.vcxproj -> C:\Users\super\source\repos\Audio-Visualizer\x64\Release\AudioVisualizer.exe
+  0 File(s) copied

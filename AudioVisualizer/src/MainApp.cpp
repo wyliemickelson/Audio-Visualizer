@@ -6,6 +6,9 @@
 #include <processwindow.h>
 #include <processhandling.h>
 
+//prototypes
+void populateProcessList(wxListBox *process_list);
+
 class App : public wxApp
 {
 	public:
@@ -16,13 +19,18 @@ bool App::OnInit()
 {
 	ProcessWindow* process_selection = new ProcessWindow(NULL);
 	process_selection->Show(true);
-	wxWindowList p_children = process_selection->GetChildren();
 
-	//populate process list with information
-	int children_len = p_children.size();
-	int i = 0;
+	wxWindowList p_children = process_selection->GetChildren();
 	wxListBox *process_list = process_selection->getProcessesList();
-	if (process_list) 
+	populateProcessList(process_list);
+	//populate process list with information
+
+	return true;
+}
+
+void populateProcessList(wxListBox *process_list)
+{
+	if (process_list)
 	{
 		std::vector<process_info> processes_info = getCurrentProcesses(getDefaultAudioDevice());
 		int len = processes_info.size();
@@ -37,7 +45,6 @@ bool App::OnInit()
 		}
 		process_list->Append(process_options);
 	}
-	return true;
 }
 
 wxIMPLEMENT_APP(App);
