@@ -7,4 +7,5 @@ public:
 	wxListBox* getProcessesList();
 protected:
 	void OnExit(wxCommandEvent& event) override;
+	void OnConfirm(wxCommandEvent& event) override;
 };

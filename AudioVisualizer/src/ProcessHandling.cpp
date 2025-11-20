@@ -63,7 +63,7 @@ std::vector<process_info> getCurrentProcesses(IMMDevice* device)
 				char* strtok_state = {};
 				char* name = {};
 				name = strtok_s(moduleName, ".", &strtok_state); //remove '.exe'
-				name[0] -= 32; //capitalize first letter
+				name[0] = toupper(name[0]); //capitalize first letter
 
 				strncpy_s(pinfo.name, moduleName, MAX_PATH);
 				processes.push_back(pinfo);

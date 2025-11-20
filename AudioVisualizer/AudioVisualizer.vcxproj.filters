@@ -30,6 +30,9 @@
     <ClInclude Include="src\ProcessWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ClientData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -39,9 +42,6 @@
     <Natvis Include="$(MSBuildThisFileDirectory)..\..\natvis\wil.natstepfilter" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\AudioVisualizer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\LoopbackCapture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
