@@ -61,6 +61,7 @@ class ProcessSelection : public wxFrame
 		wxCheckBox* remember_checkbox;
 
 		// Virtual event handlers, override them in your derived class
+		virtual void OnConfirm( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnExit( wxCommandEvent& event ) { event.Skip(); }
 
 

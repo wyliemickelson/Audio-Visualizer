@@ -1,6 +1,5 @@
-C:\Users\super\source\repos\Audio-Visualizer\AudioVisualizer\src\AudioVisualizer.cpp;C:\Users\super\source\repos\Audio-Visualizer\AudioVisualizer\x64\Debug\AudioVisualizer.obj
-C:\Users\super\source\repos\Audio-Visualizer\AudioVisualizer\src\AudioVisualizerApp.cpp;C:\Users\super\source\repos\Audio-Visualizer\AudioVisualizer\x64\Debug\AudioVisualizerApp.obj
-C:\Users\super\source\repos\Audio-Visualizer\AudioVisualizer\src\LoopbackCapture.cpp;C:\Users\super\source\repos\Audio-Visualizer\AudioVisualizer\x64\Debug\LoopbackCapture.obj
-C:\Users\super\source\repos\Audio-Visualizer\AudioVisualizer\src\MainApp.cpp;C:\Users\super\source\repos\Audio-Visualizer\AudioVisualizer\x64\Debug\MainApp.obj
-C:\Users\super\source\repos\Audio-Visualizer\AudioVisualizer\src\ProcessHandling.cpp;C:\Users\super\source\repos\Audio-Visualizer\AudioVisualizer\x64\Debug\ProcessHandling.obj
-C:\Users\super\source\repos\Audio-Visualizer\AudioVisualizer\src\ProcessWindow.cpp;C:\Users\super\source\repos\Audio-Visualizer\AudioVisualizer\x64\Debug\ProcessWindow.obj
+C:\CompSci\CS436\AudioVisualizer\AudioVisualizer\src\AudioVisualizerApp.cpp;C:\CompSci\CS436\AudioVisualizer\AudioVisualizer\x64\Debug\AudioVisualizerApp.obj
+C:\CompSci\CS436\AudioVisualizer\AudioVisualizer\src\LoopbackCapture.cpp;C:\CompSci\CS436\AudioVisualizer\AudioVisualizer\x64\Debug\LoopbackCapture.obj
+C:\CompSci\CS436\AudioVisualizer\AudioVisualizer\src\MainApp.cpp;C:\CompSci\CS436\AudioVisualizer\AudioVisualizer\x64\Debug\MainApp.obj
+C:\CompSci\CS436\AudioVisualizer\AudioVisualizer\src\ProcessHandling.cpp;C:\CompSci\CS436\AudioVisualizer\AudioVisualizer\x64\Debug\ProcessHandling.obj
+C:\CompSci\CS436\AudioVisualizer\AudioVisualizer\src\ProcessWindow.cpp;C:\CompSci\CS436\AudioVisualizer\AudioVisualizer\x64\Debug\ProcessWindow.obj

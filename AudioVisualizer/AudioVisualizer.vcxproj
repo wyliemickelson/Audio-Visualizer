@@ -141,6 +141,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="ClientData.h" />
     <ClInclude Include="src\AudioVisualizerApp.h" />
     <ClInclude Include="src\Common.h" />
     <ClInclude Include="src\LoopbackCapture.h" />
@@ -152,7 +153,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\AudioVisualizer.cpp" />
     <ClCompile Include="src\AudioVisualizerApp.cpp" />
     <ClCompile Include="src\LoopbackCapture.cpp" />
     <ClCompile Include="src\MainApp.cpp" />

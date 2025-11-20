@@ -5,6 +5,7 @@
 #include <audiovisualizerapp.h>
 #include <processwindow.h>
 #include <processhandling.h>
+#include <clientdata.h>
 
 //prototypes
 void populateProcessList(wxListBox *process_list);
@@ -17,6 +18,10 @@ class App : public wxApp
 
 bool App::OnInit()
 {
+	// set console to the one that started the .exe
+	AttachConsole(ATTACH_PARENT_PROCESS);
+	freopen("CONOUT$", "w", stdout);
+
 	ProcessWindow* process_selection = new ProcessWindow(NULL);
 	process_selection->Show(true);
 
@@ -34,16 +39,16 @@ void populateProcessList(wxListBox *process_list)
 	{
 		std::vector<process_info> processes_info = getCurrentProcesses(getDefaultAudioDevice());
 		int len = processes_info.size();
-		wxArrayString process_options = wxArrayString();
 
+		std::cout << "Process List:" << std::endl;
 		for (int i = 0; i < len; ++i)
 		{
 			process_info process_info = processes_info.at(i);
 			std::cout << process_info.name << std::endl;
-			process_options.push_back(wxString(process_info.name));
+
+			process_list->Append(process_info.name, new ClientData(process_info.name, process_info.id));
 			
 		}
-		process_list->Append(process_options);
 	}
 }
 
