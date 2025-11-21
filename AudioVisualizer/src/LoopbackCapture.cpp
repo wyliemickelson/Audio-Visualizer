@@ -16,10 +16,12 @@
 #define SAMPLE_RATE 44100
 #define BITS_PER_SAMPLE 16
 #define N_CHANNELS 2
-#define FRAMES_PER_BUFFER SAMPLE_RATE / 256
+#define FRAMES_PER_BUFFER SAMPLE_RATE / 172 // 256 (ish) frequency bins
 
 #define SPECTRO_FREQ_START 20  // Lower bound of the displayed spectrogram (Hz)
 #define SPECTRO_FREQ_END 20000 // Upper bound of the displayed spectrogram (Hz)
+
+#define OUTPUT_FREQ_COUNT 5 // has issues at 5 or lower 
 
 HRESULT CLoopbackCapture::SetDeviceStateErrorIfFailed(HRESULT hr)
 {
@@ -379,63 +381,97 @@ void CLoopbackCapture::SpectrogramVisualizer(UINT32 FramesAvailable, BYTE* Data)
     fftw_execute(fft_data_left->p);
     fftw_execute(fft_data_right->p);
 
-    int dispSize = 50;
-    //printf("\33[?25l");
+    // offsets determines the frequency range between each output index
+    int offsets = FRAMES_PER_BUFFER * (1/std::pow(2, OUTPUT_FREQ_COUNT));
+    int freqDivision = 0;
+    double freqMagnitudeSum = 0;
+    double freqDirectionSum = 0; // starting with a naive approach of just averaging the values per bin 
+    int outputIndex = 0; // indexes the output arrays
 
-    // Draw the spectrogram
-    for (int i = 0; i < dispSize; i++) {
-        // Sample frequency data logarithmically
-        double proportion = std::pow(i / (double)dispSize, 1.5);
-        double magnitude_left = fft_data_left->out[(int)(fft_data_left->startIndex
-            + proportion * fft_data_left->spectroSize)];
-        magnitude_left = std::abs(magnitude_left);
+    double sum; 
+    double diff; 
+    double direction;
+    double leftMagnitude;
+    double rightMagnitude;
+    int di;
+    // give some separation between the different fft iterations
+    std::cout << std::string(10, '\n');
 
-        double magnitude_right = fft_data_right->out[(int)(fft_data_right->startIndex
-            + proportion * fft_data_right->spectroSize)];
-        magnitude_right = std::abs(magnitude_right);
-
+    for (int k = 0; k < FRAMES_PER_BUFFER; k++) {
         
+        if (freqDivision == offsets || k == FRAMES_PER_BUFFER-1) {
 
-        //printf("%d", (int) freq);
-        // 
-        //TODO: rolling average to reduce noise - theres a lot
+            // average the sums and store them in the output arrays
+            outputDataMagnitude[outputIndex] = freqMagnitudeSum / offsets;
+            outputDataDirection[outputIndex] = freqDirectionSum / offsets;
 
-        double diff = magnitude_right - magnitude_left;
-        double sum = (magnitude_left + magnitude_right )/2;
-        float direction = diff / sum /2;// range -1-1 
-        int di = int((direction*100 + 100));
-        //printf("%f: ", direction);
-        //printf("%d", di);
-        std::cout << std::string(di, ' ');
 
-        // display full block characters with heights based on frequency intensity
+            //// ////////////////////////////////////////////////////////////////////////////////////////////
+            // This section is just for the sake of printing to the 
+            //printf("%f ", freqDirectionSum/offsets);
+            di = int(((freqDirectionSum / offsets) * 100 + 100));
 
-        if (sum < 0.125) {
-            printf(" \n");
+            //printf("%d", di);
+            // print a bunch of spaces to offset the symbol
+            std::cout << std::string(di, ' ');
+
+            // display full block characters with heights based on frequency intensity
+            if (freqMagnitudeSum / offsets < 0.125) {
+                printf(" \n");
+            }
+            else if (freqMagnitudeSum / offsets < 0.25) {
+                printf(" \n");
+            }
+            else if (freqMagnitudeSum / offsets < 0.375) {
+                printf("-\n");
+            }
+            else if (freqMagnitudeSum / offsets < 0.5) {
+                printf("=\n");
+            }
+            else if (freqMagnitudeSum / offsets < 0.625) {
+                printf("o\n");
+            }
+            else if (freqMagnitudeSum / offsets < 0.75) {
+                printf("O\n");
+            }
+            else if (freqMagnitudeSum / offsets < 0.875) {
+                printf("0\n");
+            }
+            else {
+                printf("#\n");
+            }
+            ////////////////////////////////////////////////////////////////////////////////////
+
+            // this is still important for resetting variables for the next loop!
+
+            freqDivision = 0;
+            freqDirectionSum = 0;
+            freqMagnitudeSum = 0;
+            // alter offsets exponentially to align the frequency ranges with human perception
+            offsets = FRAMES_PER_BUFFER * (std::pow(1.5, outputIndex - OUTPUT_FREQ_COUNT));
+            outputIndex++;
         }
-        else if (sum < 0.25) {
-            printf("_\n");
+
+        // calculate the magnitude and direction for each frequency bin
+        leftMagnitude = std::abs(fft_data_left->out[k]);
+        rightMagnitude = std::abs(fft_data_right->out[k]);
+
+        sum = (leftMagnitude + rightMagnitude)/2;
+        diff = rightMagnitude - leftMagnitude;
+        
+        direction = diff / sum/2;
+        // if they are equal, potential for a divide by zero error - it would be in the center so set direction to zero
+        if (isnan(direction) || isinf(direction)) {
+            direction = 0;
         }
-        else if (sum < 0.375) {
-            printf("-\n");
-        }
-        else if (sum < 0.5) {
-            printf("=\n");
-        }
-        else if (sum < 0.625) {
-            printf("o\n");
-        }
-        else if (sum < 0.75) {
-            printf("O\n");
-        }
-        else if (sum < 0.875) {
-            printf("0\n");
-        }
-        else {
-            printf("#\n");
-        }
+        freqMagnitudeSum += sum;
+        freqDirectionSum += direction;
+
+        freqDivision++;
+        
+  
     }
-
+    
     // Display the buffered changes to stdout in the terminal
     fflush(stdout);
 
@@ -498,12 +534,15 @@ void CLoopbackCapture::VolumeVisualizer(UINT32 FramesAvailable, BYTE* Data)
 //  Initialize fft_data object for FFT and spectrogram use
 //
 void CLoopbackCapture::InitializeFFT()
-{
+{   
+    maxMagnitude = 0;
     // initialize data object used for fft
     fft_data_left = (fft_callback_data*)malloc(sizeof(fft_callback_data));
     fft_data_right = (fft_callback_data*)malloc(sizeof(fft_callback_data));
 
 
+    outputDataDirection = (double*)malloc(OUTPUT_FREQ_COUNT);
+    outputDataMagnitude = (double*)malloc(OUTPUT_FREQ_COUNT);
 
     // allocate memory for fft buffers
     fft_data_left->in = (double*)malloc(sizeof(double) * FRAMES_PER_BUFFER);

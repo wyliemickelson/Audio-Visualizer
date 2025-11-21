@@ -25,6 +25,10 @@ typedef struct {
 
 static fft_callback_data* fft_data_left;
 static fft_callback_data* fft_data_right;
+static double* outputDataDirection;
+static double* outputDataMagnitude;
+
+static double maxMagnitude;
 
 class CLoopbackCapture :
     public RuntimeClass< RuntimeClassFlags< ClassicCom >, FtmBase, IActivateAudioInterfaceCompletionHandler >
