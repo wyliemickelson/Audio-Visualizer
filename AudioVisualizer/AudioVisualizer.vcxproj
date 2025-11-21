@@ -141,8 +141,8 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="ClientData.h" />
     <ClInclude Include="src\AudioVisualizerApp.h" />
+    <ClInclude Include="src\ClientData.h" />
     <ClInclude Include="src\Common.h" />
     <ClInclude Include="src\LoopbackCapture.h" />
     <ClInclude Include="src\ProcessHandling.h" />

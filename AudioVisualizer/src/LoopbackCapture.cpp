@@ -403,11 +403,13 @@ void CLoopbackCapture::SpectrogramVisualizer(UINT32 FramesAvailable, BYTE* Data)
 
             // average the sums and store them in the output arrays
             outputDataMagnitude[outputIndex] = freqMagnitudeSum / offsets;
+            // outputDataDirection values range from -1(left) to 1 (right) - 0 means centered
             outputDataDirection[outputIndex] = freqDirectionSum / offsets;
 
 
+
             //// ////////////////////////////////////////////////////////////////////////////////////////////
-            // This section is just for the sake of printing to the 
+            // This section is just for the sake of printing to the console
             //printf("%f ", freqDirectionSum/offsets);
             di = int(((freqDirectionSum / offsets) * 100 + 100));
 
@@ -535,7 +537,6 @@ void CLoopbackCapture::VolumeVisualizer(UINT32 FramesAvailable, BYTE* Data)
 //
 void CLoopbackCapture::InitializeFFT()
 {   
-    maxMagnitude = 0;
     // initialize data object used for fft
     fft_data_left = (fft_callback_data*)malloc(sizeof(fft_callback_data));
     fft_data_right = (fft_callback_data*)malloc(sizeof(fft_callback_data));
