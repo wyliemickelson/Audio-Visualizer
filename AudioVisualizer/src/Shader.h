@@ -20,8 +20,8 @@ GLuint create_shader_program(const char* vertex_shader_path, const char* fragmen
 	vs_file.seekg(EOF);
 	int len = vs_file.tellg();
 	//read file
-	char* vs_data = new char[len];
-	vs_file.read(vs_data, len);
+	std::vector<char> vs_data(len);
+	vs_file.read(vs_data.data(), len);
 	if (!vs_file) 
 	{
 		std::cerr << "ERROR: Failed reading vertex shader at path: " << vertex_shader_path << std::endl;
@@ -29,8 +29,8 @@ GLuint create_shader_program(const char* vertex_shader_path, const char* fragmen
 	}
 
 	GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-	const GLchar* source = (const GLchar*)vs_data;
-	glShaderSource(vertex_shader, 1, &source, 0);
+	const GLchar* vs_source = (const GLchar*)vs_data.data();
+	glShaderSource(vertex_shader, 1, &vs_source, 0);
 	glCompileShader(vertex_shader);
 
 	int is_compiled = 0; //check compilation status
@@ -39,15 +39,13 @@ GLuint create_shader_program(const char* vertex_shader_path, const char* fragmen
 	{
 		GLint max_length = 0;
 		glGetShaderiv(vertex_shader, GL_INFO_LOG_LENGTH, &max_length);
-		GLchar* info_log = new GLchar[max_length];
+		std::vector<GLchar> info_log(max_length);
 		glGetShaderInfoLog(vertex_shader, max_length, &max_length, &info_log[0]);
 		glDeleteShader(vertex_shader);
-		std::cerr << info_log << std::endl;
-		delete info_log;
+		std::cerr << info_log.data() << std::endl;
 
 		return -1;
 	}
-	delete vs_data;
 
 	//fragment shader
 	std::ifstream fs_file(fragment_shader_path);
@@ -58,38 +56,35 @@ GLuint create_shader_program(const char* vertex_shader_path, const char* fragmen
 	}
 	//get length of file
 	fs_file.seekg(EOF);
-	int len = fs_file.tellg();
+	len = fs_file.tellg();
 	//read file
-	char* fs_data = new char[len];
-	fs_file.read(fs_data, len);
+	std::vector<char> fs_data(len);
+	fs_file.read(fs_data.data(), len);
 	if (!fs_file) 
 	{
 		std::cerr << "ERROR: Failed reading fragment shader at path: " << fragment_shader_path << std::endl;
-		delete fs_data;
 		return -1;
 	}
 
 	GLuint fragment_shader = glCreateShader(GL_VERTEX_SHADER);
-	const GLchar* source = (const GLchar*)fs_data;
-	glShaderSource(fragment_shader, 1, &source, 0);
+	const GLchar* fs_source = (const GLchar*)fs_data.data();
+	glShaderSource(fragment_shader, 1, &fs_source, 0);
 	glCompileShader(fragment_shader);
 
 	//check compilation status
-	int is_compiled = 0; 
+	is_compiled = 0; 
 	glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &is_compiled);
 	if (is_compiled == GL_FALSE)
 	{
 		GLint max_length = 0;
 		glGetShaderiv(fragment_shader, GL_INFO_LOG_LENGTH, &max_length);
-		GLchar* info_log = new GLchar[max_length];
+		std::vector<GLchar> info_log(max_length);
 		glGetShaderInfoLog(fragment_shader, max_length, &max_length, &info_log[0]);
 		glDeleteShader(fragment_shader);
-		std::cerr << info_log << std::endl;
+		std::cerr << info_log.data() << std::endl;
 
-		delete info_log;
 		return -1;
 	}
-	delete fs_data;
 
 	GLuint program = glCreateProgram();
 	glAttachShader(program, vertex_shader);
@@ -103,9 +98,9 @@ GLuint create_shader_program(const char* vertex_shader_path, const char* fragmen
 	{
 		GLint max_length = 0;
 		glGetProgramiv(program, GL_INFO_LOG_LENGTH, &max_length);
-		GLchar* info_log = new GLchar[max_length];
+		std::vector<GLchar> info_log(max_length);
 		glGetProgramInfoLog(program, max_length, &max_length, &info_log[0]);
-		std::cerr << info_log << std::endl;
+		std::cerr << info_log.data() << std::endl;
 		glDeleteProgram(program);
 		glDeleteShader(vertex_shader);
 		glDeleteShader(fragment_shader);

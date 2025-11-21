@@ -147,10 +147,13 @@
     <ClInclude Include="src\LoopbackCapture.h" />
     <ClInclude Include="src\ProcessHandling.h" />
     <ClInclude Include="src\ProcessWindow.h" />
+    <ClInclude Include="src\Shader.h" />
     <ClInclude Include="src\VisualizerWindow.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="src\shaders\visualizer_bar.frag" />
+    <None Include="src\shaders\visualizer_bar.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AudioVisualizerApp.cpp" />
