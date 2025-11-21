@@ -1,7 +1,0 @@
-﻿  LoopbackCapture.cpp
-C:\CompSci\CS436\AudioVisualizer\AudioVisualizer\src\LoopbackCapture.cpp(485,37): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-C:\CompSci\CS436\AudioVisualizer\AudioVisualizer\src\LoopbackCapture.cpp(489,7): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-  ProcessWindow.cpp
-  Generating Code...
-  AudioVisualizer.vcxproj -> C:\CompSci\CS436\AudioVisualizer\x64\Debug\AudioVisualizer.exe
-  0 File(s) copied
