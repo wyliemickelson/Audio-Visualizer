@@ -382,10 +382,15 @@ void CLoopbackCapture::SpectrogramVisualizer(UINT32 FramesAvailable, BYTE* Data)
     fftw_execute(fft_data_right->p);
 
     // offsets determines the frequency range between each output index
-    int offsets = FRAMES_PER_BUFFER * (1/std::pow(2, OUTPUT_FREQ_COUNT));
+    int offsets =2;
     int freqDivision = 0;
+
+    // starting with a naive approach of just averaging the values per bin 
+    // This should be changed in the future, but for now it gives a functional starting point 
     double freqMagnitudeSum = 0;
-    double freqDirectionSum = 0; // starting with a naive approach of just averaging the values per bin 
+    double freqDirectionSum = 0; 
+
+
     int outputIndex = 0; // indexes the output arrays
 
     double sum; 
@@ -400,6 +405,9 @@ void CLoopbackCapture::SpectrogramVisualizer(UINT32 FramesAvailable, BYTE* Data)
     for (int k = 0; k < FRAMES_PER_BUFFER; k++) {
         
         if (freqDivision == offsets || k == FRAMES_PER_BUFFER-1) {
+            if (outputIndex >= OUTPUT_FREQ_COUNT) {
+                break;
+            }
 
             // average the sums and store them in the output arrays
             outputDataMagnitude[outputIndex] = freqMagnitudeSum / offsets;
@@ -450,7 +458,8 @@ void CLoopbackCapture::SpectrogramVisualizer(UINT32 FramesAvailable, BYTE* Data)
             freqDirectionSum = 0;
             freqMagnitudeSum = 0;
             // alter offsets exponentially to align the frequency ranges with human perception
-            offsets = FRAMES_PER_BUFFER * (std::pow(1.5, outputIndex - OUTPUT_FREQ_COUNT));
+            //TODO: This function runs into issues when the count gets too big. instead just add to the offsets or something
+            offsets = FRAMES_PER_BUFFER * (std::pow(1.3, outputIndex - OUTPUT_FREQ_COUNT));
             outputIndex++;
         }
 
