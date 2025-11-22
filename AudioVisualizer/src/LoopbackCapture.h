@@ -42,7 +42,7 @@ public:
     CLoopbackCapture() = default;
     ~CLoopbackCapture();
 
-    HRESULT StartCaptureAsync(DWORD processId, VisualizerContainer* visualizerContainer);
+    HRESULT StartCaptureAsync(DWORD processId, VisualizerWindow* visualizerContainer);
     HRESULT StopCaptureAsync();
 
     METHODASYNCCALLBACK(CLoopbackCapture, StartCapture, OnStartCapture);
@@ -67,7 +67,7 @@ private:
         Stopped,
     };
 
-    VisualizerContainer* visualizer;
+    VisualizerWindow* visualizer;
 
     HRESULT OnStartCapture(IMFAsyncResult* pResult);
     HRESULT OnStopCapture(IMFAsyncResult* pResult);

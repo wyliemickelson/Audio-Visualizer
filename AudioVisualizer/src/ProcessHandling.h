@@ -1,6 +1,7 @@
 #pragma once
 #include <minwindef.h>
 #include <mmdeviceapi.h>
+#include <vector>
 
 struct process_info
 {

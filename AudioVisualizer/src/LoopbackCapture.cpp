@@ -151,7 +151,7 @@ HRESULT CLoopbackCapture::ActivateCompleted(IActivateAudioInterfaceAsyncOperatio
     return S_OK;
 }
 
-HRESULT CLoopbackCapture::StartCaptureAsync(DWORD processId, VisualizerContainer* visualizerContainer)
+HRESULT CLoopbackCapture::StartCaptureAsync(DWORD processId, VisualizerWindow* visualizerContainer)
 {
     visualizer = visualizerContainer;
 

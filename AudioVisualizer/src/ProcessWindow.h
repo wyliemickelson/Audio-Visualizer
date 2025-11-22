@@ -1,4 +1,5 @@
 #pragma once
+#include <AudioVisualizerApp.h>
 
 class ProcessWindow : public ProcessSelection
 {

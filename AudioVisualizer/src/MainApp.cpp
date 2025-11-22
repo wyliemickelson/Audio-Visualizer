@@ -1,3 +1,4 @@
+#include <VisualizerWindow.h>
 #include <vector>
 #include <wx/wx.h>
 #include <wx/xrc/xmlres.h>
@@ -6,7 +7,6 @@
 #include <processwindow.h>
 #include <processhandling.h>
 #include <clientdata.h>
-#include <VisualizerWindow.h>
 
 //prototypes
 void populateProcessList(wxListBox *process_list);

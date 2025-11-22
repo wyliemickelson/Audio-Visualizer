@@ -21,24 +21,6 @@ Options::~Options()
 {
 }
 
-VisualizerFrame::VisualizerFrame( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxFrame( parent, id, title, pos, size, style )
-{
-	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
-
-	wxBoxSizer* options_sizer;
-	options_sizer = new wxBoxSizer( wxVERTICAL );
-
-
-	this->SetSizer( options_sizer );
-	this->Layout();
-
-	this->Centre( wxBOTH );
-}
-
-VisualizerFrame::~VisualizerFrame()
-{
-}
-
 ProcessSelection::ProcessSelection( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxFrame( parent, id, title, pos, size, style )
 {
 	this->SetSizeHints( wxDefaultSize, wxDefaultSize );

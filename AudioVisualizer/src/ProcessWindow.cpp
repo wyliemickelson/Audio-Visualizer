@@ -1,9 +1,7 @@
-#include <AudioVisualizerApp.h>
 #include <ProcessWindow.h>
 #include <ClientData.h>
 #include <VisualizerWindow.h>
-#include "LoopbackCapture.h"
-#include <VisualizerWindow.h>
+#include <LoopbackCapture.h>
 
 void ProcessWindow::OnExit(wxCommandEvent& event)
 {
@@ -22,8 +20,7 @@ void ProcessWindow::OnConfirm(wxCommandEvent& event)
     Hide();
 
     // Create and open Visualizer Window
-    VisualizerContainer* visualizer = new VisualizerContainer(NULL);
-    visualizer->Show(true);
+    VisualizerWindow* visualizer = new VisualizerWindow(NULL);
 
     // start audio capture on selected process
     CLoopbackCapture loopbackCapture;
@@ -40,10 +37,8 @@ void ProcessWindow::OnConfirm(wxCommandEvent& event)
     {
 		wxGLAttributes display_attributes;
 		display_attributes.PlatformDefaults();
-		VisualizerWindow* display_window = new VisualizerWindow(NULL);
-		display_window->Show(true);
-        VisualizerCanvas* display_canvas = display_window->canvas;
-        display_canvas->InitOpenGL();
+		visualizer->Show(true);
+        VisualizerCanvas* display_canvas = visualizer->canvas;
 
         while (true) {
             // run until program is terminated

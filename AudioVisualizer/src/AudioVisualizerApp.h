@@ -46,23 +46,6 @@ class Options : public wxFrame
 };
 
 ///////////////////////////////////////////////////////////////////////////////
-/// Class VisualizerFrame
-///////////////////////////////////////////////////////////////////////////////
-class VisualizerFrame : public wxFrame
-{
-	private:
-
-	protected:
-
-	public:
-
-		VisualizerFrame( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 925,300 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
-
-		~VisualizerFrame();
-
-};
-
-///////////////////////////////////////////////////////////////////////////////
 /// Class ProcessSelection
 ///////////////////////////////////////////////////////////////////////////////
 class ProcessSelection : public wxFrame

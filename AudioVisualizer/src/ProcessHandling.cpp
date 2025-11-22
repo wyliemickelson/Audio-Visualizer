@@ -69,7 +69,6 @@ std::vector<process_info> getCurrentProcesses(IMMDevice* device)
 				processes.push_back(pinfo);
 			}
 		}
-		CloseHandle(process);
 	}
 	return processes;
 }
