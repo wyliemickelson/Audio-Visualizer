@@ -1,3 +1,4 @@
+#include <LoopbackCapture.h>
 #include <shlobj.h>
 #include <wchar.h>
 #include <iostream>
@@ -9,19 +10,20 @@
 #include <vector>
 #include <cmath>
 
-#include "LoopbackCapture.h"
+
 
 #define BITS_PER_BYTE 8
 #define SHORT_MAX 32767
 #define SAMPLE_RATE 44100
 #define BITS_PER_SAMPLE 16
 #define N_CHANNELS 2
-#define FRAMES_PER_BUFFER SAMPLE_RATE / 172 // 256 (ish) frequency bins
+#define FRAMES_PER_BUFFER SAMPLE_RATE / 100 // 256 (ish) frequency bins
 
 #define SPECTRO_FREQ_START 20  // Lower bound of the displayed spectrogram (Hz)
 #define SPECTRO_FREQ_END 20000 // Upper bound of the displayed spectrogram (Hz)
 
 #define OUTPUT_FREQ_COUNT 5 // has issues at 5 or lower 
+#define ROLLING_AVG_ITERATIONS 8
 
 HRESULT CLoopbackCapture::SetDeviceStateErrorIfFailed(HRESULT hr)
 {
@@ -149,8 +151,10 @@ HRESULT CLoopbackCapture::ActivateCompleted(IActivateAudioInterfaceAsyncOperatio
     return S_OK;
 }
 
-HRESULT CLoopbackCapture::StartCaptureAsync(DWORD processId)
+HRESULT CLoopbackCapture::StartCaptureAsync(DWORD processId, VisualizerContainer* visualizerContainer)
 {
+    visualizer = visualizerContainer;
+
     RETURN_IF_FAILED(InitializeLoopbackCapture());
     RETURN_IF_FAILED(ActivateAudioInterface(processId));
 
@@ -382,10 +386,15 @@ void CLoopbackCapture::SpectrogramVisualizer(UINT32 FramesAvailable, BYTE* Data)
     fftw_execute(fft_data_right->p);
 
     // offsets determines the frequency range between each output index
-    int offsets = FRAMES_PER_BUFFER * (1/std::pow(2, OUTPUT_FREQ_COUNT));
+    int offsets =2;
     int freqDivision = 0;
+
+    // starting with a naive approach of just averaging the values per bin 
+    // This should be changed in the future, but for now it gives a functional starting point 
     double freqMagnitudeSum = 0;
-    double freqDirectionSum = 0; // starting with a naive approach of just averaging the values per bin 
+    double freqDirectionSum = 0; 
+
+
     int outputIndex = 0; // indexes the output arrays
 
     double sum; 
@@ -400,18 +409,36 @@ void CLoopbackCapture::SpectrogramVisualizer(UINT32 FramesAvailable, BYTE* Data)
     for (int k = 0; k < FRAMES_PER_BUFFER; k++) {
         
         if (freqDivision == offsets || k == FRAMES_PER_BUFFER-1) {
+            if (outputIndex >= OUTPUT_FREQ_COUNT) {
+                break;
+            }
+
+
+            bufferDataDirection[bufferIndex][outputIndex] = freqDirectionSum / offsets;
+            bufferDataMagnitude[bufferIndex][outputIndex] = freqMagnitudeSum / offsets;
 
             // average the sums and store them in the output arrays
-            outputDataMagnitude[outputIndex] = freqMagnitudeSum / offsets;
+            double rollingSumDirection = 0;
+            double rollingSumMagnitude = 0;
+
+            for (int x = 0; x < ROLLING_AVG_ITERATIONS; x++) {
+                rollingSumDirection += bufferDataDirection[x][outputIndex];
+                rollingSumMagnitude += bufferDataDirection[x][outputIndex];
+
+            }
+            //outputDataMagnitude[outputIndex] = rollingSumMagnitude / ROLLING_AVG_ITERATIONS;
+            outputDataMagnitude[outputIndex] = freqMagnitudeSum / offsets; // Averaging the total magnitude reduces it by a lot no averaging for right now
+
             // outputDataDirection values range from -1(left) to 1 (right) - 0 means centered
-            outputDataDirection[outputIndex] = freqDirectionSum / offsets;
+            outputDataDirection[outputIndex] = rollingSumDirection / ROLLING_AVG_ITERATIONS;
 
 
+            bufferIndex = (bufferIndex + 1)% ROLLING_AVG_ITERATIONS;
 
             //// ////////////////////////////////////////////////////////////////////////////////////////////
             // This section is just for the sake of printing to the console
             //printf("%f ", freqDirectionSum/offsets);
-            di = int(((freqDirectionSum / offsets) * 100 + 100));
+            di = int(outputDataDirection[outputIndex] * 100 + 100);
 
             //printf("%d", di);
             // print a bunch of spaces to offset the symbol
@@ -450,7 +477,8 @@ void CLoopbackCapture::SpectrogramVisualizer(UINT32 FramesAvailable, BYTE* Data)
             freqDirectionSum = 0;
             freqMagnitudeSum = 0;
             // alter offsets exponentially to align the frequency ranges with human perception
-            offsets = FRAMES_PER_BUFFER * (std::pow(1.5, outputIndex - OUTPUT_FREQ_COUNT));
+            //TODO: This function runs into issues when the count gets too big. instead just add to the offsets or something
+            offsets = FRAMES_PER_BUFFER * (std::pow(1.3, outputIndex - OUTPUT_FREQ_COUNT));
             outputIndex++;
         }
 
@@ -497,8 +525,8 @@ void CLoopbackCapture::VolumeVisualizer(UINT32 FramesAvailable, BYTE* Data)
     int vol_r = 0;
 
     for (unsigned long i = 0; i < FramesAvailable * 2; i += 2) {
-        vol_l = max(vol_l, std::abs(in[i]));
-        vol_r = max(vol_r, std::abs(in[i + 1]));
+        vol_l = std::max(vol_l, std::abs(in[i]));
+        vol_r = std::max(vol_r, std::abs(in[i + 1]));
     }
     //printf("left: %d, right: %d\n", vol_l, vol_r);
 
@@ -542,8 +570,20 @@ void CLoopbackCapture::InitializeFFT()
     fft_data_right = (fft_callback_data*)malloc(sizeof(fft_callback_data));
 
 
-    outputDataDirection = (double*)malloc(OUTPUT_FREQ_COUNT);
-    outputDataMagnitude = (double*)malloc(OUTPUT_FREQ_COUNT);
+    outputDataDirection = (double*)malloc(sizeof(double) * OUTPUT_FREQ_COUNT);
+    outputDataMagnitude = (double*)malloc(sizeof(double) * OUTPUT_FREQ_COUNT);
+
+    bufferDataDirection = (double**)malloc(sizeof(double*) * ROLLING_AVG_ITERATIONS);
+    bufferDataMagnitude = (double**)malloc(sizeof(double*) * ROLLING_AVG_ITERATIONS);
+
+
+    for (int x = 0; x < ROLLING_AVG_ITERATIONS; x++) {
+        bufferDataDirection[x] = (double*)calloc( OUTPUT_FREQ_COUNT, sizeof(double));
+        bufferDataMagnitude[x] = (double*)calloc(OUTPUT_FREQ_COUNT, sizeof(double));
+
+    }
+
+    bufferIndex = 0;
 
     // allocate memory for fft buffers
     fft_data_left->in = (double*)malloc(sizeof(double) * FRAMES_PER_BUFFER);
@@ -555,13 +595,13 @@ void CLoopbackCapture::InitializeFFT()
     // initialize spectrograph variables
     double sampleRatio = FRAMES_PER_BUFFER / (SAMPLE_RATE * 1.0);
     fft_data_left->startIndex = std::ceil(sampleRatio * SPECTRO_FREQ_START);
-    fft_data_left->spectroSize = min(
+    fft_data_left->spectroSize = std::min(
         std::ceil(sampleRatio * SPECTRO_FREQ_END),
         FRAMES_PER_BUFFER / 2.0
     ) - fft_data_left->startIndex;
 
     fft_data_right->startIndex = std::ceil(sampleRatio * SPECTRO_FREQ_START);
-    fft_data_right->spectroSize = min(
+    fft_data_right->spectroSize = std::min(
         std::ceil(sampleRatio * SPECTRO_FREQ_END),
         FRAMES_PER_BUFFER / 2.0
     ) - fft_data_right->startIndex;

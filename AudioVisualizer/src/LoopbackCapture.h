@@ -1,5 +1,6 @@
 #pragma once
 
+#include <VisualizerWindow.h>
 #include <AudioClient.h>
 #include <mmdeviceapi.h>
 #include <initguid.h>
@@ -28,6 +29,12 @@ static fft_callback_data* fft_data_right;
 static double* outputDataDirection;
 static double* outputDataMagnitude;
 
+static double** bufferDataDirection;
+static double** bufferDataMagnitude;
+
+static int bufferIndex; 
+
+
 class CLoopbackCapture :
     public RuntimeClass< RuntimeClassFlags< ClassicCom >, FtmBase, IActivateAudioInterfaceCompletionHandler >
 {
@@ -35,7 +42,7 @@ public:
     CLoopbackCapture() = default;
     ~CLoopbackCapture();
 
-    HRESULT StartCaptureAsync(DWORD processId);
+    HRESULT StartCaptureAsync(DWORD processId, VisualizerContainer* visualizerContainer);
     HRESULT StopCaptureAsync();
 
     METHODASYNCCALLBACK(CLoopbackCapture, StartCapture, OnStartCapture);
@@ -59,6 +66,8 @@ private:
         Stopping,
         Stopped,
     };
+
+    VisualizerContainer* visualizer;
 
     HRESULT OnStartCapture(IMFAsyncResult* pResult);
     HRESULT OnStopCapture(IMFAsyncResult* pResult);
