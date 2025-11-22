@@ -29,6 +29,12 @@ static fft_callback_data* fft_data_right;
 static double* outputDataDirection;
 static double* outputDataMagnitude;
 
+static double** bufferDataDirection;
+static double** bufferDataMagnitude;
+
+static int bufferIndex; 
+
+
 class CLoopbackCapture :
     public RuntimeClass< RuntimeClassFlags< ClassicCom >, FtmBase, IActivateAudioInterfaceCompletionHandler >
 {

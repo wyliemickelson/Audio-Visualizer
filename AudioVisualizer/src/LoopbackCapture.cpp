@@ -17,12 +17,13 @@
 #define SAMPLE_RATE 44100
 #define BITS_PER_SAMPLE 16
 #define N_CHANNELS 2
-#define FRAMES_PER_BUFFER SAMPLE_RATE / 172 // 256 (ish) frequency bins
+#define FRAMES_PER_BUFFER SAMPLE_RATE / 100 // 256 (ish) frequency bins
 
 #define SPECTRO_FREQ_START 20  // Lower bound of the displayed spectrogram (Hz)
 #define SPECTRO_FREQ_END 20000 // Upper bound of the displayed spectrogram (Hz)
 
 #define OUTPUT_FREQ_COUNT 5 // has issues at 5 or lower 
+#define ROLLING_AVG_ITERATIONS 8
 
 HRESULT CLoopbackCapture::SetDeviceStateErrorIfFailed(HRESULT hr)
 {
@@ -412,17 +413,32 @@ void CLoopbackCapture::SpectrogramVisualizer(UINT32 FramesAvailable, BYTE* Data)
                 break;
             }
 
+
+            bufferDataDirection[bufferIndex][outputIndex] = freqDirectionSum / offsets;
+            bufferDataMagnitude[bufferIndex][outputIndex] = freqMagnitudeSum / offsets;
+
             // average the sums and store them in the output arrays
-            outputDataMagnitude[outputIndex] = freqMagnitudeSum / offsets;
+            double rollingSumDirection = 0;
+            double rollingSumMagnitude = 0;
+
+            for (int x = 0; x < ROLLING_AVG_ITERATIONS; x++) {
+                rollingSumDirection += bufferDataDirection[x][outputIndex];
+                rollingSumMagnitude += bufferDataDirection[x][outputIndex];
+
+            }
+            //outputDataMagnitude[outputIndex] = rollingSumMagnitude / ROLLING_AVG_ITERATIONS;
+            outputDataMagnitude[outputIndex] = freqMagnitudeSum / offsets; // Averaging the total magnitude reduces it by a lot no averaging for right now
+
             // outputDataDirection values range from -1(left) to 1 (right) - 0 means centered
-            outputDataDirection[outputIndex] = freqDirectionSum / offsets;
+            outputDataDirection[outputIndex] = rollingSumDirection / ROLLING_AVG_ITERATIONS;
 
 
+            bufferIndex = (bufferIndex + 1)% ROLLING_AVG_ITERATIONS;
 
             //// ////////////////////////////////////////////////////////////////////////////////////////////
             // This section is just for the sake of printing to the console
             //printf("%f ", freqDirectionSum/offsets);
-            di = int(((freqDirectionSum / offsets) * 100 + 100));
+            di = int(outputDataDirection[outputIndex] * 100 + 100);
 
             //printf("%d", di);
             // print a bunch of spaces to offset the symbol
@@ -554,8 +570,20 @@ void CLoopbackCapture::InitializeFFT()
     fft_data_right = (fft_callback_data*)malloc(sizeof(fft_callback_data));
 
 
-    outputDataDirection = (double*)malloc(OUTPUT_FREQ_COUNT);
-    outputDataMagnitude = (double*)malloc(OUTPUT_FREQ_COUNT);
+    outputDataDirection = (double*)malloc(sizeof(double) * OUTPUT_FREQ_COUNT);
+    outputDataMagnitude = (double*)malloc(sizeof(double) * OUTPUT_FREQ_COUNT);
+
+    bufferDataDirection = (double**)malloc(sizeof(double*) * ROLLING_AVG_ITERATIONS);
+    bufferDataMagnitude = (double**)malloc(sizeof(double*) * ROLLING_AVG_ITERATIONS);
+
+
+    for (int x = 0; x < ROLLING_AVG_ITERATIONS; x++) {
+        bufferDataDirection[x] = (double*)calloc( OUTPUT_FREQ_COUNT, sizeof(double));
+        bufferDataMagnitude[x] = (double*)calloc(OUTPUT_FREQ_COUNT, sizeof(double));
+
+    }
+
+    bufferIndex = 0;
 
     // allocate memory for fft buffers
     fft_data_left->in = (double*)malloc(sizeof(double) * FRAMES_PER_BUFFER);
