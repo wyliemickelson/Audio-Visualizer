@@ -33,5 +33,5 @@ public:
 		canvas = new VisualizerWindow(this, vAttrs);
 		canvas->SetMinSize(size);
 	};
-	
+
 };
