@@ -1,5 +1,6 @@
 #pragma once
 
+#include <VisualizerWindow.h>
 #include <AudioClient.h>
 #include <mmdeviceapi.h>
 #include <initguid.h>
@@ -35,7 +36,7 @@ public:
     CLoopbackCapture() = default;
     ~CLoopbackCapture();
 
-    HRESULT StartCaptureAsync(DWORD processId);
+    HRESULT StartCaptureAsync(DWORD processId, VisualizerContainer* visualizerContainer);
     HRESULT StopCaptureAsync();
 
     METHODASYNCCALLBACK(CLoopbackCapture, StartCapture, OnStartCapture);
@@ -59,6 +60,8 @@ private:
         Stopping,
         Stopped,
     };
+
+    VisualizerContainer* visualizer;
 
     HRESULT OnStartCapture(IMFAsyncResult* pResult);
     HRESULT OnStopCapture(IMFAsyncResult* pResult);

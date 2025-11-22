@@ -1,3 +1,4 @@
+#include <LoopbackCapture.h>
 #include <shlobj.h>
 #include <wchar.h>
 #include <iostream>
@@ -9,7 +10,7 @@
 #include <vector>
 #include <cmath>
 
-#include "LoopbackCapture.h"
+
 
 #define BITS_PER_BYTE 8
 #define SHORT_MAX 32767
@@ -149,8 +150,10 @@ HRESULT CLoopbackCapture::ActivateCompleted(IActivateAudioInterfaceAsyncOperatio
     return S_OK;
 }
 
-HRESULT CLoopbackCapture::StartCaptureAsync(DWORD processId)
+HRESULT CLoopbackCapture::StartCaptureAsync(DWORD processId, VisualizerContainer* visualizerContainer)
 {
+    visualizer = visualizerContainer;
+
     RETURN_IF_FAILED(InitializeLoopbackCapture());
     RETURN_IF_FAILED(ActivateAudioInterface(processId));
 
@@ -506,8 +509,8 @@ void CLoopbackCapture::VolumeVisualizer(UINT32 FramesAvailable, BYTE* Data)
     int vol_r = 0;
 
     for (unsigned long i = 0; i < FramesAvailable * 2; i += 2) {
-        vol_l = max(vol_l, std::abs(in[i]));
-        vol_r = max(vol_r, std::abs(in[i + 1]));
+        vol_l = std::max(vol_l, std::abs(in[i]));
+        vol_r = std::max(vol_r, std::abs(in[i + 1]));
     }
     //printf("left: %d, right: %d\n", vol_l, vol_r);
 
@@ -564,13 +567,13 @@ void CLoopbackCapture::InitializeFFT()
     // initialize spectrograph variables
     double sampleRatio = FRAMES_PER_BUFFER / (SAMPLE_RATE * 1.0);
     fft_data_left->startIndex = std::ceil(sampleRatio * SPECTRO_FREQ_START);
-    fft_data_left->spectroSize = min(
+    fft_data_left->spectroSize = std::min(
         std::ceil(sampleRatio * SPECTRO_FREQ_END),
         FRAMES_PER_BUFFER / 2.0
     ) - fft_data_left->startIndex;
 
     fft_data_right->startIndex = std::ceil(sampleRatio * SPECTRO_FREQ_START);
-    fft_data_right->spectroSize = min(
+    fft_data_right->spectroSize = std::min(
         std::ceil(sampleRatio * SPECTRO_FREQ_END),
         FRAMES_PER_BUFFER / 2.0
     ) - fft_data_right->startIndex;
