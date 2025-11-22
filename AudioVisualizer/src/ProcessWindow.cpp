@@ -2,6 +2,7 @@
 #include <ProcessWindow.h>
 #include <ClientData.h>
 #include "LoopbackCapture.h"
+#include <VisualizerWindow.h>
 
 void ProcessWindow::OnExit(wxCommandEvent& event)
 {
@@ -19,10 +20,14 @@ void ProcessWindow::OnConfirm(wxCommandEvent& event)
     
     Hide();
 
+    // Create and open Visualizer Window
+    VisualizerContainer* visualizer = new VisualizerContainer(NULL);
+    visualizer->Show(true);
+
     // start audio capture on selected process
     CLoopbackCapture loopbackCapture;
 
-    HRESULT hr = loopbackCapture.StartCaptureAsync(data->processID);
+    HRESULT hr = loopbackCapture.StartCaptureAsync(data->processID, visualizer);
     if (FAILED(hr))
     {
         wil::unique_hlocal_string message;
