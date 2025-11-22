@@ -1,6 +1,7 @@
 #include <AudioVisualizerApp.h>
 #include <ProcessWindow.h>
 #include <ClientData.h>
+#include <VisualizerWindow.h>
 #include "LoopbackCapture.h"
 
 void ProcessWindow::OnExit(wxCommandEvent& event)
@@ -22,7 +23,8 @@ void ProcessWindow::OnConfirm(wxCommandEvent& event)
     // start audio capture on selected process
     CLoopbackCapture loopbackCapture;
 
-    HRESULT hr = loopbackCapture.StartCaptureAsync(data->processID);
+   // HRESULT hr = loopbackCapture.StartCaptureAsync(data->processID);
+    HRESULT hr = 1;
     if (FAILED(hr))
     {
         wil::unique_hlocal_string message;
@@ -32,8 +34,20 @@ void ProcessWindow::OnConfirm(wxCommandEvent& event)
     }
     else
     {
+		wxGLAttributes display_attributes;
+		display_attributes.PlatformDefaults();
+		VisualizerWindow* display_window = new VisualizerWindow(NULL);
+		display_window->Show(true);
+        VisualizerCanvas* display_canvas = display_window->canvas;
+        display_canvas->InitOpenGL();
+
         while (true) {
             // run until program is terminated
+            FreqData f_data;
+            f_data.color = (0.7f, 0.0f, 0.0f, 1.0f);
+            f_data.stereo_pos = (0.0f);
+            f_data.size = (1.0f);
+            display_canvas->Render(f_data);
         }
 
         loopbackCapture.StopCaptureAsync();

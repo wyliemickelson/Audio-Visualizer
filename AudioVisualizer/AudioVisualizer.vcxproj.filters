@@ -33,13 +33,13 @@
     <ClInclude Include="src\ProcessWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ClientData.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\VisualizerWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Shader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ClientData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -75,7 +75,7 @@
     <ClCompile Include="src\VisualizerWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\glad.c">
+    <ClCompile Include="src\gl.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

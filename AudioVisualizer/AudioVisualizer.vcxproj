@@ -157,7 +157,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AudioVisualizerApp.cpp" />
-    <ClCompile Include="src\glad.c" />
+    <ClCompile Include="src\gl.c" />
     <ClCompile Include="src\LoopbackCapture.cpp" />
     <ClCompile Include="src\MainApp.cpp" />
     <ClCompile Include="src\ProcessHandling.cpp" />

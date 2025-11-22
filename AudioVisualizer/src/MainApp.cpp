@@ -6,6 +6,7 @@
 #include <processwindow.h>
 #include <processhandling.h>
 #include <clientdata.h>
+#include <VisualizerWindow.h>
 
 //prototypes
 void populateProcessList(wxListBox *process_list);
@@ -25,10 +26,10 @@ bool App::OnInit()
 	ProcessWindow* process_selection = new ProcessWindow(NULL);
 	process_selection->Show(true);
 
+	//populate process list with information
 	wxWindowList p_children = process_selection->GetChildren();
 	wxListBox *process_list = process_selection->getProcessesList();
 	populateProcessList(process_list);
-	//populate process list with information
 
 	return true;
 }

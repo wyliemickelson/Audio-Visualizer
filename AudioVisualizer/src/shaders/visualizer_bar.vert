@@ -1,9 +1,9 @@
 #version 330 core 
-layout (location = 0) in vec2 pos;
+layout (location = 0) in vec3 pos;
 
-uniform mat3 transform; //transformation matrix for position & size
+uniform mat4 transform; //transformation matrix for position & size
 
 void main()
 {
-	gl_Position = transform * vec3(pos);
+	gl_Position = transform * vec4(pos, 1.0f);
 }
