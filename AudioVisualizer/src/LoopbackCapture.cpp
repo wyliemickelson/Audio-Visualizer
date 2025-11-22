@@ -22,8 +22,8 @@
 #define SPECTRO_FREQ_START 20  // Lower bound of the displayed spectrogram (Hz)
 #define SPECTRO_FREQ_END 20000 // Upper bound of the displayed spectrogram (Hz)
 
-#define OUTPUT_FREQ_COUNT 5 // has issues at 5 or lower 
-#define ROLLING_AVG_ITERATIONS 8
+#define OUTPUT_FREQ_COUNT 5 // its currently not good at distinguishing separate low frequency bands, particularly below 5
+#define ROLLING_AVG_ITERATIONS 32
 
 HRESULT CLoopbackCapture::SetDeviceStateErrorIfFailed(HRESULT hr)
 {
@@ -423,14 +423,14 @@ void CLoopbackCapture::SpectrogramVisualizer(UINT32 FramesAvailable, BYTE* Data)
 
             for (int x = 0; x < ROLLING_AVG_ITERATIONS; x++) {
                 rollingSumDirection += bufferDataDirection[x][outputIndex];
-                rollingSumMagnitude += bufferDataDirection[x][outputIndex];
+                rollingSumMagnitude += bufferDataMagnitude[x][outputIndex];
 
             }
-            //outputDataMagnitude[outputIndex] = rollingSumMagnitude / ROLLING_AVG_ITERATIONS;
-            outputDataMagnitude[outputIndex] = freqMagnitudeSum / offsets; // Averaging the total magnitude reduces it by a lot no averaging for right now
+            outputDataMagnitude[outputIndex] = rollingSumMagnitude / (ROLLING_AVG_ITERATIONS / 2);
+            //outputDataMagnitude[outputIndex] = freqMagnitudeSum / offsets; // Averaging the total magnitude reduces it by a lot no averaging for right now
 
             // outputDataDirection values range from -1(left) to 1 (right) - 0 means centered
-            outputDataDirection[outputIndex] = rollingSumDirection / ROLLING_AVG_ITERATIONS;
+            outputDataDirection[outputIndex] = rollingSumDirection/ (ROLLING_AVG_ITERATIONS/4);
 
 
             bufferIndex = (bufferIndex + 1)% ROLLING_AVG_ITERATIONS;
@@ -445,25 +445,25 @@ void CLoopbackCapture::SpectrogramVisualizer(UINT32 FramesAvailable, BYTE* Data)
             std::cout << std::string(di, ' ');
 
             // display full block characters with heights based on frequency intensity
-            if (freqMagnitudeSum / offsets < 0.125) {
+            if (outputDataMagnitude[outputIndex] < 0.125) {
                 printf(" \n");
             }
-            else if (freqMagnitudeSum / offsets < 0.25) {
+            else if (outputDataMagnitude[outputIndex] < 0.25) {
                 printf(" \n");
             }
-            else if (freqMagnitudeSum / offsets < 0.375) {
+            else if (outputDataMagnitude[outputIndex] < 0.375) {
                 printf("-\n");
             }
-            else if (freqMagnitudeSum / offsets < 0.5) {
+            else if (outputDataMagnitude[outputIndex] < 0.5) {
                 printf("=\n");
             }
-            else if (freqMagnitudeSum / offsets < 0.625) {
+            else if (outputDataMagnitude[outputIndex] < 0.625) {
                 printf("o\n");
             }
-            else if (freqMagnitudeSum / offsets < 0.75) {
+            else if (outputDataMagnitude[outputIndex] < 0.75) {
                 printf("O\n");
             }
-            else if (freqMagnitudeSum / offsets < 0.875) {
+            else if (outputDataMagnitude[outputIndex] < 0.875) {
                 printf("0\n");
             }
             else {
