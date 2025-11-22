@@ -3,6 +3,7 @@
 #include <wx/glcanvas.h>
 #include <wx/frame.h>
 #include <wx/sizer.h>
+#include <wx/display.h>
 
 struct FreqData 
 {
@@ -17,10 +18,11 @@ struct FreqData
 class VisualizerCanvas: public wxGLCanvas
 {
 public:
-	VisualizerCanvas(wxWindow* parent, const wxGLAttributes display_attribs) : wxGLCanvas(parent, display_attribs)
+	VisualizerCanvas(wxWindow* parent, const wxGLAttributes display_attribs, wxSize size) : wxGLCanvas(parent, display_attribs, wxID_ANY, wxDefaultPosition, size, 0, wxGLCanvasName, wxNullPalette)
 	{
+		//initialize OpenGL context to canvas
 		wxGLContextAttrs glAttributes;
-		SetSize(2560, 50);
+
 		glAttributes.CoreProfile().OGLVersion(3, 3).EndList();
 		gl_context = new wxGLContext(this, nullptr, &glAttributes);
 		SetCurrent(*gl_context);
@@ -33,13 +35,14 @@ public:
 			.5f, 0.25f, 0.0f,
 			0.0f, 0.5f, 0.0f
 		};
-
+		//indices defining draw order
 		unsigned int indices[] =
 		{
 			0, 1, 2,
-			3, 1, 2
+			3, 2, 0
 		};
 		
+		//buffer instantiation
 		unsigned int VAO;
 		unsigned int VBO;
 		unsigned int EBO;
@@ -53,7 +56,6 @@ public:
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 		glEnableVertexAttribArray(0);
-		unsigned int i = glGetError();
 
 		shader = new Shader("src/shaders/visualizer_bar.vert", "src/shaders/visualizer_bar.frag");
 		shader->Use();
@@ -67,17 +69,15 @@ public:
 class VisualizerWindow : public wxFrame
 {
 public:
-	VisualizerWindow(wxWindow* parent, long style = wxSTAY_ON_TOP | wxRESIZE_BORDER | wxMAXIMIZE) : wxFrame(parent, wxID_ANY, "", wxDefaultPosition, wxDefaultSize, style, wxFrameNameStr)
+	VisualizerWindow(wxWindow* parent, long style = wxSTAY_ON_TOP) : wxFrame(parent, wxID_ANY, "", wxDefaultPosition, wxDefaultSize, style, wxFrameNameStr)
 	{
-		wxSize size = GetMaxClientSize();
-		SetSize(size.x, 50);
+		wxDisplay *display = new wxDisplay();
+		wxSize size = (display->GetClientArea()).GetSize();
+		size.y = 50;
+		SetSize(size);
 		wxGLAttributes display_attributes;
 		display_attributes.PlatformDefaults().RGBA().MinRGBA(8, 8, 8, 8).DoubleBuffer().Depth(24).EndList();
-		this->canvas = new VisualizerCanvas(this, display_attributes);
-
-		wxBoxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
-		sizer->Add(this->canvas);
-		SetSizer(sizer);
+		this->canvas = new VisualizerCanvas(this, display_attributes, size);
 	}
 	VisualizerCanvas *canvas;
 };

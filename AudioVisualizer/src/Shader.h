@@ -14,7 +14,7 @@ class Shader
 public:
 	Shader(const char* vertex_shader_path, const char* fragment_shader_path)
 	{
-		//vertex shader 
+		//read both shader files into string buffers 
 		std::string vertexCode;
 		std::string fragmentCode;
 		std::ifstream vFile;
@@ -36,11 +36,13 @@ public:
 		}
 		catch (std::ifstream::failure e)
 		{
-			std::cout << "ERROR SHADER FILE NOT SUCCESSFULLY READ, REASON: " << e.what() << std::endl;
+			std::cerr << "ERROR SHADER FILE NOT SUCCESSFULLY READ, REASON: " << e.what() << std::endl;
+			return;
 		}
 		const char* vs_data = vertexCode.c_str();
 		const char* fs_data = fragmentCode.c_str();
 
+		//compile vertex shader
 		GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
 		const GLchar* vs_source = (const GLchar*)vs_data;
 		glShaderSource(vertex_shader, 1, &vs_source, 0);
@@ -60,7 +62,7 @@ public:
 			return;
 		}
 
-		//fragment shader
+		//compile fragment shader
 		GLuint fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
 		const GLchar* fs_source = (const GLchar*)fs_data;
 		glShaderSource(fragment_shader, 1, &fs_source, 0);
@@ -81,6 +83,7 @@ public:
 			return ;
 		}
 
+		//link vertex & fragment shader to shader program
 		GLuint program = glCreateProgram();
 		glAttachShader(program, vertex_shader);
 		glAttachShader(program, fragment_shader);
@@ -100,14 +103,12 @@ public:
 			glDeleteShader(vertex_shader);
 			glDeleteShader(fragment_shader);
 
-			return ;
+			return;
 		}
-
 		glDetachShader(program, vertex_shader);
 		glDetachShader(program, fragment_shader);
 
 		ID = program;
-
 	}
 	void Use()
 	{
@@ -115,7 +116,7 @@ public:
 	}
 	void setMat4(const char* name, float mat4[4][4])
 	{
-		glUniformMatrix4fv(glGetUniformLocation(ID, name), 1, GL_FALSE, &mat4[0][0]);
+		glUniformMatrix4fv(glGetUniformLocation(ID, name), 1, GL_TRUE, &mat4[0][0]); //set to transpose so input matrix is more readable
 	}
 	void setVec4(const char* name, float vec[4])
 	{
