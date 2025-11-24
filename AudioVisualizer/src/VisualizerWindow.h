@@ -5,12 +5,21 @@
 #include <wx/sizer.h>
 #include <wx/display.h>
 
+struct Color
+{
+	float r;
+	float g;
+	float b;
+	float a;
+};
+
 struct FreqData 
 {
 	float stereo_pos; //from 0-100, represents left-right pos
 	float size; //size multiplier
-	float color; //rgb
+	Color color; //rgba
 };
+
 
 /*
 * wxWidgets window using OpenGL to draw audio visualizations 
@@ -27,6 +36,7 @@ public:
 		gl_context = new wxGLContext(this, nullptr, &glAttributes);
 		SetCurrent(*gl_context);
 
+		//load OpenGL procedure pointers using GLAD
 		int version = gladLoaderLoadGL();
 		//vertices defining a diamond shape
 		float diamond[] = {
@@ -60,7 +70,7 @@ public:
 		shader = new Shader("src/shaders/visualizer_bar.vert", "src/shaders/visualizer_bar.frag");
 		shader->Use();
 	}
-	void Render(FreqData data);
+	void Render(FreqData* data, int len);
 	Shader* shader = nullptr;
 	wxGLContext* gl_context = nullptr;
 };

@@ -11,30 +11,44 @@
 * Size is loudness,
 * Color separates different frequency buckets.
 */
-void VisualizerCanvas::Render(FreqData data)
+void VisualizerCanvas::Render(FreqData* data, int len)
 {
 	wxSize size = GetSize();
+	SetCurrent(*gl_context);
 	glViewport(0, 0, size.x * GetContentScaleFactor(), size.y * GetContentScaleFactor());
 	glClear(GL_COLOR_BUFFER_BIT);
 	glClearColor(0.2f, 0.2f, 0.3f, 1.0f);
 
-	//translate and scale according to FreqData
-	float transformation_mat[4][4] =
+	//iterate each bucket and draw as separate diamond
+	for (int i = 0; i < len; ++i)
 	{
-		data.size*.025f, 0.0f, 0.0f, data.stereo_pos,
-		0.0f, 1.0f, data.size*.05f, 0.0f,
-		0.0f, 0.0f, 1.0f, 0.0f, 
-		0.0 ,0.0f, 0.0f, 1.0f
-	};
+		int e = 0;
+		//translate and scale according to FreqData
+		FreqData bucket = data[i];
+		float transformation_mat[4][4] =
+		{
+			bucket.size, 0.0f, 0.0f, bucket.stereo_pos,
+			0.0f, 1.0f, bucket.size, 0.0f,
+			0.0f, 0.0f, 1.0f, 0.0f, 
+			0.0 ,0.0f, 0.0f, 1.0f
+		};
 
-	//set transformation matrix uniform
-	shader->setMat4("transform", transformation_mat);
+		shader->Use();
+		e = glGetError();
+		//set transformation matrix uniform
+		shader->setMat4("transform", transformation_mat);
+		e = glGetError();
 
-	float color[4] = { 0.3f, 0.3f, 0.3f, 1.0f };
+		float color[4] = { bucket.color.r, bucket.color.g, bucket.color.b, bucket.color.a};
 
-	//set color uniform
-	shader->setVec4("color", color);
+		//set color uniform
+		shader->setVec4("color", color);
+		e = glGetError();
 
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		e = glGetError();
+		int g = 0;
+	}
 	SwapBuffers();
+
 }

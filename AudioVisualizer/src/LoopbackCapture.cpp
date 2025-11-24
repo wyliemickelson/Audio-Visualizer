@@ -10,7 +10,7 @@
 #include <vector>
 #include <cmath>
 
-
+VisualizerWindow* RENDER_WINDOW = new VisualizerWindow(NULL); 
 
 #define BITS_PER_BYTE 8
 #define SHORT_MAX 32767
@@ -154,6 +154,7 @@ HRESULT CLoopbackCapture::ActivateCompleted(IActivateAudioInterfaceAsyncOperatio
 HRESULT CLoopbackCapture::StartCaptureAsync(DWORD processId, VisualizerWindow* visualizerContainer)
 {
     visualizer = visualizerContainer;
+    visualizer->Show(true);
 
     RETURN_IF_FAILED(InitializeLoopbackCapture());
     RETURN_IF_FAILED(ActivateAudioInterface(processId));
@@ -340,12 +341,23 @@ HRESULT CLoopbackCapture::OnAudioSampleRequested()
         // Get sample buffer
         RETURN_IF_FAILED(m_AudioCaptureClient->GetBuffer(&Data, &FramesAvailable, &dwCaptureFlags, &u64DevicePosition, &u64QPCPosition));
         // reset cursor to write over previous output
-        printf("\r"); // cursor to beginning of current line
-
-        printf("\n"); // whitespace
         SpectrogramVisualizer(FramesAvailable, Data);
         //printf("\n\n"); // separate two visualizers
         //VolumeVisualizer(FramesAvailable, Data);
+
+        FreqData freqDatas[OUTPUT_FREQ_COUNT]{};
+        for (int i = 0; i < OUTPUT_FREQ_COUNT; ++i)
+        {
+            FreqData data{};
+            data.stereo_pos = 0;
+            float mag = outputDataMagnitude[i];
+            data.size = 1.0f;
+            data.color = Color(0.0f , 0.0f, 0.0f, 1.0f);
+
+            freqDatas[i] = data;
+        }
+
+        visualizer->canvas->Render(freqDatas, OUTPUT_FREQ_COUNT);
 
         //printf("\033[1A\033[1A\033[1A"); // cursor back three lines
 
@@ -404,7 +416,6 @@ void CLoopbackCapture::SpectrogramVisualizer(UINT32 FramesAvailable, BYTE* Data)
     double rightMagnitude;
     int di;
     // give some separation between the different fft iterations
-    std::cout << std::string(10, '\n');
 
     for (int k = 0; k < FRAMES_PER_BUFFER; k++) {
         
@@ -442,33 +453,8 @@ void CLoopbackCapture::SpectrogramVisualizer(UINT32 FramesAvailable, BYTE* Data)
 
             //printf("%d", di);
             // print a bunch of spaces to offset the symbol
-            std::cout << std::string(di, ' ');
 
             // display full block characters with heights based on frequency intensity
-            if (outputDataMagnitude[outputIndex] < 0.125) {
-                printf(" \n");
-            }
-            else if (outputDataMagnitude[outputIndex] < 0.25) {
-                printf(" \n");
-            }
-            else if (outputDataMagnitude[outputIndex] < 0.375) {
-                printf("-\n");
-            }
-            else if (outputDataMagnitude[outputIndex] < 0.5) {
-                printf("=\n");
-            }
-            else if (outputDataMagnitude[outputIndex] < 0.625) {
-                printf("o\n");
-            }
-            else if (outputDataMagnitude[outputIndex] < 0.75) {
-                printf("O\n");
-            }
-            else if (outputDataMagnitude[outputIndex] < 0.875) {
-                printf("0\n");
-            }
-            else {
-                printf("#\n");
-            }
             ////////////////////////////////////////////////////////////////////////////////////
 
             // this is still important for resetting variables for the next loop!

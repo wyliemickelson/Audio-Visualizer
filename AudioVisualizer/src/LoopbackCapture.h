@@ -66,7 +66,7 @@ private:
         Stopping,
         Stopped,
     };
-
+    
     VisualizerWindow* visualizer;
 
     HRESULT OnStartCapture(IMFAsyncResult* pResult);

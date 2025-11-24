@@ -19,13 +19,12 @@ void ProcessWindow::OnConfirm(wxCommandEvent& event)
     
     Hide();
 
-    // Create and open Visualizer Window
-    VisualizerWindow* visualizer = new VisualizerWindow(NULL);
 
     // start audio capture on selected process
     CLoopbackCapture loopbackCapture;
+    VisualizerWindow* visualizerContainer = new VisualizerWindow(NULL);
 
-    HRESULT hr = loopbackCapture.StartCaptureAsync(data->processID, visualizer);
+    HRESULT hr = loopbackCapture.StartCaptureAsync(data->processID, visualizerContainer);
     if (FAILED(hr))
     {
         wil::unique_hlocal_string message;
@@ -35,22 +34,16 @@ void ProcessWindow::OnConfirm(wxCommandEvent& event)
     }
     else
     {
-		wxGLAttributes display_attributes;
-		display_attributes.PlatformDefaults();
-		visualizer->Show(true);
-        VisualizerCanvas* display_canvas = visualizer->canvas;
 
         while (true) {
             // run until program is terminated
-            FreqData f_data;
-            f_data.color = (0.7f, 0.0f, 0.0f, 1.0f);
-            f_data.stereo_pos = (0.0f);
-            f_data.size = (1.0f);
-            display_canvas->Render(f_data);
+            //FreqData f_data;
+            //f_data.color = Color(0.7f, 0.0f, 0.0f, 1.0f);
+            //f_data.stereo_pos = (0.0f);
+            //f_data.size = (1.0f);
         }
 
         loopbackCapture.StopCaptureAsync();
-  
         Close(true);
     }
 
