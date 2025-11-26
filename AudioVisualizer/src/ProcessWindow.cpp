@@ -42,11 +42,12 @@ void ProcessWindow::OnConfirm(wxCommandEvent& event)
 
         while (true) {
             // run until program is terminated
-            FreqData f_data;
-            f_data.color = (0.7f, 0.0f, 0.0f, 1.0f);
-            f_data.stereo_pos = (0.0f);
-            f_data.size = (1.0f);
-            display_canvas->Render(f_data);
+            //FreqData f_data;
+            //f_data.color = (0.7f, 0.0f, 0.0f, 1.0f);
+            //f_data.stereo_pos = (0.0f);
+            //f_data.size = (1.0f);
+            //display_canvas;
+            display_canvas->Render();
         }
 
         loopbackCapture.StopCaptureAsync();

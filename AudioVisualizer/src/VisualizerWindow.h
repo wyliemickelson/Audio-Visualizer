@@ -5,11 +5,20 @@
 #include <wx/sizer.h>
 #include <wx/display.h>
 
+
+struct Color
+{
+	float r;
+	float g;
+	float b;
+	float a;
+};
+
 struct FreqData 
 {
 	float stereo_pos; //from 0-100, represents left-right pos
 	float size; //size multiplier
-	float color; //rgb
+	Color color; //rgba
 };
 
 /*
@@ -59,10 +68,21 @@ public:
 
 		shader = new Shader("src/shaders/visualizer_bar.vert", "src/shaders/visualizer_bar.frag");
 		shader->Use();
+
 	}
-	void Render(FreqData data);
+	static void UpdateVizualizerData(FreqData* newData, int newLen)
+	{
+		data = newData;
+		len = newLen;
+	}
+
+	static int len;
+	static FreqData* data;
+
+	void Render();
 	Shader* shader = nullptr;
 	wxGLContext* gl_context = nullptr;
+
 };
 
 

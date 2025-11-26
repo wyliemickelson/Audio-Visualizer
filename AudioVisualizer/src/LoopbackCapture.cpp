@@ -346,6 +346,20 @@ HRESULT CLoopbackCapture::OnAudioSampleRequested()
         SpectrogramVisualizer(FramesAvailable, Data);
         //printf("\n\n"); // separate two visualizers
         //VolumeVisualizer(FramesAvailable, Data);
+        FreqData freqDatas[OUTPUT_FREQ_COUNT]{};
+        for (int i = 0; i < OUTPUT_FREQ_COUNT; ++i)
+        {
+            FreqData data{};
+            data.stereo_pos = outputDataDirection[i];
+            float mag = outputDataMagnitude[i];
+            data.size = mag;
+
+            data.color = Color(0.0f, 0.0f, 0.0f, 1.0f);
+            
+
+            freqDatas[i] = data;
+        }
+        VisualizerCanvas::UpdateVizualizerData(freqDatas, OUTPUT_FREQ_COUNT);
 
         //printf("\033[1A\033[1A\033[1A"); // cursor back three lines
 
@@ -442,10 +456,10 @@ void CLoopbackCapture::SpectrogramVisualizer(UINT32 FramesAvailable, BYTE* Data)
 
             //printf("%d", di);
             // print a bunch of spaces to offset the symbol
-            std::cout << std::string(di, ' ');
+            //std::cout << std::string(di, ' ');
 
             // display full block characters with heights based on frequency intensity
-            if (outputDataMagnitude[outputIndex] < 0.125) {
+   /*         if (outputDataMagnitude[outputIndex] < 0.125) {
                 printf(" \n");
             }
             else if (outputDataMagnitude[outputIndex] < 0.25) {
@@ -468,7 +482,7 @@ void CLoopbackCapture::SpectrogramVisualizer(UINT32 FramesAvailable, BYTE* Data)
             }
             else {
                 printf("#\n");
-            }
+            }*/
             ////////////////////////////////////////////////////////////////////////////////////
 
             // this is still important for resetting variables for the next loop!
