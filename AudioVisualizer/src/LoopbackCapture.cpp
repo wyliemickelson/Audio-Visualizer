@@ -340,9 +340,9 @@ HRESULT CLoopbackCapture::OnAudioSampleRequested()
         // Get sample buffer
         RETURN_IF_FAILED(m_AudioCaptureClient->GetBuffer(&Data, &FramesAvailable, &dwCaptureFlags, &u64DevicePosition, &u64QPCPosition));
         // reset cursor to write over previous output
-        printf("\r"); // cursor to beginning of current line
+        //printf("\r"); // cursor to beginning of current line
 
-        printf("\n"); // whitespace
+        //printf("\n"); // whitespace
         SpectrogramVisualizer(FramesAvailable, Data);
         //printf("\n\n"); // separate two visualizers
         //VolumeVisualizer(FramesAvailable, Data);
@@ -418,7 +418,7 @@ void CLoopbackCapture::SpectrogramVisualizer(UINT32 FramesAvailable, BYTE* Data)
     double rightMagnitude;
     int di;
     // give some separation between the different fft iterations
-    std::cout << std::string(10, '\n');
+    //std::cout << std::string(10, '\n');
 
     for (int k = 0; k < FRAMES_PER_BUFFER; k++) {
         
