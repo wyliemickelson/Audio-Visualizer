@@ -354,7 +354,7 @@ HRESULT CLoopbackCapture::OnAudioSampleRequested()
             float mag = outputDataMagnitude[i];
             data.size = mag;
 
-            data.color = Color(0.0f, 0.0f, 0.0f, 1.0f);
+            data.color = Color(0.0f, 0.0f, 0.0f, 0.0f);
             
 
             freqDatas[i] = data;
@@ -416,7 +416,7 @@ void CLoopbackCapture::SpectrogramVisualizer(UINT32 FramesAvailable, BYTE* Data)
     double direction;
     double leftMagnitude;
     double rightMagnitude;
-    int di;
+    //int di;
     // give some separation between the different fft iterations
     //std::cout << std::string(10, '\n');
 
