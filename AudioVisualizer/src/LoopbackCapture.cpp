@@ -452,7 +452,7 @@ void CLoopbackCapture::SpectrogramVisualizer(UINT32 FramesAvailable, BYTE* Data)
             //// ////////////////////////////////////////////////////////////////////////////////////////////
             // This section is just for the sake of printing to the console
             //printf("%f ", freqDirectionSum/offsets);
-            di = int(outputDataDirection[outputIndex] * 100 + 100);
+            //di = int(outputDataDirection[outputIndex] * 100 + 100);
 
             //printf("%d", di);
             // print a bunch of spaces to offset the symbol
@@ -517,7 +517,7 @@ void CLoopbackCapture::SpectrogramVisualizer(UINT32 FramesAvailable, BYTE* Data)
     }
     
     // Display the buffered changes to stdout in the terminal
-    fflush(stdout);
+    //fflush(stdout);
 
     free(fullSamples);
     return;
