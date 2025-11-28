@@ -354,12 +354,9 @@ HRESULT CLoopbackCapture::OnAudioSampleRequested()
             float mag = outputDataMagnitude[i];
             data.size = mag;
 
-            data.color = Color(0.0f, 0.0f, 0.0f, 0.0f);
-            
-
             freqDatas[i] = data;
+			VisualizerCanvas::data[i] = data;
         }
-        VisualizerCanvas::UpdateVizualizerData(freqDatas, OUTPUT_FREQ_COUNT);
 
         //printf("\033[1A\033[1A\033[1A"); // cursor back three lines
 

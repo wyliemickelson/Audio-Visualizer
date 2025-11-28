@@ -31,7 +31,6 @@ struct FreqData
 {
 	float stereo_pos; //from 0-100, represents left-right pos
 	float size; //size multiplier
-	Color color; //rgba
 };
 
 /*
@@ -82,11 +81,6 @@ public:
 		shader = new Shader("src/shaders/visualizer_bar.vert", "src/shaders/visualizer_bar.frag");
 		shader->Use();
 
-	}
-	static void UpdateVizualizerData(FreqData* newData, int newLen)
-	{
-		data = newData;
-		len = newLen;
 	}
 
 	static int len;

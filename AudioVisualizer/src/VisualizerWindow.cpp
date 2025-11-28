@@ -3,8 +3,8 @@
 #include <wx/datetime.h>
 #include <cmath>
 
-int VisualizerCanvas::len = 0;
-FreqData* VisualizerCanvas::data = nullptr;
+int VisualizerCanvas::len = 5;
+FreqData* VisualizerCanvas::data = new FreqData[5];
 
 
 /*
@@ -34,26 +34,26 @@ void VisualizerCanvas::Render()
 		FreqData bucket = data[i];
 		float transformation_mat[4][4] =
 		{
-			bucket.size, 0.0f, 0.0f, bucket.stereo_pos,
-			0.0f, 1.0f, bucket.size, 0.0f,
+			std::min(bucket.size, 0.5f), 0.0f, 0.0f, bucket.stereo_pos,
+			0.0f, 1.0f, std::min(bucket.size, (0.2f)), -((1.0f / (float)len) * i) + ((0.5f) / (float)len),
 			0.0f, 0.0f, 1.0f, 0.0f,
 			0.0 ,0.0f, 0.0f, 1.0f
 		};
 
 		shader->Use();
-		e = glGetError();
 		//set transformation matrix uniform
 		shader->setMat4("transform", transformation_mat);
-		e = glGetError();
 
-		float color[4] = { bucket.color.r, bucket.color.g, bucket.color.b, bucket.color.a };
+		float color[4];
+		color[0] = 1.0f;
+		color[1] = 1.0f;
+		color[2] = 1.0f;
+		color[3] = 1.0f;
 
 		//set color uniform
 		shader->setVec4("color", color);
-		e = glGetError();
 
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-		e = glGetError();
 		int g = 0;
 	}
 	SwapBuffers();

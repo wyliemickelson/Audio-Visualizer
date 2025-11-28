@@ -19,10 +19,6 @@ class App : public wxApp
 
 bool App::OnInit()
 {
-	// set console to the one that started the .exe
-	AllocConsole();
-	freopen("CONOUT$", "w", stdout);
-
 	ProcessWindow* process_selection = new ProcessWindow(NULL);
 	process_selection->Show(true);
 
