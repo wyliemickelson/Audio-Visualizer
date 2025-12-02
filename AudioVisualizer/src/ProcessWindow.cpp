@@ -1,6 +1,7 @@
 #include <ProcessWindow.h>
 #include <ClientData.h>
 #include <VisualizerWindow.h>
+#include <CustomizationWindow.h>
 #include <LoopbackCapture.h>
 
 void ProcessWindow::OnExit(wxCommandEvent& event)
@@ -55,6 +56,13 @@ void ProcessWindow::OnConfirm(wxCommandEvent& event)
         Close(true);
     }
 
+}
+
+void ProcessWindow::OnCustomize(wxCommandEvent& event)
+{
+    //create customization window
+    CustomizationWindow* window = new CustomizationWindow();
+    window->Show(true);
 }
 
 wxListBox* ProcessWindow::getProcessesList()

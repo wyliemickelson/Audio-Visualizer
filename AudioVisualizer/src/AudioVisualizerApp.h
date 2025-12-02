@@ -11,20 +11,21 @@
 #include <wx/xrc/xmlres.h>
 #include <wx/intl.h>
 #include <wx/string.h>
-#include <wx/frame.h>
+#include <wx/stattext.h>
 #include <wx/gdicmn.h>
 #include <wx/font.h>
 #include <wx/colour.h>
 #include <wx/settings.h>
+#include <wx/slider.h>
+#include <wx/textctrl.h>
 #include <wx/sizer.h>
-#include <wx/stattext.h>
-#include <wx/listbox.h>
 #include <wx/button.h>
 #include <wx/bitmap.h>
 #include <wx/image.h>
 #include <wx/icon.h>
-#include <wx/checkbox.h>
 #include <wx/panel.h>
+#include <wx/frame.h>
+#include <wx/listbox.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -36,10 +37,36 @@ class Options : public wxFrame
 	private:
 
 	protected:
+		wxPanel* m_panel2;
+		wxStaticText* m_staticText31;
+		wxStaticText* m_staticText42;
+		wxSlider* size_x_slider;
+		wxTextCtrl* size_x_text;
+		wxStaticText* m_staticText411;
+		wxSlider* size_y_slider;
+		wxTextCtrl* size_y_text;
+		wxStaticText* m_staticText3;
+		wxStaticText* m_staticText4;
+		wxSlider* pos_x_slider;
+		wxTextCtrl* pos_x_text;
+		wxStaticText* m_staticText41;
+		wxSlider* pos_y_slider;
+		wxTextCtrl* pos_y_text;
+		wxButton* apply;
+		wxButton* m_button4;
+
+		// Virtual event handlers, override them in your derived class
+		virtual void OnSL_Size( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnSize( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnSL_Pos( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnPos( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnApply( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnExit( wxCommandEvent& event ) { event.Skip(); }
+
 
 	public:
 
-		Options( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 350,300 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
+		Options( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Customization"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 235,300 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
 
 		~Options();
 
@@ -58,11 +85,12 @@ class ProcessSelection : public wxFrame
 		wxListBox* processes_list;
 		wxButton* confirm;
 		wxButton* cancel;
-		wxCheckBox* remember_checkbox;
+		wxButton* customize;
 
 		// Virtual event handlers, override them in your derived class
 		virtual void OnConfirm( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnExit( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnCustomize( wxCommandEvent& event ) { event.Skip(); }
 
 
 	public:

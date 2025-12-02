@@ -3,6 +3,15 @@
 #include <wx/datetime.h>
 #include <cmath>
 
+void VisualizerWindow::OnCustomize(wxCommandEvent& event)
+{
+
+}
+void VisualizerWindow::OnClose(wxCloseEvent& event)
+{
+	Close(true);
+}
+
 int VisualizerCanvas::len = 5;
 FreqData* VisualizerCanvas::data = new FreqData[5];
 

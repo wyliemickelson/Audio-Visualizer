@@ -144,6 +144,7 @@
     <ClInclude Include="src\AudioVisualizerApp.h" />
     <ClInclude Include="src\ClientData.h" />
     <ClInclude Include="src\Common.h" />
+    <ClInclude Include="src\CustomizationWindow.h" />
     <ClInclude Include="src\LoopbackCapture.h" />
     <ClInclude Include="src\ProcessHandling.h" />
     <ClInclude Include="src\ProcessWindow.h" />
@@ -167,6 +168,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AudioVisualizerApp.cpp" />
+    <ClCompile Include="src\CustomizationWindow.cpp" />
     <ClCompile Include="src\gl.c" />
     <ClCompile Include="src\LoopbackCapture.cpp" />
     <ClCompile Include="src\MainApp.cpp" />

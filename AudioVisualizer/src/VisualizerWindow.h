@@ -4,6 +4,7 @@
 #include <wx/frame.h>
 #include <wx/sizer.h>
 #include <wx/display.h>
+#include <wx/menu.h>
 
 
 struct Color
@@ -31,6 +32,14 @@ struct FreqData
 {
 	float stereo_pos; //from 0-100, represents left-right pos
 	float size; //size multiplier
+};
+
+struct VisualizerPosition
+{
+	int x;
+	int y;
+	int size_x;
+	int size_y;
 };
 
 /*
@@ -86,6 +95,8 @@ public:
 	static int len;
 	static FreqData* data;
 
+	static VisualizerPosition position;
+
 	void Render();
 	Shader* shader = nullptr;
 	wxGLContext* gl_context = nullptr;
@@ -96,9 +107,13 @@ public:
 class VisualizerWindow : public wxFrame
 {
 public:
+	void OnCustomize(wxCommandEvent& event);
+	void OnClose(wxCloseEvent& event);
+	VisualizerCanvas *canvas;
+
 	VisualizerWindow(wxWindow* parent, long style = wxSTAY_ON_TOP) : wxFrame(parent, wxID_ANY, "", wxDefaultPosition, wxDefaultSize, style, wxFrameNameStr)
 	{
-		wxDisplay *display = new wxDisplay();
+		wxDisplay* display = new wxDisplay();
 		wxSize size = (display->GetClientArea()).GetSize();
 		size.y = 50;
 		SetSize(size);
@@ -106,5 +121,4 @@ public:
 		display_attributes.PlatformDefaults().RGBA().MinRGBA(8, 8, 8, 8).DoubleBuffer().Depth(24).EndList();
 		this->canvas = new VisualizerCanvas(this, display_attributes, size);
 	}
-	VisualizerCanvas *canvas;
 };

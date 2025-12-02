@@ -9,4 +9,5 @@ public:
 protected:
 	void OnExit(wxCommandEvent& event) override;
 	void OnConfirm(wxCommandEvent& event) override;
+	void OnCustomize(wxCommandEvent& event) override;
 };
