@@ -45,13 +45,21 @@ void ProcessWindow::OnConfirm(wxCommandEvent& event)
 		wxGLAttributes display_attributes;
 		display_attributes.PlatformDefaults();
 
+		//set visualizer window position from customization options
 		int x = pos_x_slider->GetValue();
 		int y = pos_y_slider->GetValue();
 		visualizer->SetPosition(wxPoint(x, y));
+
+		//move and display options window on top of visualizer
+		OptionsWindow* options = new OptionsWindow();
+		options->SetPosition(wxPoint(x, y));
+
+		//resize visualizer
 		x = size_x_slider->GetValue();
 		y = size_y_slider->GetValue();
 		visualizer->SetSize(x, y);
 		visualizer->Show(true);
+		options->Show(true);
 
         VisualizerCanvas* display_canvas = visualizer->canvas;
 
@@ -64,6 +72,7 @@ void ProcessWindow::OnConfirm(wxCommandEvent& event)
             //f_data.size = (1.0f);
             //display_canvas;
             display_canvas->Render();
+			wxYield();
         }
 
         loopbackCapture.StopCaptureAsync();

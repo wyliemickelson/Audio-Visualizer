@@ -14,12 +14,20 @@ void VisualizerWindow::OnSize(wxSizeEvent& event)
 }
 void VisualizerWindow::OnClose(wxCloseEvent& event)
 {
+	canvas->Close(true);
 	Close(true);
 }
 
 int VisualizerCanvas::len = 5;
 FreqData* VisualizerCanvas::data = new FreqData[5];
-
+const Color colors[5] =
+{
+	Color(0.8f, 0.2f, 0.2f, 1.0f),
+	Color(1.0f, 1.0f, 0.0f, 1.0f),
+	Color(0.2f, 0.4f, 0.4f, 1.0f),
+	Color(0.0f, 1.0f, 0.2f, 1.0f),
+	Color(0.0f, 1.0f, 0.0f, 1.0f)
+};
 
 /*
 * Enter processed audio data, draw using OpenGL
@@ -48,7 +56,7 @@ void VisualizerCanvas::Render()
 		float transformation_mat[4][4] =
 		{
 			std::min(bucket.size, 0.5f), 0.0f, 0.0f, bucket.stereo_pos,
-			0.0f, 1.0f, std::min(bucket.size, (0.2f)), -((1.0f / (float)len) * i) + ((0.5f) / (float)len),
+			0.0f, 1.0f, (1.0f)/ ((float)len), (((2.0f) / (float)len) * (i)) - ((4.0f / (float)len)),
 			0.0f, 0.0f, 1.0f, 0.0f,
 			0.0 ,0.0f, 0.0f, 1.0f
 		};
@@ -57,14 +65,11 @@ void VisualizerCanvas::Render()
 		//set transformation matrix uniform
 		shader->setMat4("transform", transformation_mat);
 
-		float color[4];
-		color[0] = 1.0f;
-		color[1] = 1.0f;
-		color[2] = 1.0f;
-		color[3] = 1.0f;
+		Color color = colors[i % 5];
+
 
 		//set color uniform
-		shader->setVec4("color", color);
+		shader->setVec4("color", &color.r);
 
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		int g = 0;

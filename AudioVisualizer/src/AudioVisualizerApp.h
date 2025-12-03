@@ -30,9 +30,9 @@
 ///////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
-/// Class Options
+/// Class Customization
 ///////////////////////////////////////////////////////////////////////////////
-class Options : public wxFrame
+class Customization : public wxFrame
 {
 	private:
 
@@ -66,9 +66,9 @@ class Options : public wxFrame
 
 	public:
 
-		Options( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Customization"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 235,300 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
+		Customization( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Customization"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 235,300 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
 
-		~Options();
+		~Customization();
 
 };
 
@@ -117,6 +117,31 @@ class ProcessSelection : public wxFrame
 		ProcessSelection( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Directional Audio Visualizer"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 575,330 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
 
 		~ProcessSelection();
+
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class Options
+///////////////////////////////////////////////////////////////////////////////
+class Options : public wxFrame
+{
+	private:
+
+	protected:
+		wxPanel* m_panel4;
+		wxButton* customize;
+		wxButton* exit;
+
+		// Virtual event handlers, override them in your derived class
+		virtual void OnCustomize( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnQuit( wxCommandEvent& event ) { event.Skip(); }
+
+
+	public:
+
+		Options( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Visualizer"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 199,77 ), long style = 0|wxTAB_TRAVERSAL );
+
+		~Options();
 
 };
 

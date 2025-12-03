@@ -1,5 +1,6 @@
 #pragma once
 #include <AudioVisualizerApp.h>
+#include <OptionsWindow.h>
 #include <wx/display.h>
 
 class ProcessWindow : public ProcessSelection
@@ -27,6 +28,8 @@ public:
 		//create preview window
 		preview_window = new wxFrame(NULL, wxID_ANY, "Preview", wxPoint(0,0), wxSize(screen_size.x, 50), wxFRAME_NO_TASKBAR, wxFrameNameStr);
 		preview_window->Show(true);
+		//create options window
+		options_window = new OptionsWindow();
 	}
 	wxListBox* getProcessesList();
 private:
@@ -43,4 +46,5 @@ private:
 
 	void SetPreviewPos();
 	wxFrame* preview_window;
+	OptionsWindow* options_window;
 };
