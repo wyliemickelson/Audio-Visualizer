@@ -22,11 +22,11 @@ int VisualizerCanvas::len = 5;
 FreqData* VisualizerCanvas::data = new FreqData[5];
 const Color colors[5] =
 {
-	Color(0.8f, 0.2f, 0.2f, 1.0f),
-	Color(1.0f, 1.0f, 0.0f, 1.0f),
-	Color(0.2f, 0.4f, 0.4f, 1.0f),
-	Color(0.0f, 1.0f, 0.2f, 1.0f),
-	Color(0.0f, 1.0f, 0.0f, 1.0f)
+	Color(0.6706f, 0.2784f, 0.7373f, 1.0f), 
+	Color(0.7490f, 0.4549f, 0.6706f, 1.0f),
+	Color(0.8275f, 0.6039f, 0.5804f, 1.0f),
+	Color(0.9137f, 0.7373f, 0.4471f, 1.0f),
+	Color(1.0f, 0.8706f, 0.1255f, 1.0f)
 };
 
 /*
