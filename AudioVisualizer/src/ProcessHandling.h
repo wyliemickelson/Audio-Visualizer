@@ -9,5 +9,7 @@ struct process_info
 	char name[MAX_PATH];
 };
 
-std::vector<process_info> getCurrentProcesses(IMMDevice* device);
+std::vector<process_info> getCurrentAudioProcesses(IMMDevice* device);
+void printProcessInfo(process_info* process);
 IMMDevice* getDefaultAudioDevice();
+std::vector<process_info> GetFullProcessList();

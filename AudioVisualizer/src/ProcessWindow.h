@@ -2,6 +2,15 @@
 #include <AudioVisualizerApp.h>
 #include <OptionsWindow.h>
 #include <wx/display.h>
+#include <VisualizerWindow.h>
+#include <vector>
+#include <wx/wx.h>
+#include <wx/xrc/xmlres.h>
+#include <wx/xrc/xmlreshandler.h>
+#include <audiovisualizerapp.h>
+#include <processwindow.h>
+#include <processhandling.h>
+#include <clientdata.h>
 
 class ProcessWindow : public ProcessSelection
 {
@@ -32,7 +41,9 @@ public:
 		options_window = new OptionsWindow();
 	}
 	wxListBox* getProcessesList();
+	void populateProcessList();
 private:
+	void OnRefresh(wxCommandEvent& event) override;
 	void OnExit(wxCommandEvent& event) override;
 	void OnConfirm(wxCommandEvent& event) override;
 	void OnReset(wxCommandEvent& event) override;

@@ -24,27 +24,10 @@ bool App::OnInit()
 
 	//populate process list with information
 	wxWindowList p_children = process_selection->GetChildren();
-	wxListBox *process_list = process_selection->getProcessesList();
-	populateProcessList(process_list);
+	//wxListBox *process_list = process_selection->getProcessesList();
+	process_selection->populateProcessList();
 
 	return true;
-}
-
-void populateProcessList(wxListBox *process_list)
-{
-	if (process_list)
-	{
-		std::vector<process_info> processes_info = getCurrentProcesses(getDefaultAudioDevice());
-		int len = processes_info.size();
-
-		for (int i = 0; i < len; ++i)
-		{
-			process_info process_info = processes_info.at(i);
-
-			process_list->Append(process_info.name, new ClientData(process_info.name, process_info.id));
-			
-		}
-	}
 }
 
 wxIMPLEMENT_APP(App);
