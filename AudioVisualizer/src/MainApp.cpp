@@ -34,7 +34,7 @@ void populateProcessList(wxListBox *process_list)
 {
 	if (process_list)
 	{
-		std::vector<process_info> processes_info = getCurrentProcesses(getDefaultAudioDevice());
+		std::vector<process_info> processes_info = getCurrentAudioProcesses(getDefaultAudioDevice());
 		int len = processes_info.size();
 
 		for (int i = 0; i < len; ++i)

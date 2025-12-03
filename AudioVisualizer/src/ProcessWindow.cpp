@@ -16,12 +16,20 @@ void ProcessWindow::OnExit(wxCommandEvent& event)
 
 void ProcessWindow::OnConfirm(wxCommandEvent& event)
 {
-	preview_window->Close(true);
     // get selected processID after confirm
 	wxListBox* listBox = wxDynamicCast(this->getProcessesList(), wxListBox);
 	int selected = listBox->GetSelection();
+
+	if (selected == wxNOT_FOUND) {
+		wxString errorMessage = "An error occurred: Please select a process to visualize.";
+		wxMessageBox(errorMessage, "Error", wxOK | wxICON_ERROR, this);
+		return;
+	}
+
+	preview_window->Close(true);
 	ClientData* data = NULL;
 	data = static_cast<ClientData*>(listBox->GetClientObject(selected));
+
 	std::cout << std::endl << "Selected index: " << selected << ", Name: " << data->name << ", ProcessID: " << data->processID << std::endl;
     
     Hide();
@@ -64,6 +72,7 @@ void ProcessWindow::OnConfirm(wxCommandEvent& event)
             //f_data.size = (1.0f);
             //display_canvas;
             display_canvas->Render();
+			wxYield();
         }
 
         loopbackCapture.StopCaptureAsync();
