@@ -85,17 +85,36 @@ class ProcessSelection : public wxFrame
 		wxListBox* processes_list;
 		wxButton* confirm;
 		wxButton* cancel;
-		wxButton* customize;
+		wxStaticText* m_staticText3;
+		wxStaticText* m_staticText4;
+		wxSlider* pos_x_slider;
+		wxTextCtrl* pos_x_text;
+		wxStaticText* m_staticText41;
+		wxSlider* pos_y_slider;
+		wxTextCtrl* pos_y_text;
+		wxPanel* m_panel3;
+		wxStaticText* m_staticText31;
+		wxStaticText* m_staticText42;
+		wxSlider* size_x_slider;
+		wxTextCtrl* size_x_text;
+		wxStaticText* m_staticText411;
+		wxSlider* size_y_slider;
+		wxTextCtrl* size_y_text;
+		wxButton* reset;
 
 		// Virtual event handlers, override them in your derived class
 		virtual void OnConfirm( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnExit( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnCustomize( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnSL_Pos( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnPos( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnSL_Size( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnSize( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnReset( wxCommandEvent& event ) { event.Skip(); }
 
 
 	public:
 
-		ProcessSelection( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Directional Audio Visualizer"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 350,330 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
+		ProcessSelection( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Directional Audio Visualizer"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 575,330 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
 
 		~ProcessSelection();
 

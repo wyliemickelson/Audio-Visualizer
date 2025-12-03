@@ -3,9 +3,14 @@
 #include <wx/datetime.h>
 #include <cmath>
 
-void VisualizerWindow::OnCustomize(wxCommandEvent& event)
+void VisualizerCanvas::OnSize(wxSizeEvent& event)
 {
-
+	wxSize size = GetSize();
+	glViewport(0, 0, size.x, size.y);
+}
+void VisualizerWindow::OnSize(wxSizeEvent& event)
+{
+	canvas->SetSize(GetSize());
 }
 void VisualizerWindow::OnClose(wxCloseEvent& event)
 {
@@ -38,7 +43,6 @@ void VisualizerCanvas::Render()
 	//iterate each bucket and draw as separate diamond
 	for (int i = 0; i < len; ++i)
 	{
-		int e = 0;
 		//translate and scale according to FreqData
 		FreqData bucket = data[i];
 		float transformation_mat[4][4] =

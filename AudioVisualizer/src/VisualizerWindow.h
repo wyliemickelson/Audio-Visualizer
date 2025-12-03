@@ -48,8 +48,13 @@ struct VisualizerPosition
 class VisualizerCanvas: public wxGLCanvas
 {
 public:
+	void OnSize(wxSizeEvent& event);
+
 	VisualizerCanvas(wxWindow* parent, const wxGLAttributes display_attribs, wxSize size) : wxGLCanvas(parent, display_attribs, wxID_ANY, wxDefaultPosition, size, 0, wxGLCanvasName, wxNullPalette)
 	{
+		//bind resize event to scale opengl viewport
+		Bind(wxEVT_SIZE, &VisualizerCanvas::OnSize, this);
+
 		//initialize OpenGL context to canvas
 		wxGLContextAttrs glAttributes;
 
@@ -98,6 +103,7 @@ public:
 	static VisualizerPosition position;
 
 	void Render();
+	
 	Shader* shader = nullptr;
 	wxGLContext* gl_context = nullptr;
 
@@ -107,7 +113,7 @@ public:
 class VisualizerWindow : public wxFrame
 {
 public:
-	void OnCustomize(wxCommandEvent& event);
+	void OnSize(wxSizeEvent& event);
 	void OnClose(wxCloseEvent& event);
 	VisualizerCanvas *canvas;
 
@@ -120,5 +126,7 @@ public:
 		wxGLAttributes display_attributes;
 		display_attributes.PlatformDefaults().RGBA().MinRGBA(8, 8, 8, 8).DoubleBuffer().Depth(24).EndList();
 		this->canvas = new VisualizerCanvas(this, display_attributes, size);
+
+		Bind(wxEVT_SIZE, &VisualizerWindow::OnSize, this);
 	}
 };

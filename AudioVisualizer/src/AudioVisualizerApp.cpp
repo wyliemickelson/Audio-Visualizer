@@ -159,6 +159,9 @@ ProcessSelection::ProcessSelection( wxWindow* parent, wxWindowID id, const wxStr
 	m_panel1 = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxSize( -1,-1 ), wxTAB_TRAVERSAL );
 	m_panel1->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_MENU ) );
 
+	wxBoxSizer* bSizer38;
+	bSizer38 = new wxBoxSizer( wxHORIZONTAL );
+
 	wxBoxSizer* bSizer3;
 	bSizer3 = new wxBoxSizer( wxVERTICAL );
 
@@ -174,22 +177,131 @@ ProcessSelection::ProcessSelection( wxWindow* parent, wxWindowID id, const wxStr
 	wxBoxSizer* confirmation;
 	confirmation = new wxBoxSizer( wxHORIZONTAL );
 
-	confirm = new wxButton( m_panel1, wxID_ANY, _("Ok"), wxDefaultPosition, wxSize( -1,50 ), 0 );
+	confirm = new wxButton( m_panel1, wxID_ANY, _("Ok"), wxDefaultPosition, wxSize( 150,50 ), 0 );
 	confirmation->Add( confirm, 0, wxALL, 5 );
 
-	cancel = new wxButton( m_panel1, wxID_ANY, _("Cancel"), wxDefaultPosition, wxSize( -1,50 ), 0 );
+	cancel = new wxButton( m_panel1, wxID_ANY, _("Cancel"), wxDefaultPosition, wxSize( 150,50 ), 0 );
 	confirmation->Add( cancel, 0, wxALL, 5 );
-
-	customize = new wxButton( m_panel1, wxID_ANY, _("Customize"), wxPoint( -1,-1 ), wxSize( -1,50 ), 0 );
-	confirmation->Add( customize, 0, wxALL, 5 );
 
 
 	bSizer3->Add( confirmation, 1, wxEXPAND, 5 );
 
 
-	m_panel1->SetSizer( bSizer3 );
+	bSizer38->Add( bSizer3, 1, wxEXPAND, 5 );
+
+	wxBoxSizer* bSizer14;
+	bSizer14 = new wxBoxSizer( wxVERTICAL );
+
+	wxBoxSizer* bSizer5;
+	bSizer5 = new wxBoxSizer( wxVERTICAL );
+
+	m_staticText3 = new wxStaticText( m_panel1, wxID_ANY, _("Position:"), wxPoint( -1,-1 ), wxSize( -1,-1 ), 0 );
+	m_staticText3->Wrap( -1 );
+	m_staticText3->SetFont( wxFont( 10, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, true, wxT("Arial") ) );
+
+	bSizer5->Add( m_staticText3, 0, wxALL, 5 );
+
+	wxBoxSizer* bSizer6;
+	bSizer6 = new wxBoxSizer( wxHORIZONTAL );
+
+	m_staticText4 = new wxStaticText( m_panel1, wxID_ANY, _("X:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText4->Wrap( -1 );
+	bSizer6->Add( m_staticText4, 0, wxALL, 5 );
+
+	pos_x_slider = new wxSlider( m_panel1, wxID_ANY, 50, 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL );
+	bSizer6->Add( pos_x_slider, 0, wxALL, 5 );
+
+	pos_x_text = new wxTextCtrl( m_panel1, wxID_ANY, _("0"), wxDefaultPosition, wxSize( 75,-1 ), 0 );
+	bSizer6->Add( pos_x_text, 0, wxALL, 5 );
+
+
+	bSizer5->Add( bSizer6, 1, wxEXPAND, 5 );
+
+	wxBoxSizer* bSizer61;
+	bSizer61 = new wxBoxSizer( wxHORIZONTAL );
+
+	m_staticText41 = new wxStaticText( m_panel1, wxID_ANY, _("Y:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText41->Wrap( -1 );
+	bSizer61->Add( m_staticText41, 0, wxALL, 5 );
+
+	pos_y_slider = new wxSlider( m_panel1, wxID_ANY, 50, 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL );
+	bSizer61->Add( pos_y_slider, 0, wxALL, 5 );
+
+	pos_y_text = new wxTextCtrl( m_panel1, wxID_ANY, _("0"), wxDefaultPosition, wxSize( 75,-1 ), 0 );
+	bSizer61->Add( pos_y_text, 0, wxALL, 5 );
+
+
+	bSizer5->Add( bSizer61, 1, wxEXPAND, 5 );
+
+
+	bSizer14->Add( bSizer5, 1, wxEXPAND, 5 );
+
+	m_panel3 = new wxPanel( m_panel1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxBoxSizer* bSizer51;
+	bSizer51 = new wxBoxSizer( wxVERTICAL );
+
+	m_staticText31 = new wxStaticText( m_panel3, wxID_ANY, _("Size:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText31->Wrap( -1 );
+	m_staticText31->SetFont( wxFont( 10, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, true, wxT("Arial") ) );
+
+	bSizer51->Add( m_staticText31, 0, wxALL, 5 );
+
+	wxBoxSizer* bSizer62;
+	bSizer62 = new wxBoxSizer( wxHORIZONTAL );
+
+	m_staticText42 = new wxStaticText( m_panel3, wxID_ANY, _("X:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText42->Wrap( -1 );
+	bSizer62->Add( m_staticText42, 0, wxALL, 5 );
+
+	size_x_slider = new wxSlider( m_panel3, wxID_ANY, 50, 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL );
+	bSizer62->Add( size_x_slider, 0, wxALL, 5 );
+
+	size_x_text = new wxTextCtrl( m_panel3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 75,-1 ), 0 );
+	bSizer62->Add( size_x_text, 0, wxALL, 5 );
+
+
+	bSizer51->Add( bSizer62, 1, wxEXPAND, 5 );
+
+	wxBoxSizer* bSizer611;
+	bSizer611 = new wxBoxSizer( wxHORIZONTAL );
+
+	m_staticText411 = new wxStaticText( m_panel3, wxID_ANY, _("Y:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText411->Wrap( -1 );
+	bSizer611->Add( m_staticText411, 0, wxALL, 5 );
+
+	size_y_slider = new wxSlider( m_panel3, wxID_ANY, 50, 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL );
+	bSizer611->Add( size_y_slider, 0, wxALL, 5 );
+
+	size_y_text = new wxTextCtrl( m_panel3, wxID_ANY, _("50"), wxDefaultPosition, wxSize( 75,-1 ), 0 );
+	bSizer611->Add( size_y_text, 0, wxALL, 5 );
+
+
+	bSizer51->Add( bSizer611, 1, wxEXPAND, 5 );
+
+
+	m_panel3->SetSizer( bSizer51 );
+	m_panel3->Layout();
+	bSizer51->Fit( m_panel3 );
+	bSizer14->Add( m_panel3, 1, wxEXPAND | wxALL, 5 );
+
+	wxBoxSizer* bSizer20;
+	bSizer20 = new wxBoxSizer( wxHORIZONTAL );
+
+	reset = new wxButton( m_panel1, wxID_ANY, _("Reset"), wxPoint( -1,-1 ), wxSize( 115,50 ), 0 );
+
+	reset->SetBitmapPosition( wxRIGHT );
+	bSizer20->Add( reset, 0, wxALL, 5 );
+
+
+	bSizer14->Add( bSizer20, 1, wxEXPAND, 5 );
+
+
+	bSizer38->Add( bSizer14, 1, wxEXPAND, 5 );
+
+
+	m_panel1->SetSizer( bSizer38 );
 	m_panel1->Layout();
-	bSizer3->Fit( m_panel1 );
+	bSizer38->Fit( m_panel1 );
 	options_sizer->Add( m_panel1, 1, wxEXPAND | wxALL, 5 );
 
 
@@ -201,7 +313,15 @@ ProcessSelection::ProcessSelection( wxWindow* parent, wxWindowID id, const wxStr
 	// Connect Events
 	confirm->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProcessSelection::OnConfirm ), NULL, this );
 	cancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProcessSelection::OnExit ), NULL, this );
-	customize->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProcessSelection::OnCustomize ), NULL, this );
+	pos_x_slider->Connect( wxEVT_SLIDER, wxCommandEventHandler( ProcessSelection::OnSL_Pos ), NULL, this );
+	pos_x_text->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ProcessSelection::OnPos ), NULL, this );
+	pos_y_slider->Connect( wxEVT_SLIDER, wxCommandEventHandler( ProcessSelection::OnSL_Pos ), NULL, this );
+	pos_y_text->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ProcessSelection::OnPos ), NULL, this );
+	size_x_slider->Connect( wxEVT_SLIDER, wxCommandEventHandler( ProcessSelection::OnSL_Size ), NULL, this );
+	size_x_text->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ProcessSelection::OnSize ), NULL, this );
+	size_y_slider->Connect( wxEVT_SLIDER, wxCommandEventHandler( ProcessSelection::OnSL_Size ), NULL, this );
+	size_y_text->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ProcessSelection::OnSize ), NULL, this );
+	reset->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProcessSelection::OnReset ), NULL, this );
 }
 
 ProcessSelection::~ProcessSelection()
