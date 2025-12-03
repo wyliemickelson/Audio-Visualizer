@@ -22,7 +22,9 @@
 #define SPECTRO_FREQ_START 20  // Lower bound of the displayed spectrogram (Hz)
 #define SPECTRO_FREQ_END 20000 // Upper bound of the displayed spectrogram (Hz)
 
-#define OUTPUT_FREQ_COUNT 5 // its currently not good at distinguishing separate low frequency bands, particularly below 5
+#define OUTPUT_FREQ_COUNT 6 // its currently not good at distinguishing separate low frequency bands, particularly below 5
+#define PROCESSING_FREQ_CLIP 1 // the super low frequencies arent exactly helpful - clip off the bottom few bins and combine them with the first index
+#define PROCESSING_FREQ_COUNT OUTPUT_FREQ_COUNT + PROCESSING_FREQ_CLIP
 #define ROLLING_AVG_ITERATIONS 32
 
 HRESULT CLoopbackCapture::SetDeviceStateErrorIfFailed(HRESULT hr)
@@ -397,7 +399,6 @@ void CLoopbackCapture::SpectrogramVisualizer(UINT32 FramesAvailable, BYTE* Data)
     fftw_execute(fft_data_right->p);
 
     // offsets determines the frequency range between each output index
-    int offsets =2;
     int freqDivision = 0;
 
     // starting with a naive approach of just averaging the values per bin 
@@ -413,20 +414,22 @@ void CLoopbackCapture::SpectrogramVisualizer(UINT32 FramesAvailable, BYTE* Data)
     double direction;
     double leftMagnitude;
     double rightMagnitude;
+
+    double alpha = log2(SAMPLE_RATE /2) / (PROCESSING_FREQ_COUNT);
+    int offsets = pow(2.0f, alpha *  (PROCESSING_FREQ_CLIP));
     //int di;
-    // give some separation between the different fft iterations
-    //std::cout << std::string(10, '\n');
+ 
 
     for (int k = 0; k < FRAMES_PER_BUFFER; k++) {
         
-        if (freqDivision == offsets || k == FRAMES_PER_BUFFER-1) {
+        if (freqDivision >= offsets || k == FRAMES_PER_BUFFER-1) {
             if (outputIndex >= OUTPUT_FREQ_COUNT) {
                 break;
             }
 
 
-            bufferDataDirection[bufferIndex][outputIndex] = freqDirectionSum / offsets;
-            bufferDataMagnitude[bufferIndex][outputIndex] = freqMagnitudeSum / offsets;
+            bufferDataDirection[bufferIndex][outputIndex] = freqDirectionSum / (offsets/alpha);
+            bufferDataMagnitude[bufferIndex][outputIndex] = freqMagnitudeSum / (offsets/alpha);
 
             // average the sums and store them in the output arrays
             double rollingSumDirection = 0;
@@ -446,51 +449,13 @@ void CLoopbackCapture::SpectrogramVisualizer(UINT32 FramesAvailable, BYTE* Data)
 
             bufferIndex = (bufferIndex + 1)% ROLLING_AVG_ITERATIONS;
 
-            //// ////////////////////////////////////////////////////////////////////////////////////////////
-            // This section is just for the sake of printing to the console
-            //printf("%f ", freqDirectionSum/offsets);
-            //di = int(outputDataDirection[outputIndex] * 100 + 100);
-
-            //printf("%d", di);
-            // print a bunch of spaces to offset the symbol
-            //std::cout << std::string(di, ' ');
-
-            // display full block characters with heights based on frequency intensity
-   /*         if (outputDataMagnitude[outputIndex] < 0.125) {
-                printf(" \n");
-            }
-            else if (outputDataMagnitude[outputIndex] < 0.25) {
-                printf(" \n");
-            }
-            else if (outputDataMagnitude[outputIndex] < 0.375) {
-                printf("-\n");
-            }
-            else if (outputDataMagnitude[outputIndex] < 0.5) {
-                printf("=\n");
-            }
-            else if (outputDataMagnitude[outputIndex] < 0.625) {
-                printf("o\n");
-            }
-            else if (outputDataMagnitude[outputIndex] < 0.75) {
-                printf("O\n");
-            }
-            else if (outputDataMagnitude[outputIndex] < 0.875) {
-                printf("0\n");
-            }
-            else {
-                printf("#\n");
-            }*/
-            ////////////////////////////////////////////////////////////////////////////////////
-
-            // this is still important for resetting variables for the next loop!
-
-            freqDivision = 0;
+            //freqDivision = 0;
             freqDirectionSum = 0;
             freqMagnitudeSum = 0;
             // alter offsets exponentially to align the frequency ranges with human perception
             //TODO: This function runs into issues when the count gets too big. instead just add to the offsets or something
-            offsets = FRAMES_PER_BUFFER * (std::pow(1.3, outputIndex - OUTPUT_FREQ_COUNT));
             outputIndex++;
+            offsets = pow(2, alpha*float (outputIndex+PROCESSING_FREQ_CLIP));
         }
 
         // calculate the magnitude and direction for each frequency bin
