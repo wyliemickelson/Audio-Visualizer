@@ -12,6 +12,8 @@ public:
 		wxSize screen_size = (display->GetClientArea()).GetSize();
 
 		pos_x_slider->SetMax(screen_size.x);
+		pos_x_slider->SetValue(0);
+		pos_y_slider->SetValue(0);
 		pos_y_slider->SetMax(screen_size.y);
 
 		size_x_slider->SetMax(screen_size.x);

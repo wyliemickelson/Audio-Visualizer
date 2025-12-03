@@ -211,7 +211,7 @@ ProcessSelection::ProcessSelection( wxWindow* parent, wxWindowID id, const wxStr
 	pos_x_slider = new wxSlider( m_panel1, wxID_ANY, 50, 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL );
 	bSizer6->Add( pos_x_slider, 0, wxALL, 5 );
 
-	pos_x_text = new wxTextCtrl( m_panel1, wxID_ANY, _("0"), wxDefaultPosition, wxSize( 75,-1 ), 0 );
+	pos_x_text = new wxTextCtrl( m_panel1, wxID_ANY, _("0"), wxDefaultPosition, wxSize( 75,-1 ), wxTE_PROCESS_ENTER );
 	bSizer6->Add( pos_x_text, 0, wxALL, 5 );
 
 
@@ -227,7 +227,7 @@ ProcessSelection::ProcessSelection( wxWindow* parent, wxWindowID id, const wxStr
 	pos_y_slider = new wxSlider( m_panel1, wxID_ANY, 50, 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL );
 	bSizer61->Add( pos_y_slider, 0, wxALL, 5 );
 
-	pos_y_text = new wxTextCtrl( m_panel1, wxID_ANY, _("0"), wxDefaultPosition, wxSize( 75,-1 ), 0 );
+	pos_y_text = new wxTextCtrl( m_panel1, wxID_ANY, _("0"), wxDefaultPosition, wxSize( 75,-1 ), wxTE_PROCESS_ENTER );
 	bSizer61->Add( pos_y_text, 0, wxALL, 5 );
 
 
@@ -256,7 +256,7 @@ ProcessSelection::ProcessSelection( wxWindow* parent, wxWindowID id, const wxStr
 	size_x_slider = new wxSlider( m_panel3, wxID_ANY, 50, 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL );
 	bSizer62->Add( size_x_slider, 0, wxALL, 5 );
 
-	size_x_text = new wxTextCtrl( m_panel3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 75,-1 ), 0 );
+	size_x_text = new wxTextCtrl( m_panel3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 75,-1 ), wxTE_PROCESS_ENTER );
 	bSizer62->Add( size_x_text, 0, wxALL, 5 );
 
 
@@ -272,7 +272,7 @@ ProcessSelection::ProcessSelection( wxWindow* parent, wxWindowID id, const wxStr
 	size_y_slider = new wxSlider( m_panel3, wxID_ANY, 50, 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL );
 	bSizer611->Add( size_y_slider, 0, wxALL, 5 );
 
-	size_y_text = new wxTextCtrl( m_panel3, wxID_ANY, _("50"), wxDefaultPosition, wxSize( 75,-1 ), 0 );
+	size_y_text = new wxTextCtrl( m_panel3, wxID_ANY, _("50"), wxDefaultPosition, wxSize( 75,-1 ), wxTE_PROCESS_ENTER );
 	bSizer611->Add( size_y_text, 0, wxALL, 5 );
 
 

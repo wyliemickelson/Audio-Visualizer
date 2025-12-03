@@ -4,11 +4,15 @@
 #include <CustomizationWindow.h>
 #include <LoopbackCapture.h>
 
+static boolean is_rendering = true;
+
 void ProcessWindow::OnExit(wxCommandEvent& event)
 {
+	is_rendering = false;
 	preview_window->Close(true);
 	Close(true);
 }
+
 
 void ProcessWindow::OnConfirm(wxCommandEvent& event)
 {
@@ -40,10 +44,19 @@ void ProcessWindow::OnConfirm(wxCommandEvent& event)
     {
 		wxGLAttributes display_attributes;
 		display_attributes.PlatformDefaults();
+
+		int x = pos_x_slider->GetValue();
+		int y = pos_y_slider->GetValue();
+		visualizer->SetPosition(wxPoint(x, y));
+		x = size_x_slider->GetValue();
+		y = size_y_slider->GetValue();
+		visualizer->SetSize(x, y);
 		visualizer->Show(true);
+
         VisualizerCanvas* display_canvas = visualizer->canvas;
 
-        while (true) {
+        while (is_rendering) 
+		{
             // run until program is terminated
             //FreqData f_data;
             //f_data.color = (0.7f, 0.0f, 0.0f, 1.0f);
