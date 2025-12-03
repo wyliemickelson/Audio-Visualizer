@@ -18,6 +18,24 @@ void ProcessWindow::OnRefresh(wxCommandEvent& event) {
 	process_list->Clear();
 	populateProcessList();
 }
+void ProcessWindow::OnClose(wxCloseEvent& event)
+{
+	is_rendering = false;
+	preview_window->Close(true);
+}
+
+void ProcessWindow::OnReset(wxCommandEvent& event)
+{
+	pos_x_slider->SetValue(0);
+	pos_y_slider->SetValue(0);
+	size_x_slider->SetValue(screen_size.x);
+	size_y_slider->SetValue(50);
+	pos_x_text->SetValue(std::to_string(pos_x_slider->GetValue()));
+	pos_y_text->SetValue(std::to_string(pos_y_slider->GetValue()));
+	size_x_text->SetValue(std::to_string(size_x_slider->GetValue()));
+	size_y_text->SetValue(std::to_string(size_y_slider->GetValue()));
+	SetPreviewPos();
+}
 
 void ProcessWindow::OnConfirm(wxCommandEvent& event)
 {
@@ -58,13 +76,21 @@ void ProcessWindow::OnConfirm(wxCommandEvent& event)
 		wxGLAttributes display_attributes;
 		display_attributes.PlatformDefaults();
 
+		//set visualizer window position from customization options
 		int x = pos_x_slider->GetValue();
 		int y = pos_y_slider->GetValue();
 		visualizer->SetPosition(wxPoint(x, y));
+
+		//move and display options window on top of visualizer
+		OptionsWindow* options = new OptionsWindow();
+		options->SetPosition(wxPoint(x, y));
+
+		//resize visualizer
 		x = size_x_slider->GetValue();
 		y = size_y_slider->GetValue();
 		visualizer->SetSize(x, y);
 		visualizer->Show(true);
+		options->Show(true);
 
         VisualizerCanvas* display_canvas = visualizer->canvas;
 
@@ -90,11 +116,6 @@ void ProcessWindow::OnConfirm(wxCommandEvent& event)
 wxListBox* ProcessWindow::getProcessesList()
 {
 	return processes_list;
-}
-
-void ProcessWindow::OnReset(wxCommandEvent& event) 
-{
-	event.Skip();
 }
 
 //customization input callbacks

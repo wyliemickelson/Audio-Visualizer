@@ -1,12 +1,12 @@
 #pragma once
 #include <AudioVisualizerApp.h>
+#include <OptionsWindow.h>
 #include <wx/display.h>
 #include <VisualizerWindow.h>
 #include <vector>
 #include <wx/wx.h>
 #include <wx/xrc/xmlres.h>
 #include <wx/xrc/xmlreshandler.h>
-#include <audiovisualizerapp.h>
 #include <processwindow.h>
 #include <processhandling.h>
 #include <clientdata.h>
@@ -14,11 +14,12 @@
 class ProcessWindow : public ProcessSelection
 {
 public:
+	void OnClose(wxCloseEvent& event);
 	ProcessWindow(wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Directional Audio Visualizer"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize(575, 330), long style = wxDEFAULT_FRAME_STYLE | wxTAB_TRAVERSAL) : ProcessSelection(parent, id, title, pos, size, style)
 	{
 		//get screen size
 		wxDisplay* display = new wxDisplay();
-		wxSize screen_size = (display->GetClientArea()).GetSize();
+		screen_size = (display->GetClientArea()).GetSize();
 
 		pos_x_slider->SetMax(screen_size.x);
 		pos_x_slider->SetValue(0);
@@ -36,6 +37,11 @@ public:
 		//create preview window
 		preview_window = new wxFrame(NULL, wxID_ANY, "Preview", wxPoint(0,0), wxSize(screen_size.x, 50), wxFRAME_NO_TASKBAR, wxFrameNameStr);
 		preview_window->Show(true);
+		//create options window
+		options_window = new OptionsWindow();
+
+		//handle window close event
+		Bind(wxEVT_CLOSE_WINDOW, &ProcessWindow::OnClose, this, wxID_ANY);
 	}
 	wxListBox* getProcessesList();
 	void populateProcessList();
@@ -54,4 +60,6 @@ private:
 
 	void SetPreviewPos();
 	wxFrame* preview_window;
+	OptionsWindow* options_window;
+	wxSize screen_size;
 };

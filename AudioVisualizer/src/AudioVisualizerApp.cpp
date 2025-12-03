@@ -9,7 +9,7 @@
 
 ///////////////////////////////////////////////////////////////////////////
 
-Options::Options( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxFrame( parent, id, title, pos, size, style )
+Customization::Customization( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxFrame( parent, id, title, pos, size, style )
 {
 	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
 
@@ -133,19 +133,19 @@ Options::Options( wxWindow* parent, wxWindowID id, const wxString& title, const 
 	this->Centre( wxBOTH );
 
 	// Connect Events
-	size_x_slider->Connect( wxEVT_SLIDER, wxCommandEventHandler( Options::OnSL_Size ), NULL, this );
-	size_x_text->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( Options::OnSize ), NULL, this );
-	size_y_slider->Connect( wxEVT_SLIDER, wxCommandEventHandler( Options::OnSL_Size ), NULL, this );
-	size_y_text->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( Options::OnSize ), NULL, this );
-	pos_x_slider->Connect( wxEVT_SLIDER, wxCommandEventHandler( Options::OnSL_Pos ), NULL, this );
-	pos_x_text->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( Options::OnPos ), NULL, this );
-	pos_y_slider->Connect( wxEVT_SLIDER, wxCommandEventHandler( Options::OnSL_Pos ), NULL, this );
-	pos_y_text->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( Options::OnPos ), NULL, this );
-	apply->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Options::OnApply ), NULL, this );
-	m_button4->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Options::OnExit ), NULL, this );
+	size_x_slider->Connect( wxEVT_SLIDER, wxCommandEventHandler( Customization::OnSL_Size ), NULL, this );
+	size_x_text->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( Customization::OnSize ), NULL, this );
+	size_y_slider->Connect( wxEVT_SLIDER, wxCommandEventHandler( Customization::OnSL_Size ), NULL, this );
+	size_y_text->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( Customization::OnSize ), NULL, this );
+	pos_x_slider->Connect( wxEVT_SLIDER, wxCommandEventHandler( Customization::OnSL_Pos ), NULL, this );
+	pos_x_text->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( Customization::OnPos ), NULL, this );
+	pos_y_slider->Connect( wxEVT_SLIDER, wxCommandEventHandler( Customization::OnSL_Pos ), NULL, this );
+	pos_y_text->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( Customization::OnPos ), NULL, this );
+	apply->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Customization::OnApply ), NULL, this );
+	m_button4->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Customization::OnExit ), NULL, this );
 }
 
-Options::~Options()
+Customization::~Customization()
 {
 }
 
@@ -329,5 +329,43 @@ ProcessSelection::ProcessSelection( wxWindow* parent, wxWindowID id, const wxStr
 }
 
 ProcessSelection::~ProcessSelection()
+{
+}
+
+Options::Options( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxFrame( parent, id, title, pos, size, style )
+{
+	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+
+	wxBoxSizer* bSizer22;
+	bSizer22 = new wxBoxSizer( wxVERTICAL );
+
+	m_panel4 = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxSize( -1,-1 ), wxTAB_TRAVERSAL );
+	wxBoxSizer* bSizer24;
+	bSizer24 = new wxBoxSizer( wxHORIZONTAL );
+
+	customize = new wxButton( m_panel4, wxID_ANY, _("Customize"), wxDefaultPosition, wxSize( 100,50 ), 0 );
+	bSizer24->Add( customize, 0, wxALL, 5 );
+
+	exit = new wxButton( m_panel4, wxID_ANY, _("Quit"), wxDefaultPosition, wxSize( 100,50 ), 0 );
+	bSizer24->Add( exit, 0, wxALL, 5 );
+
+
+	m_panel4->SetSizer( bSizer24 );
+	m_panel4->Layout();
+	bSizer24->Fit( m_panel4 );
+	bSizer22->Add( m_panel4, 1, wxEXPAND | wxALL, 5 );
+
+
+	this->SetSizer( bSizer22 );
+	this->Layout();
+
+	this->Centre( wxBOTH );
+
+	// Connect Events
+	customize->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Options::OnCustomize ), NULL, this );
+	exit->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Options::OnQuit ), NULL, this );
+}
+
+Options::~Options()
 {
 }

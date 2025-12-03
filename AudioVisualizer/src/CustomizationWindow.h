@@ -5,7 +5,7 @@
 #include <AudioVisualizerApp.h>
 #include <wx/display.h>
 
-class CustomizationWindow : public Options
+class CustomizationWindow : public Customization 
 {
 public:
 	void OnExit(wxCommandEvent& event) override;
@@ -20,7 +20,7 @@ public:
 
 	void SetPreviewPos();
 
-	CustomizationWindow(wxSize size = wxSize(235,300)) : Options(NULL, wxID_ANY, _("Customization"), wxDefaultPosition, size, wxDEFAULT_FRAME_STYLE | wxTAB_TRAVERSAL)
+	CustomizationWindow(wxSize size = wxSize(235,300)) : Customization(NULL, wxID_ANY, _("Customization"), wxDefaultPosition, size, wxDEFAULT_FRAME_STYLE | wxTAB_TRAVERSAL)
 	{
 		//get screen size
 		wxDisplay* display = new wxDisplay();

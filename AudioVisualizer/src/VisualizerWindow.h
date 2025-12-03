@@ -99,7 +99,6 @@ public:
 
 	static int len;
 	static FreqData* data;
-
 	static VisualizerPosition position;
 
 	void Render();
