@@ -25,7 +25,7 @@
 #define OUTPUT_FREQ_COUNT 6 // its currently not good at distinguishing separate low frequency bands, particularly below 5
 #define PROCESSING_FREQ_CLIP 1 // the super low frequencies arent exactly helpful - clip off the bottom few bins and combine them with the first index
 #define PROCESSING_FREQ_COUNT OUTPUT_FREQ_COUNT + PROCESSING_FREQ_CLIP
-#define ROLLING_AVG_ITERATIONS 32
+#define ROLLING_AVG_ITERATIONS 16
 
 HRESULT CLoopbackCapture::SetDeviceStateErrorIfFailed(HRESULT hr)
 {
@@ -440,11 +440,11 @@ void CLoopbackCapture::SpectrogramVisualizer(UINT32 FramesAvailable, BYTE* Data)
                 rollingSumMagnitude += bufferDataMagnitude[x][outputIndex];
 
             }
-            outputDataMagnitude[outputIndex] = rollingSumMagnitude / (ROLLING_AVG_ITERATIONS / 2);
+            outputDataMagnitude[outputIndex] = rollingSumMagnitude / (ROLLING_AVG_ITERATIONS);
             //outputDataMagnitude[outputIndex] = freqMagnitudeSum / offsets; // Averaging the total magnitude reduces it by a lot no averaging for right now
 
             // outputDataDirection values range from -1(left) to 1 (right) - 0 means centered
-            outputDataDirection[outputIndex] = rollingSumDirection/ (ROLLING_AVG_ITERATIONS/4);
+            outputDataDirection[outputIndex] = rollingSumDirection/ (ROLLING_AVG_ITERATIONS);
 
 
             bufferIndex = (bufferIndex + 1)% ROLLING_AVG_ITERATIONS;
@@ -471,7 +471,7 @@ void CLoopbackCapture::SpectrogramVisualizer(UINT32 FramesAvailable, BYTE* Data)
             direction = 0;
         }
         freqMagnitudeSum += sum;
-        freqDirectionSum += direction;
+        freqDirectionSum += direction*0.55;
 
         freqDivision++;
         
