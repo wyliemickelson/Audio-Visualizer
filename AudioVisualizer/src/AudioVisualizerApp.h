@@ -83,6 +83,7 @@ class ProcessSelection : public wxFrame
 		wxPanel* m_panel1;
 		wxStaticText* m_staticText2;
 		wxListBox* processes_list;
+		wxButton* refresh;
 		wxButton* confirm;
 		wxButton* cancel;
 		wxStaticText* m_staticText3;
@@ -103,6 +104,7 @@ class ProcessSelection : public wxFrame
 		wxButton* reset;
 
 		// Virtual event handlers, override them in your derived class
+		virtual void OnRefresh( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnConfirm( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnExit( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnSL_Pos( wxCommandEvent& event ) { event.Skip(); }

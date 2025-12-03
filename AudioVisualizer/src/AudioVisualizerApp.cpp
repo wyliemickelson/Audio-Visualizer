@@ -177,10 +177,13 @@ ProcessSelection::ProcessSelection( wxWindow* parent, wxWindowID id, const wxStr
 	wxBoxSizer* confirmation;
 	confirmation = new wxBoxSizer( wxHORIZONTAL );
 
-	confirm = new wxButton( m_panel1, wxID_ANY, _("Ok"), wxDefaultPosition, wxSize( 150,50 ), 0 );
+	refresh = new wxButton( m_panel1, wxID_ANY, _("Refresh List"), wxDefaultPosition, wxSize( 100,50 ), 0 );
+	confirmation->Add( refresh, 0, wxALL, 5 );
+
+	confirm = new wxButton( m_panel1, wxID_ANY, _("Ok"), wxDefaultPosition, wxSize( 100,50 ), 0 );
 	confirmation->Add( confirm, 0, wxALL, 5 );
 
-	cancel = new wxButton( m_panel1, wxID_ANY, _("Cancel"), wxDefaultPosition, wxSize( 150,50 ), 0 );
+	cancel = new wxButton( m_panel1, wxID_ANY, _("Cancel"), wxDefaultPosition, wxSize( 100,50 ), 0 );
 	confirmation->Add( cancel, 0, wxALL, 5 );
 
 
@@ -311,6 +314,7 @@ ProcessSelection::ProcessSelection( wxWindow* parent, wxWindowID id, const wxStr
 	this->Centre( wxBOTH );
 
 	// Connect Events
+	refresh->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProcessSelection::OnRefresh ), NULL, this ) ;
 	confirm->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProcessSelection::OnConfirm ), NULL, this );
 	cancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProcessSelection::OnExit ), NULL, this );
 	pos_x_slider->Connect( wxEVT_SLIDER, wxCommandEventHandler( ProcessSelection::OnSL_Pos ), NULL, this );
