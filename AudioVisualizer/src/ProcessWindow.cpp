@@ -13,6 +13,11 @@ void ProcessWindow::OnExit(wxCommandEvent& event)
 	Close(true);
 }
 
+void ProcessWindow::OnRefresh(wxCommandEvent& event) {
+	wxListBox* process_list = getProcessesList();
+	process_list->Clear();
+	populateProcessList();
+}
 
 void ProcessWindow::OnConfirm(wxCommandEvent& event)
 {
@@ -135,4 +140,22 @@ inline void ProcessWindow::SetPreviewPos()
 	int size_x = size_x_slider->GetValue();
 	int size_y = size_y_slider->GetValue();
 	preview_window->SetSize(wxSize(size_x, size_y));
+}
+
+void ProcessWindow::populateProcessList()
+{
+	wxListBox* process_list = getProcessesList();
+	if (process_list)
+	{
+		std::vector<process_info> processes_info = getCurrentAudioProcesses(getDefaultAudioDevice());
+		int len = processes_info.size();
+
+		for (int i = 0; i < len; ++i)
+		{
+			process_info process_info = processes_info.at(i);
+
+			process_list->Append(process_info.name, new ClientData(process_info.name, process_info.id));
+
+		}
+	}
 }
