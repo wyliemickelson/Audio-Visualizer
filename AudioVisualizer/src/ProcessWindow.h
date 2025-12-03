@@ -7,7 +7,6 @@
 #include <wx/wx.h>
 #include <wx/xrc/xmlres.h>
 #include <wx/xrc/xmlreshandler.h>
-#include <audiovisualizerapp.h>
 #include <processwindow.h>
 #include <processhandling.h>
 #include <clientdata.h>
@@ -15,6 +14,7 @@
 class ProcessWindow : public ProcessSelection
 {
 public:
+	void OnClose(wxCloseEvent& event);
 	ProcessWindow(wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Directional Audio Visualizer"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize(575, 330), long style = wxDEFAULT_FRAME_STYLE | wxTAB_TRAVERSAL) : ProcessSelection(parent, id, title, pos, size, style)
 	{
 		//get screen size
@@ -39,6 +39,9 @@ public:
 		preview_window->Show(true);
 		//create options window
 		options_window = new OptionsWindow();
+
+		//handle window close event
+		Bind(wxEVT_CLOSE_WINDOW, &ProcessWindow::OnClose, this, wxID_ANY);
 	}
 	wxListBox* getProcessesList();
 	void populateProcessList();

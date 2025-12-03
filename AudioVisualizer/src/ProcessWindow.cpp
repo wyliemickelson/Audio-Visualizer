@@ -18,6 +18,12 @@ void ProcessWindow::OnRefresh(wxCommandEvent& event) {
 	process_list->Clear();
 	populateProcessList();
 }
+void ProcessWindow::OnClose(wxCloseEvent& event)
+{
+	is_rendering = false;
+	preview_window->Close(true);
+	Close(true);
+}
 
 void ProcessWindow::OnConfirm(wxCommandEvent& event)
 {
