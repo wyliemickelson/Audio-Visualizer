@@ -22,7 +22,19 @@ void ProcessWindow::OnClose(wxCloseEvent& event)
 {
 	is_rendering = false;
 	preview_window->Close(true);
-	Close(true);
+}
+
+void ProcessWindow::OnReset(wxCommandEvent& event)
+{
+	pos_x_slider->SetValue(0);
+	pos_y_slider->SetValue(0);
+	size_x_slider->SetValue(screen_size.x);
+	size_y_slider->SetValue(50);
+	pos_x_text->SetValue(std::to_string(pos_x_slider->GetValue()));
+	pos_y_text->SetValue(std::to_string(pos_y_slider->GetValue()));
+	size_x_text->SetValue(std::to_string(size_x_slider->GetValue()));
+	size_y_text->SetValue(std::to_string(size_y_slider->GetValue()));
+	SetPreviewPos();
 }
 
 void ProcessWindow::OnConfirm(wxCommandEvent& event)
@@ -104,11 +116,6 @@ void ProcessWindow::OnConfirm(wxCommandEvent& event)
 wxListBox* ProcessWindow::getProcessesList()
 {
 	return processes_list;
-}
-
-void ProcessWindow::OnReset(wxCommandEvent& event) 
-{
-	event.Skip();
 }
 
 //customization input callbacks

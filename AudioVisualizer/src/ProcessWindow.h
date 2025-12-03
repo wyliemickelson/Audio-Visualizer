@@ -19,7 +19,7 @@ public:
 	{
 		//get screen size
 		wxDisplay* display = new wxDisplay();
-		wxSize screen_size = (display->GetClientArea()).GetSize();
+		screen_size = (display->GetClientArea()).GetSize();
 
 		pos_x_slider->SetMax(screen_size.x);
 		pos_x_slider->SetValue(0);
@@ -61,4 +61,5 @@ private:
 	void SetPreviewPos();
 	wxFrame* preview_window;
 	OptionsWindow* options_window;
+	wxSize screen_size;
 };
