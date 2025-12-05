@@ -5,6 +5,8 @@
 #include <wx/sizer.h>
 #include <wx/display.h>
 #include <wx/menu.h>
+#include <dwmapi.h>
+#pragma comment(lib, "dwmapi.lib")
 
 
 struct Color
@@ -28,7 +30,7 @@ struct Color
 	}
 };
 
-struct FreqData 
+struct FreqData
 {
 	float stereo_pos; //from 0-100, represents left-right pos
 	float size; //size multiplier
@@ -43,9 +45,9 @@ struct VisualizerPosition
 };
 
 /*
-* wxWidgets window using OpenGL to draw audio visualizations 
+* wxWidgets window using OpenGL to draw audio visualizations
 */
-class VisualizerCanvas: public wxGLCanvas
+class VisualizerCanvas : public wxGLCanvas
 {
 public:
 	void OnSize(wxSizeEvent& event);
@@ -76,7 +78,7 @@ public:
 			0, 1, 2,
 			3, 2, 0
 		};
-		
+
 		//buffer instantiation
 		unsigned int VAO;
 		unsigned int VBO;
@@ -99,10 +101,11 @@ public:
 
 	static int len;
 	static FreqData* data;
+
 	static VisualizerPosition position;
 
 	void Render();
-	
+
 	Shader* shader = nullptr;
 	wxGLContext* gl_context = nullptr;
 
@@ -114,7 +117,7 @@ class VisualizerWindow : public wxFrame
 public:
 	void OnSize(wxSizeEvent& event);
 	void OnClose(wxCloseEvent& event);
-	VisualizerCanvas *canvas;
+	VisualizerCanvas* canvas;
 
 	VisualizerWindow(wxWindow* parent, long style = wxSTAY_ON_TOP) : wxFrame(parent, wxID_ANY, "", wxDefaultPosition, wxDefaultSize, style, wxFrameNameStr)
 	{
@@ -127,5 +130,23 @@ public:
 		this->canvas = new VisualizerCanvas(this, display_attributes, size);
 
 		Bind(wxEVT_SIZE, &VisualizerWindow::OnSize, this);
+
+
+		// remove window borders
+		HWND hWnd = this->GetHandle();
+		DWORD style1 = ::GetWindowLong(hWnd, GWL_STYLE);
+		style1 &= ~(WS_CAPTION | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_SYSMENU | WS_DLGFRAME | WS_EX_DLGMODALFRAME | WS_EX_CLIENTEDGE | WS_EX_STATICEDGE);
+		style1 |= (WS_POPUP | WS_EX_TRANSPARENT | WS_EX_LAYERED);
+		::SetWindowLongPtr(hWnd, GWL_EXSTYLE, style1);
+		SetWindowPos(hWnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER);
+
+		// transparent background
+		DWM_BLURBEHIND bb = { 0 };
+		HRGN hRgn = CreateRectRgn(0, 0, -1, -1);
+		bb.dwFlags = DWM_BB_ENABLE | DWM_BB_BLURREGION;
+		bb.hRgnBlur = hRgn;
+		bb.fEnable = TRUE;
+		DwmEnableBlurBehindWindow(hWnd, &bb);
+		SetLayeredWindowAttributes(hWnd, 0, 255, LWA_ALPHA);
 	}
 };
