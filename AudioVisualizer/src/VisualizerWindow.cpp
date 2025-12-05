@@ -43,7 +43,7 @@ void VisualizerCanvas::Render()
 	SetCurrent(*gl_context);
 	glViewport(0, 0, size.x * GetContentScaleFactor(), size.y * GetContentScaleFactor());
 	glClear(GL_COLOR_BUFFER_BIT);
-	glClearColor(0.1f, 0.1f, 0.2f, 1.0f);
+	glClearColor(0, 0, 0, 0); //transparent
 
 	//int len = this->len;
 	//FreqData* data = nullptr;

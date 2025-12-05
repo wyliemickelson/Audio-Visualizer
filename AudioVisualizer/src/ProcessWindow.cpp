@@ -102,6 +102,8 @@ void ProcessWindow::OnConfirm(wxCommandEvent& event)
         }
 
         loopbackCapture.StopCaptureAsync();
+  
+        Close(true);
     }
 
 }
