@@ -3,14 +3,15 @@
 #include <VisualizerWindow.h>
 #include <CustomizationWindow.h>
 #include <LoopbackCapture.h>
+#include <wx/taskbar.h>
+#include <Tray.h>
 
-static boolean is_rendering = true;
+CLoopbackCapture loopbackCapture;
 
 void ProcessWindow::OnExit(wxCommandEvent& event)
 {
 	is_rendering = false;
 	preview_window->Close(true);
-	options_window->Close(true);
 	Destroy();
 }
 
@@ -23,7 +24,6 @@ void ProcessWindow::OnClose(wxCloseEvent& event)
 {
 	is_rendering = false;
 	preview_window->Close(true);
-	options_window->Close(true);
 	Destroy();
 }
 
@@ -60,11 +60,8 @@ void ProcessWindow::OnConfirm(wxCommandEvent& event)
     
     Hide();
 
-    // Create and open Visualizer Window
-    VisualizerWindow* visualizer = new VisualizerWindow(NULL);
 
     // start audio capture on selected process
-    CLoopbackCapture loopbackCapture;
 
     HRESULT hr = loopbackCapture.StartCaptureAsync(data->processID, visualizer);
     if (FAILED(hr))
@@ -84,16 +81,11 @@ void ProcessWindow::OnConfirm(wxCommandEvent& event)
 		int y = pos_y_slider->GetValue();
 		visualizer->SetPosition(wxPoint(x, y));
 
-		//move and display options window on top of visualizer
-		OptionsWindow* options = new OptionsWindow();
-		options->SetPosition(wxPoint(x, y));
-
 		//resize visualizer
 		x = size_x_slider->GetValue();
 		y = size_y_slider->GetValue();
 		visualizer->SetSize(x, y);
 		visualizer->Show(true);
-		options->Show(true);
 
         VisualizerCanvas* display_canvas = visualizer->canvas;
 
@@ -110,8 +102,6 @@ void ProcessWindow::OnConfirm(wxCommandEvent& event)
         }
 
         loopbackCapture.StopCaptureAsync();
-  
-        Close(true);
     }
 
 }

@@ -1,14 +1,21 @@
 #include <CustomizationWindow.h>
 
-	void CustomizationWindow::OnExit(wxCommandEvent& event) 
+	void CustomizationWindow::OnReset(wxCommandEvent& event)
 	{
-		preview_window->Close(true);
-		Close(true);
+		pos_x_slider->SetValue(0);
+		pos_y_slider->SetValue(0);
+		size_x_slider->SetValue(screen_size.x);
+		size_y_slider->SetValue(50);
+		pos_x_text->SetValue(std::to_string(pos_x_slider->GetValue()));
+		pos_y_text->SetValue(std::to_string(pos_y_slider->GetValue()));
+		size_x_text->SetValue(std::to_string(size_x_slider->GetValue()));
+		size_y_text->SetValue(std::to_string(size_y_slider->GetValue()));
+		SetPreviewPos();
 	}
 
-	void CustomizationWindow::OnApply(wxCommandEvent& event) 
+	void CustomizationWindow::OnExit(wxCommandEvent& event)
 	{
-		event.Skip();
+		Close(true);
 	}
 
 	//customization input callbacks
@@ -50,10 +57,10 @@
 	{
 		int x = pos_x_slider->GetValue();
 		int y = pos_y_slider->GetValue();
-		preview_window->SetPosition(wxPoint(x, y));
+		visualizer->SetPosition(wxPoint(x, y));
 
 		int size_x = size_x_slider->GetValue();
 		int size_y = size_y_slider->GetValue();
-		preview_window->SetSize(wxSize(size_x, size_y));
+		visualizer->SetSize(wxSize(size_x, size_y));
 
 	}

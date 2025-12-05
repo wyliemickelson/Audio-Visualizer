@@ -13,33 +13,30 @@ Customization::Customization( wxWindow* parent, wxWindowID id, const wxString& t
 {
 	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
 
-	wxBoxSizer* bSizer4;
-	bSizer4 = new wxBoxSizer( wxVERTICAL );
-
-	m_panel2 = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxSize( -1,-1 ), wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer14;
 	bSizer14 = new wxBoxSizer( wxVERTICAL );
 
+	m_panel3 = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer51;
 	bSizer51 = new wxBoxSizer( wxVERTICAL );
 
-	m_staticText31 = new wxStaticText( m_panel2, wxID_ANY, _("Size:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText31 = new wxStaticText( m_panel3, wxID_ANY, _("Size:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText31->Wrap( -1 );
-	m_staticText31->SetFont( wxFont( 10, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, true, wxT("Arial") ) );
+	m_staticText31->SetFont( wxFont( 9, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, true, wxT("Arial") ) );
 
 	bSizer51->Add( m_staticText31, 0, wxALL, 5 );
 
 	wxBoxSizer* bSizer62;
 	bSizer62 = new wxBoxSizer( wxHORIZONTAL );
 
-	m_staticText42 = new wxStaticText( m_panel2, wxID_ANY, _("X:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText42 = new wxStaticText( m_panel3, wxID_ANY, _("X:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText42->Wrap( -1 );
 	bSizer62->Add( m_staticText42, 0, wxALL, 5 );
 
-	size_x_slider = new wxSlider( m_panel2, wxID_ANY, 50, 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL );
+	size_x_slider = new wxSlider( m_panel3, wxID_ANY, 50, 0, 100, wxPoint( -1,-1 ), wxSize( 170,-1 ), wxSL_HORIZONTAL );
 	bSizer62->Add( size_x_slider, 0, wxALL, 5 );
 
-	size_x_text = new wxTextCtrl( m_panel2, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 75,-1 ), 0 );
+	size_x_text = new wxTextCtrl( m_panel3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 100,-1 ), wxTE_PROCESS_ENTER );
 	bSizer62->Add( size_x_text, 0, wxALL, 5 );
 
 
@@ -48,42 +45,39 @@ Customization::Customization( wxWindow* parent, wxWindowID id, const wxString& t
 	wxBoxSizer* bSizer611;
 	bSizer611 = new wxBoxSizer( wxHORIZONTAL );
 
-	m_staticText411 = new wxStaticText( m_panel2, wxID_ANY, _("Y:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText411 = new wxStaticText( m_panel3, wxID_ANY, _("Y:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText411->Wrap( -1 );
 	bSizer611->Add( m_staticText411, 0, wxALL, 5 );
 
-	size_y_slider = new wxSlider( m_panel2, wxID_ANY, 50, 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL );
+	size_y_slider = new wxSlider( m_panel3, wxID_ANY, 50, 0, 100, wxDefaultPosition, wxSize( 170,-1 ), wxSL_HORIZONTAL );
 	bSizer611->Add( size_y_slider, 0, wxALL, 5 );
 
-	size_y_text = new wxTextCtrl( m_panel2, wxID_ANY, _("50"), wxDefaultPosition, wxSize( 75,-1 ), 0 );
+	size_y_text = new wxTextCtrl( m_panel3, wxID_ANY, _("50"), wxDefaultPosition, wxSize( 100,-1 ), wxTE_PROCESS_ENTER );
 	bSizer611->Add( size_y_text, 0, wxALL, 5 );
 
 
 	bSizer51->Add( bSizer611, 1, wxEXPAND, 5 );
 
-
-	bSizer14->Add( bSizer51, 1, wxEXPAND, 5 );
-
 	wxBoxSizer* bSizer5;
 	bSizer5 = new wxBoxSizer( wxVERTICAL );
 
-	m_staticText3 = new wxStaticText( m_panel2, wxID_ANY, _("Position:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText3 = new wxStaticText( m_panel3, wxID_ANY, _("Position:"), wxPoint( -1,-1 ), wxSize( -1,-1 ), 0 );
 	m_staticText3->Wrap( -1 );
-	m_staticText3->SetFont( wxFont( 10, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, true, wxT("Arial") ) );
+	m_staticText3->SetFont( wxFont( 9, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, true, wxT("Arial") ) );
 
 	bSizer5->Add( m_staticText3, 0, wxALL, 5 );
 
 	wxBoxSizer* bSizer6;
 	bSizer6 = new wxBoxSizer( wxHORIZONTAL );
 
-	m_staticText4 = new wxStaticText( m_panel2, wxID_ANY, _("X:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText4 = new wxStaticText( m_panel3, wxID_ANY, _("X:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText4->Wrap( -1 );
 	bSizer6->Add( m_staticText4, 0, wxALL, 5 );
 
-	pos_x_slider = new wxSlider( m_panel2, wxID_ANY, 50, 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL );
+	pos_x_slider = new wxSlider( m_panel3, wxID_ANY, 50, 0, 100, wxDefaultPosition, wxSize( 170,-1 ), wxSL_HORIZONTAL );
 	bSizer6->Add( pos_x_slider, 0, wxALL, 5 );
 
-	pos_x_text = new wxTextCtrl( m_panel2, wxID_ANY, _("0"), wxDefaultPosition, wxSize( 75,-1 ), 0 );
+	pos_x_text = new wxTextCtrl( m_panel3, wxID_ANY, _("0"), wxDefaultPosition, wxSize( 100,-1 ), wxTE_PROCESS_ENTER );
 	bSizer6->Add( pos_x_text, 0, wxALL, 5 );
 
 
@@ -92,42 +86,44 @@ Customization::Customization( wxWindow* parent, wxWindowID id, const wxString& t
 	wxBoxSizer* bSizer61;
 	bSizer61 = new wxBoxSizer( wxHORIZONTAL );
 
-	m_staticText41 = new wxStaticText( m_panel2, wxID_ANY, _("Y:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText41 = new wxStaticText( m_panel3, wxID_ANY, _("Y:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText41->Wrap( -1 );
 	bSizer61->Add( m_staticText41, 0, wxALL, 5 );
 
-	pos_y_slider = new wxSlider( m_panel2, wxID_ANY, 50, 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL );
+	pos_y_slider = new wxSlider( m_panel3, wxID_ANY, 50, 0, 100, wxDefaultPosition, wxSize( 170,-1 ), wxSL_HORIZONTAL );
 	bSizer61->Add( pos_y_slider, 0, wxALL, 5 );
 
-	pos_y_text = new wxTextCtrl( m_panel2, wxID_ANY, _("0"), wxDefaultPosition, wxSize( 75,-1 ), 0 );
+	pos_y_text = new wxTextCtrl( m_panel3, wxID_ANY, _("0"), wxDefaultPosition, wxSize( 100,-1 ), wxTE_PROCESS_ENTER );
 	bSizer61->Add( pos_y_text, 0, wxALL, 5 );
 
 
 	bSizer5->Add( bSizer61, 1, wxEXPAND, 5 );
 
 
-	bSizer14->Add( bSizer5, 1, wxEXPAND, 5 );
+	bSizer51->Add( bSizer5, 1, wxEXPAND, 5 );
 
 	wxBoxSizer* bSizer20;
 	bSizer20 = new wxBoxSizer( wxHORIZONTAL );
 
-	apply = new wxButton( m_panel2, wxID_ANY, _("Apply"), wxDefaultPosition, wxSize( 115,50 ), 0 );
-	bSizer20->Add( apply, 0, wxALL, 5 );
+	confirm = new wxButton( m_panel3, wxID_ANY, _("Confirm"), wxDefaultPosition, wxSize( 150,50 ), 0 );
+	bSizer20->Add( confirm, 0, wxALL, 5 );
 
-	m_button4 = new wxButton( m_panel2, wxID_ANY, _("Cancel"), wxDefaultPosition, wxSize( -1,50 ), 0 );
-	bSizer20->Add( m_button4, 0, wxALL, 5 );
+	reset = new wxButton( m_panel3, wxID_ANY, _("Reset"), wxPoint( -1,-1 ), wxSize( 300,50 ), 0 );
 
-
-	bSizer14->Add( bSizer20, 1, wxEXPAND, 5 );
-
-
-	m_panel2->SetSizer( bSizer14 );
-	m_panel2->Layout();
-	bSizer14->Fit( m_panel2 );
-	bSizer4->Add( m_panel2, 1, wxEXPAND | wxALL, 5 );
+	reset->SetBitmapPosition( wxRIGHT );
+	bSizer20->Add( reset, 0, wxALL, 5 );
 
 
-	this->SetSizer( bSizer4 );
+	bSizer51->Add( bSizer20, 1, wxEXPAND, 5 );
+
+
+	m_panel3->SetSizer( bSizer51 );
+	m_panel3->Layout();
+	bSizer51->Fit( m_panel3 );
+	bSizer14->Add( m_panel3, 1, wxEXPAND | wxALL, 5 );
+
+
+	this->SetSizer( bSizer14 );
 	this->Layout();
 
 	this->Centre( wxBOTH );
@@ -141,8 +137,8 @@ Customization::Customization( wxWindow* parent, wxWindowID id, const wxString& t
 	pos_x_text->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( Customization::OnPos ), NULL, this );
 	pos_y_slider->Connect( wxEVT_SLIDER, wxCommandEventHandler( Customization::OnSL_Pos ), NULL, this );
 	pos_y_text->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( Customization::OnPos ), NULL, this );
-	apply->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Customization::OnApply ), NULL, this );
-	m_button4->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Customization::OnExit ), NULL, this );
+	confirm->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Customization::OnExit ), NULL, this );
+	reset->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Customization::OnReset ), NULL, this );
 }
 
 Customization::~Customization()

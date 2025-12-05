@@ -22,11 +22,11 @@ int VisualizerCanvas::len = 5;
 FreqData* VisualizerCanvas::data = new FreqData[5];
 const Color colors[5] =
 {
-	Color(0.6706f, 0.2784f, 0.7373f, 1.0f), 
-	Color(0.7490f, 0.4549f, 0.6706f, 1.0f),
-	Color(0.8275f, 0.6039f, 0.5804f, 1.0f),
-	Color(0.9137f, 0.7373f, 0.4471f, 1.0f),
-	Color(1.0f, 0.8706f, 0.1255f, 1.0f)
+Color(0.8f, 0.6f, 0.9f, 1.0f),
+Color(0.74f, 0.17f, 0.39f, 1.0f),
+Color(0.9, 0.2f, 0.2f, 1.0f),
+Color(1.0f, 0.5f, 0.2f, 1.0f),
+Color(1.0f, 0.70f, 0.3f, 1.0f)
 };
 
 /*
@@ -43,7 +43,7 @@ void VisualizerCanvas::Render()
 	SetCurrent(*gl_context);
 	glViewport(0, 0, size.x * GetContentScaleFactor(), size.y * GetContentScaleFactor());
 	glClear(GL_COLOR_BUFFER_BIT);
-	glClearColor(0.2f, 0.2f, 0.3f, 1.0f);
+	glClearColor(0.1f, 0.1f, 0.2f, 1.0f);
 
 	//int len = this->len;
 	//FreqData* data = nullptr;

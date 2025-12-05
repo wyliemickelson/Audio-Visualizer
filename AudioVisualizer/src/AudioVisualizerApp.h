@@ -37,7 +37,7 @@ class Customization : public wxFrame
 	private:
 
 	protected:
-		wxPanel* m_panel2;
+		wxPanel* m_panel3;
 		wxStaticText* m_staticText31;
 		wxStaticText* m_staticText42;
 		wxSlider* size_x_slider;
@@ -52,21 +52,21 @@ class Customization : public wxFrame
 		wxStaticText* m_staticText41;
 		wxSlider* pos_y_slider;
 		wxTextCtrl* pos_y_text;
-		wxButton* apply;
-		wxButton* m_button4;
+		wxButton* confirm;
+		wxButton* reset;
 
 		// Virtual event handlers, override them in your derived class
 		virtual void OnSL_Size( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnSize( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnSL_Pos( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnPos( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnApply( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnExit( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnReset( wxCommandEvent& event ) { event.Skip(); }
 
 
 	public:
 
-		Customization( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Customization"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 235,300 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
+		Customization( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Customization"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 300,300 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
 
 		~Customization();
 

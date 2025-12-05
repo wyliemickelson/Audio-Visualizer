@@ -45,10 +45,10 @@
     <ClInclude Include="src\CustomizationWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\OptionsWindow.h">
+    <ClInclude Include="src\MainApp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\MainApp.h">
+    <ClInclude Include="src\Tray.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -84,7 +84,7 @@
     <ClCompile Include="src\CustomizationWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\OptionsWindow.cpp">
+    <ClCompile Include="src\Tray.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

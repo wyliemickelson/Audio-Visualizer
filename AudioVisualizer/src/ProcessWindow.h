@@ -1,6 +1,5 @@
 #pragma once
 #include <AudioVisualizerApp.h>
-#include <OptionsWindow.h>
 #include <wx/display.h>
 #include <VisualizerWindow.h>
 #include <vector>
@@ -17,6 +16,9 @@ public:
 	void OnClose(wxCloseEvent& event);
 	ProcessWindow(wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Directional Audio Visualizer"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize(575, 330), long style = wxDEFAULT_FRAME_STYLE | wxTAB_TRAVERSAL) : ProcessSelection(parent, id, title, pos, size, style)
 	{
+		// Create and open Visualizer Window
+		visualizer = new VisualizerWindow(NULL);
+
 		//get screen size
 		wxDisplay* display = new wxDisplay();
 		screen_size = (display->GetClientArea()).GetSize();
@@ -37,8 +39,6 @@ public:
 		//create preview window
 		preview_window = new wxFrame(NULL, wxID_ANY, "Preview", wxPoint(0,0), wxSize(screen_size.x, 50), wxFRAME_NO_TASKBAR, wxFrameNameStr);
 		preview_window->Show(true);
-		//create options window
-		options_window = new OptionsWindow();
 
 		SetIcon(wxIcon("AAAA"));
 
@@ -47,6 +47,9 @@ public:
 	}
 	wxListBox* getProcessesList();
 	void populateProcessList();
+	boolean is_rendering = true;
+	VisualizerWindow* visualizer;
+
 private:
 	void OnRefresh(wxCommandEvent& event) override;
 	void OnExit(wxCommandEvent& event) override;
@@ -62,6 +65,5 @@ private:
 
 	void SetPreviewPos();
 	wxFrame* preview_window;
-	OptionsWindow* options_window;
 	wxSize screen_size;
 };
