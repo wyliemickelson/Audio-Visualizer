@@ -2,7 +2,7 @@
 A tool for assisting those who are Deaf, Hard of Hearing, or otherwise unable to take full advantage of audio in games by providing directional visual overlay. 
 
 ## Instructions:
-Install the zip file from [latest release](https://github.com/wyliemickelson/Audio-Visualizer/releases), extract the folder, and open AudioVisualizer.exe
+Install the zip file from [latest release](https://github.com/wyliemickelson/Audio-Visualizer/releases/latest), extract the folder, and open AudioVisualizer.exe
 
 Select the application you wish to visualize<br>
 <img width="423" height="245" alt="{98AAD662-AEC8-4928-A727-43A1736CDB6F}" src="https://github.com/user-attachments/assets/286f1b21-ec64-4a68-b9a9-36af040cab19" /> <br>
