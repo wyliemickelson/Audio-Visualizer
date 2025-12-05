@@ -55,8 +55,8 @@ void VisualizerCanvas::Render()
 	{
 		//translate and scale according to FreqData
 		FreqData bucket = data[i];
-		std::cout << "Size: " << bucket.size << std::endl;
-		std::cout << "Pos: " << bucket.stereo_pos << std::endl;
+		//std::cout << "Size: " << bucket.size << std::endl;
+		//std::cout << "Pos: " << bucket.stereo_pos << std::endl;
 
 		float transformation_mat[4][4] =
 		{
