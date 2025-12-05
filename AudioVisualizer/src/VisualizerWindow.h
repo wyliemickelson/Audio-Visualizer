@@ -5,7 +5,9 @@
 #include <wx/sizer.h>
 #include <wx/display.h>
 #include <wx/menu.h>
+#include <queue>
 #include <dwmapi.h>
+#include <vector>
 #pragma comment(lib, "dwmapi.lib")
 
 
@@ -32,8 +34,8 @@ struct Color
 
 struct FreqData
 {
-	float stereo_pos; //from 0-100, represents left-right pos
-	float size; //size multiplier
+	float stereo_pos; //from -1 to 1, represents left-right pos
+	float size; //from 0 to 1, size multiplier
 };
 
 struct VisualizerPosition
@@ -101,6 +103,8 @@ public:
 
 	static int len;
 	static FreqData* data;
+	static std::vector<FreqData> dataVector;
+	static int dataVectorMaxLen;
 
 	static VisualizerPosition position;
 
@@ -132,16 +136,8 @@ public:
 		SetIcon(wxIcon("AAAA"));
 		Bind(wxEVT_SIZE, &VisualizerWindow::OnSize, this);
 
-
-		// remove window borders
-		HWND hWnd = this->GetHandle();
-		DWORD style1 = ::GetWindowLong(hWnd, GWL_STYLE);
-		style1 &= ~(WS_CAPTION | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_SYSMENU | WS_DLGFRAME | WS_EX_DLGMODALFRAME | WS_EX_CLIENTEDGE | WS_EX_STATICEDGE);
-		style1 |= (WS_POPUP | WS_EX_TRANSPARENT | WS_EX_LAYERED);
-		::SetWindowLongPtr(hWnd, GWL_EXSTYLE, style1);
-		SetWindowPos(hWnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER);
-
 		// transparent background
+		HWND hWnd = this->GetHandle();
 		DWM_BLURBEHIND bb = { 0 };
 		HRGN hRgn = CreateRectRgn(0, 0, -1, -1);
 		bb.dwFlags = DWM_BB_ENABLE | DWM_BB_BLURREGION;

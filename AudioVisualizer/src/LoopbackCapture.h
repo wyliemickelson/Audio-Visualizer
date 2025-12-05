@@ -14,6 +14,21 @@
 #include <fftw3.h>
 #include "Common.h"
 
+#define BITS_PER_BYTE 8
+#define SHORT_MAX 32767
+#define SAMPLE_RATE 44100
+#define BITS_PER_SAMPLE 16
+#define N_CHANNELS 2
+#define FRAMES_PER_BUFFER SAMPLE_RATE / 100 // 256 (ish) frequency bins
+
+#define SPECTRO_FREQ_START 20  // Lower bound of the displayed spectrogram (Hz)
+#define SPECTRO_FREQ_END 20000 // Upper bound of the displayed spectrogram (Hz)
+
+#define OUTPUT_FREQ_COUNT 6 // its currently not good at distinguishing separate low frequency bands, particularly below 5
+#define PROCESSING_FREQ_CLIP 1 // the super low frequencies arent exactly helpful - clip off the bottom few bins and combine them with the first index
+#define PROCESSING_FREQ_COUNT OUTPUT_FREQ_COUNT + PROCESSING_FREQ_CLIP
+#define ROLLING_AVG_ITERATIONS 16
+
 using namespace Microsoft::WRL;
 
 typedef struct {
@@ -80,6 +95,7 @@ private:
     HRESULT ActivateAudioInterface(DWORD processId);
     HRESULT FinishCaptureAsync();
 
+    void CircularVisualizer(UINT32 FramesAvailable, BYTE* Data);
     void SpectrogramVisualizer(UINT32 FramesAvailable, BYTE* Data);
     void VolumeVisualizer(UINT32 FramesAvailable, BYTE* Data);
     void InitializeFFT();
@@ -97,8 +113,6 @@ private:
     wil::unique_hfile m_hFile;
     wil::critical_section m_CritSec;
     DWORD m_dwQueueID = 0;
-    DWORD m_cbHeaderSize = 0;
-    DWORD m_cbDataSize = 0;
 
     // used to communicate between the main thread
     // and the ActivateCompleted callback.

@@ -19,6 +19,8 @@ void VisualizerWindow::OnClose(wxCloseEvent& event)
 }
 
 int VisualizerCanvas::len = 5;
+int VisualizerCanvas::dataVectorMaxLen = 1000;
+std::vector<FreqData> VisualizerCanvas::dataVector;
 FreqData* VisualizerCanvas::data = new FreqData[5];
 const Color colors[5] =
 {
@@ -53,6 +55,9 @@ void VisualizerCanvas::Render()
 	{
 		//translate and scale according to FreqData
 		FreqData bucket = data[i];
+		std::cout << "Size: " << bucket.size << std::endl;
+		std::cout << "Pos: " << bucket.stereo_pos << std::endl;
+
 		float transformation_mat[4][4] =
 		{
 			std::min(bucket.size, 0.5f), 0.0f, 0.0f, bucket.stereo_pos,

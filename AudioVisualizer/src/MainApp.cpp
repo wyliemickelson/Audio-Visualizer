@@ -13,6 +13,11 @@
 
 bool App::OnInit()
 {
+	#ifdef _DEBUG
+		AllocConsole();
+		freopen("CONOUT$", "w", stdout);
+	#endif
+
 	process_window = new ProcessWindow(NULL);
 	process_window->Show(true);
 

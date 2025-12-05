@@ -10,23 +10,6 @@
 #include <vector>
 #include <cmath>
 
-
-
-#define BITS_PER_BYTE 8
-#define SHORT_MAX 32767
-#define SAMPLE_RATE 44100
-#define BITS_PER_SAMPLE 16
-#define N_CHANNELS 2
-#define FRAMES_PER_BUFFER SAMPLE_RATE / 100 // 256 (ish) frequency bins
-
-#define SPECTRO_FREQ_START 20  // Lower bound of the displayed spectrogram (Hz)
-#define SPECTRO_FREQ_END 20000 // Upper bound of the displayed spectrogram (Hz)
-
-#define OUTPUT_FREQ_COUNT 6 // its currently not good at distinguishing separate low frequency bands, particularly below 5
-#define PROCESSING_FREQ_CLIP 1 // the super low frequencies arent exactly helpful - clip off the bottom few bins and combine them with the first index
-#define PROCESSING_FREQ_COUNT OUTPUT_FREQ_COUNT + PROCESSING_FREQ_CLIP
-#define ROLLING_AVG_ITERATIONS 16
-
 HRESULT CLoopbackCapture::SetDeviceStateErrorIfFailed(HRESULT hr)
 {
     if (FAILED(hr))
@@ -341,13 +324,12 @@ HRESULT CLoopbackCapture::OnAudioSampleRequested()
 
         // Get sample buffer
         RETURN_IF_FAILED(m_AudioCaptureClient->GetBuffer(&Data, &FramesAvailable, &dwCaptureFlags, &u64DevicePosition, &u64QPCPosition));
-        // reset cursor to write over previous output
-        //printf("\r"); // cursor to beginning of current line
 
-        //printf("\n"); // whitespace
+        // Circular Visualizer
+        CircularVisualizer(FramesAvailable, Data);
+
+        // Main Frequency Visualizer
         SpectrogramVisualizer(FramesAvailable, Data);
-        //printf("\n\n"); // separate two visualizers
-        //VolumeVisualizer(FramesAvailable, Data);
         FreqData freqDatas[OUTPUT_FREQ_COUNT]{};
         for (int i = 0; i < OUTPUT_FREQ_COUNT; ++i)
         {
@@ -360,16 +342,35 @@ HRESULT CLoopbackCapture::OnAudioSampleRequested()
 			VisualizerCanvas::data[i] = data;
         }
 
-        //printf("\033[1A\033[1A\033[1A"); // cursor back three lines
-
         // Release buffer back
         m_AudioCaptureClient->ReleaseBuffer(FramesAvailable);
-
-        // Increase the size of our 'data' chunk.  m_cbDataSize needs to be accurate
-        m_cbDataSize += cbBytesToCapture;
     }
 
     return S_OK;
+}
+
+void CLoopbackCapture::CircularVisualizer(UINT32 FramesAvailable, BYTE* Data)
+{
+    INT16* inSamples = (INT16*)Data;
+
+    for (unsigned long i = 0; i < FramesAvailable * 2; i += 2) {
+        FreqData newData;
+        int left_signal = inSamples[i];
+        int right_signal = inSamples[i + 1];
+
+        float left_magnitude = left_signal / (float)SHORT_MAX;
+        float right_magnitude = right_signal / (float)SHORT_MAX;
+
+        newData.stereo_pos = right_magnitude - left_magnitude;
+        newData.size = (right_magnitude + left_magnitude) / 2;
+
+        if (VisualizerCanvas::dataVector.size() >= VisualizerCanvas::dataVectorMaxLen) {
+            VisualizerCanvas::dataVector.pop_back();
+        }
+        VisualizerCanvas::dataVector.insert(VisualizerCanvas::dataVector.begin(), newData);
+    }
+
+    return;
 }
 
 //
