@@ -1,6 +1,5 @@
 #pragma once
 #include <AudioVisualizerApp.h>
-#include <OptionsWindow.h>
 #include <wx/display.h>
 #include <VisualizerWindow.h>
 #include <vector>
@@ -38,7 +37,6 @@ public:
 		preview_window = new wxFrame(NULL, wxID_ANY, "Preview", wxPoint(0,0), wxSize(screen_size.x, 50), wxFRAME_NO_TASKBAR, wxFrameNameStr);
 		preview_window->Show(true);
 		//create options window
-		options_window = new OptionsWindow();
 
 		SetIcon(wxIcon("AAAA"));
 
@@ -62,6 +60,5 @@ private:
 
 	void SetPreviewPos();
 	wxFrame* preview_window;
-	OptionsWindow* options_window;
 	wxSize screen_size;
 };
