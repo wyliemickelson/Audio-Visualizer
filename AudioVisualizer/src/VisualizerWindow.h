@@ -119,7 +119,7 @@ public:
 	void OnClose(wxCloseEvent& event);
 	VisualizerCanvas* canvas;
 
-	VisualizerWindow(wxWindow* parent, long style = wxSTAY_ON_TOP | wxNO_BORDER ) : wxFrame(parent, wxID_ANY, "", wxDefaultPosition, wxDefaultSize, style, wxFrameNameStr)
+	VisualizerWindow(wxWindow* parent, long style = wxSTAY_ON_TOP | wxNO_BORDER ) : wxFrame(parent, wxID_ANY, "Audio Visualizer", wxDefaultPosition, wxDefaultSize, style, wxFrameNameStr)
 	{
 		wxDisplay* display = new wxDisplay();
 		wxSize size = (display->GetClientArea()).GetSize();
