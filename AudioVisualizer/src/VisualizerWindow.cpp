@@ -56,7 +56,7 @@ void VisualizerCanvas::Render()
 		float transformation_mat[4][4] =
 		{
 			std::min(bucket.size, 0.5f), 0.0f, 0.0f, bucket.stereo_pos,
-			0.0f, 1.0f, (1.0f)/ ((float)len), (((2.0f) / (float)len) * (i)) - ((4.0f / (float)len)),
+			0.0f, 1.0f, (1.0f)/ ((float)len), (((2.0f) / (float)len) * (i)) - ((5.0f / (float)len)),
 			0.0f, 0.0f, 1.0f, 0.0f,
 			0.0 ,0.0f, 0.0f, 1.0f
 		};

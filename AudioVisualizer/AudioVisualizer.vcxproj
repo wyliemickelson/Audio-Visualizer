@@ -146,6 +146,7 @@
     <ClInclude Include="src\Common.h" />
     <ClInclude Include="src\CustomizationWindow.h" />
     <ClInclude Include="src\LoopbackCapture.h" />
+    <ClInclude Include="src\MainApp.h" />
     <ClInclude Include="src\OptionsWindow.h" />
     <ClInclude Include="src\ProcessHandling.h" />
     <ClInclude Include="src\ProcessWindow.h" />
@@ -177,6 +178,9 @@
     <ClCompile Include="src\ProcessHandling.cpp" />
     <ClCompile Include="src\ProcessWindow.cpp" />
     <ClCompile Include="src\VisualizerWindow.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="visualizer.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

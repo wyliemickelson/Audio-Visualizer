@@ -7,15 +7,8 @@
 #include <processwindow.h>
 #include <processhandling.h>
 #include <clientdata.h>
-
-//prototypes
-void populateProcessList(wxListBox *process_list);
-
-class App : public wxApp
-{
-	public:
-		virtual bool OnInit();
-};
+#include <wx/gdicmn.h>
+#include <MainApp.h>
 
 bool App::OnInit()
 {
@@ -30,4 +23,3 @@ bool App::OnInit()
 	return true;
 }
 
-wxIMPLEMENT_APP(App);

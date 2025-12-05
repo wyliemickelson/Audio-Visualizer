@@ -40,6 +40,8 @@ public:
 		//create options window
 		options_window = new OptionsWindow();
 
+		SetIcon(wxIcon("AAAA"));
+
 		//handle window close event
 		Bind(wxEVT_CLOSE_WINDOW, &ProcessWindow::OnClose, this, wxID_ANY);
 	}

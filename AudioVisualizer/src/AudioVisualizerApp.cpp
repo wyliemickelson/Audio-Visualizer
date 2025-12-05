@@ -200,7 +200,7 @@ ProcessSelection::ProcessSelection( wxWindow* parent, wxWindowID id, const wxStr
 
 	m_staticText3 = new wxStaticText( m_panel1, wxID_ANY, _("Position:"), wxPoint( -1,-1 ), wxSize( -1,-1 ), 0 );
 	m_staticText3->Wrap( -1 );
-	m_staticText3->SetFont( wxFont( 10, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, true, wxT("Arial") ) );
+	m_staticText3->SetFont( wxFont( 9, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, true, wxT("Arial") ) );
 
 	bSizer5->Add( m_staticText3, 0, wxALL, 5 );
 
@@ -245,7 +245,7 @@ ProcessSelection::ProcessSelection( wxWindow* parent, wxWindowID id, const wxStr
 
 	m_staticText31 = new wxStaticText( m_panel3, wxID_ANY, _("Size:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText31->Wrap( -1 );
-	m_staticText31->SetFont( wxFont( 10, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, true, wxT("Arial") ) );
+	m_staticText31->SetFont( wxFont( 9, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, true, wxT("Arial") ) );
 
 	bSizer51->Add( m_staticText31, 0, wxALL, 5 );
 
@@ -290,7 +290,7 @@ ProcessSelection::ProcessSelection( wxWindow* parent, wxWindowID id, const wxStr
 	wxBoxSizer* bSizer20;
 	bSizer20 = new wxBoxSizer( wxHORIZONTAL );
 
-	reset = new wxButton( m_panel1, wxID_ANY, _("Reset"), wxPoint( -1,-1 ), wxSize( 115,50 ), 0 );
+	reset = new wxButton( m_panel1, wxID_ANY, _("Reset"), wxPoint( -1,-1 ), wxSize( 225,50 ), 0 );
 
 	reset->SetBitmapPosition( wxRIGHT );
 	bSizer20->Add( reset, 0, wxALL, 5 );
@@ -314,7 +314,7 @@ ProcessSelection::ProcessSelection( wxWindow* parent, wxWindowID id, const wxStr
 	this->Centre( wxBOTH );
 
 	// Connect Events
-	refresh->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProcessSelection::OnRefresh ), NULL, this ) ;
+	refresh->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProcessSelection::OnRefresh ), NULL, this );
 	confirm->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProcessSelection::OnConfirm ), NULL, this );
 	cancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProcessSelection::OnExit ), NULL, this );
 	pos_x_slider->Connect( wxEVT_SLIDER, wxCommandEventHandler( ProcessSelection::OnSL_Pos ), NULL, this );

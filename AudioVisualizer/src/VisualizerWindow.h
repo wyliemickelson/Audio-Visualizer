@@ -126,6 +126,7 @@ public:
 		display_attributes.PlatformDefaults().RGBA().MinRGBA(8, 8, 8, 8).DoubleBuffer().Depth(24).EndList();
 		this->canvas = new VisualizerCanvas(this, display_attributes, size);
 
+		SetIcon(wxIcon("AAAA"));
 		Bind(wxEVT_SIZE, &VisualizerWindow::OnSize, this);
 	}
 };
