@@ -335,6 +335,8 @@ HRESULT CLoopbackCapture::OnAudioSampleRequested()
         {
             FreqData data{};
             data.stereo_pos = outputDataDirection[i];
+            //std::cout << "dir: " << data.stereo_pos << std::endl;
+
             float mag = outputDataMagnitude[i];
             data.size = mag;
 
@@ -351,24 +353,39 @@ HRESULT CLoopbackCapture::OnAudioSampleRequested()
 
 void CLoopbackCapture::CircularVisualizer(UINT32 FramesAvailable, BYTE* Data)
 {
+    double* fullSamples = (double*)malloc(FramesAvailable * 2 * sizeof(double));
     INT16* inSamples = (INT16*)Data;
+    for (int i = 0; i < FRAMES_PER_BUFFER * 2; i++) {
+        fullSamples[i] = (double)(inSamples[i]) / SHORT_MAX;
+    }
+
+    FreqData newData;
+    float right_signal_sum = 0;
+    float left_signal_sum = 0;
 
     for (unsigned long i = 0; i < FramesAvailable * 2; i += 2) {
-        FreqData newData;
-        int left_signal = inSamples[i];
-        int right_signal = inSamples[i + 1];
-
-        float left_magnitude = left_signal / (float)SHORT_MAX;
-        float right_magnitude = right_signal / (float)SHORT_MAX;
-
-        newData.stereo_pos = right_magnitude - left_magnitude;
-        newData.size = (right_magnitude + left_magnitude) / 2;
-
-        if (VisualizerCanvas::dataVector.size() >= VisualizerCanvas::dataVectorMaxLen) {
-            VisualizerCanvas::dataVector.pop_back();
-        }
-        VisualizerCanvas::dataVector.insert(VisualizerCanvas::dataVector.begin(), newData);
+        left_signal_sum += std::abs(fullSamples[i]);
+        right_signal_sum += std::abs(fullSamples[i + 1]);
     }
+    float size = (right_signal_sum + left_signal_sum) / FramesAvailable / 2;
+    float dir = (right_signal_sum - left_signal_sum) / FramesAvailable / 2;
+    dir = dir / size;
+
+    //std::cout << "l: " << left_signal_sum << std::endl;
+    //std::cout << "r: " << right_signal_sum << std::endl;
+
+    //std::cout << "dir: " << dir << std::endl;
+    std::cout << "size: " << size << std::endl;
+
+
+
+    newData.stereo_pos = dir;
+    newData.size = size;
+
+    if (VisualizerCanvas::dataVector.size() >= VisualizerCanvas::dataVectorMaxLen) {
+        VisualizerCanvas::dataVector.pop_back();
+    }
+    VisualizerCanvas::dataVector.insert(VisualizerCanvas::dataVector.begin(), newData);
 
     return;
 }

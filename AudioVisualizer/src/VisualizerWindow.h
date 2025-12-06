@@ -138,6 +138,11 @@ public:
 
 		// transparent background
 		HWND hWnd = this->GetHandle();
+
+		DWORD style1 = ::GetWindowLong(hWnd, GWL_STYLE);
+		style1 |= (WS_POPUP | WS_EX_TRANSPARENT | WS_EX_LAYERED);
+		::SetWindowLongPtr(hWnd, GWL_EXSTYLE, style1);
+
 		DWM_BLURBEHIND bb = { 0 };
 		HRGN hRgn = CreateRectRgn(0, 0, -1, -1);
 		bb.dwFlags = DWM_BB_ENABLE | DWM_BB_BLURREGION;
