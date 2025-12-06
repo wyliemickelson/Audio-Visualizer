@@ -53,6 +53,7 @@ class VisualizerCanvas : public wxGLCanvas
 {
 public:
 	void OnSize(wxSizeEvent& event);
+	void GetCircularCoords(float radius, float* x, float* y, FreqData data);
 
 	VisualizerCanvas(wxWindow* parent, const wxGLAttributes display_attribs, wxSize size) : wxGLCanvas(parent, display_attribs, wxID_ANY, wxDefaultPosition, size, 0, wxGLCanvasName, wxNullPalette)
 	{

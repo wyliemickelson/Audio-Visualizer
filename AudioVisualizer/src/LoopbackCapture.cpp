@@ -375,7 +375,7 @@ void CLoopbackCapture::CircularVisualizer(UINT32 FramesAvailable, BYTE* Data)
     //std::cout << "r: " << right_signal_sum << std::endl;
 
     //std::cout << "dir: " << dir << std::endl;
-    std::cout << "size: " << size << std::endl;
+    //std::cout << "size: " << size << std::endl;
 
 
 

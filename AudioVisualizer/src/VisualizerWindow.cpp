@@ -2,6 +2,7 @@
 #include <Shader.h>
 #include <wx/datetime.h>
 #include <cmath>
+#include <numbers>
 
 void VisualizerCanvas::OnSize(wxSizeEvent& event)
 {
@@ -30,6 +31,16 @@ Color(0.9, 0.2f, 0.2f, 1.0f),
 Color(1.0f, 0.5f, 0.2f, 1.0f),
 Color(1.0f, 0.70f, 0.3f, 1.0f)
 };
+
+void VisualizerCanvas::GetCircularCoords(float radius, float* x, float* y, FreqData data) {
+	// middle direction = 90 degrees
+	// range: +,- 150 degrees from 90
+	float angle = 90 + (data.stereo_pos * -150);
+	float radians = angle * std::numbers::pi / 180;
+
+	*x = radius * cos(radians);
+	*y = radius * sin(radians);
+}
 
 /*
 * Enter processed audio data, draw using OpenGL
@@ -101,25 +112,28 @@ void VisualizerCanvas::Render()
 			}
 
 			Color c;
-			int height;
+			float radius = 0.5;
 			if (bucket.size <= 0.01) {
 				c = volumeColors[0];
-				height = 1;
 			}
 			else if (bucket.size <= 0.1) {
 				c = volumeColors[1];
-				height = 2;
+				radius /= 1.05;
 			}
 			else {
 				c = volumeColors[2];
-				height = 3;
+				radius /= 1.1;
 			}
 			c.a = 1.0f - (i * 1.0 / dataVectorMaxLen);
 
+			float x;
+			float y;
+			GetCircularCoords(radius, &x, &y, bucket);
+
 			float transformation_mat[4][4] =
 			{
-				0.01f, 0.0f, 0.0f, bucket.stereo_pos,
-				0.0f, 1.0f, (1.0f) / ((float)len), (((2.0f) / (float)len) * (height)) - ((5.0f / (float)len)),
+				0.03f, 0.0f, 0.0f, x,
+				0.0f, 0.03f, (1.0f) / ((float)len), y,
 				0.0f, 0.0f, 1.0f, 0.0f,
 				0.0 ,0.0f, 0.0f, 1.0f
 			};
