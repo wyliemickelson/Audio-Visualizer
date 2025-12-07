@@ -152,8 +152,9 @@ ProcessSelection::ProcessSelection( wxWindow* parent, wxWindowID id, const wxStr
 	wxBoxSizer* options_sizer;
 	options_sizer = new wxBoxSizer( wxVERTICAL );
 
-	m_panel1 = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxSize( -1,-1 ), wxTAB_TRAVERSAL );
-	m_panel1->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_MENU ) );
+	m_notebook1 = new wxNotebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
+	AppSelectionPanel = new wxPanel( m_notebook1, wxID_ANY, wxDefaultPosition, wxSize( -1,-1 ), wxTAB_TRAVERSAL );
+	AppSelectionPanel->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_MENU ) );
 
 	wxBoxSizer* bSizer38;
 	bSizer38 = new wxBoxSizer( wxHORIZONTAL );
@@ -161,32 +162,33 @@ ProcessSelection::ProcessSelection( wxWindow* parent, wxWindowID id, const wxStr
 	wxBoxSizer* bSizer3;
 	bSizer3 = new wxBoxSizer( wxVERTICAL );
 
-	m_staticText2 = new wxStaticText( m_panel1, wxID_ANY, _("Please select which application to visualize:"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer3->SetMinSize( wxSize( 320,400 ) );
+	m_staticText2 = new wxStaticText( AppSelectionPanel, wxID_ANY, _("Please select which application to visualize:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText2->Wrap( -1 );
 	bSizer3->Add( m_staticText2, 0, wxALL, 5 );
 
-	processes_list = new wxListBox( m_panel1, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 );
-	processes_list->SetMinSize( wxSize( 320,200 ) );
+	processes_list = new wxListBox( AppSelectionPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, wxLB_ALWAYS_SB );
+	processes_list->SetMinSize( wxSize( 320,-1 ) );
 
 	bSizer3->Add( processes_list, 0, wxALL, 5 );
 
 	wxBoxSizer* confirmation;
 	confirmation = new wxBoxSizer( wxHORIZONTAL );
 
-	refresh = new wxButton( m_panel1, wxID_ANY, _("Refresh List"), wxDefaultPosition, wxSize( 100,50 ), 0 );
+	refresh = new wxButton( AppSelectionPanel, wxID_ANY, _("Refresh List"), wxDefaultPosition, wxSize( 100,50 ), 0 );
 	confirmation->Add( refresh, 0, wxALL, 5 );
 
-	confirm = new wxButton( m_panel1, wxID_ANY, _("Ok"), wxDefaultPosition, wxSize( 100,50 ), 0 );
+	confirm = new wxButton( AppSelectionPanel, wxID_ANY, _("Ok"), wxDefaultPosition, wxSize( 100,50 ), 0 );
 	confirmation->Add( confirm, 0, wxALL, 5 );
 
-	cancel = new wxButton( m_panel1, wxID_ANY, _("Cancel"), wxDefaultPosition, wxSize( 100,50 ), 0 );
+	cancel = new wxButton( AppSelectionPanel, wxID_ANY, _("Cancel"), wxDefaultPosition, wxSize( 100,50 ), 0 );
 	confirmation->Add( cancel, 0, wxALL, 5 );
 
 
 	bSizer3->Add( confirmation, 1, wxEXPAND, 5 );
 
 
-	bSizer38->Add( bSizer3, 1, wxEXPAND, 5 );
+	bSizer38->Add( bSizer3, 1, 0, 5 );
 
 	wxBoxSizer* bSizer14;
 	bSizer14 = new wxBoxSizer( wxVERTICAL );
@@ -194,7 +196,7 @@ ProcessSelection::ProcessSelection( wxWindow* parent, wxWindowID id, const wxStr
 	wxBoxSizer* bSizer5;
 	bSizer5 = new wxBoxSizer( wxVERTICAL );
 
-	m_staticText3 = new wxStaticText( m_panel1, wxID_ANY, _("Position:"), wxPoint( -1,-1 ), wxSize( -1,-1 ), 0 );
+	m_staticText3 = new wxStaticText( AppSelectionPanel, wxID_ANY, _("Position:"), wxPoint( -1,-1 ), wxSize( -1,-1 ), 0 );
 	m_staticText3->Wrap( -1 );
 	m_staticText3->SetFont( wxFont( 9, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, true, wxT("Arial") ) );
 
@@ -203,14 +205,14 @@ ProcessSelection::ProcessSelection( wxWindow* parent, wxWindowID id, const wxStr
 	wxBoxSizer* bSizer6;
 	bSizer6 = new wxBoxSizer( wxHORIZONTAL );
 
-	m_staticText4 = new wxStaticText( m_panel1, wxID_ANY, _("X:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText4 = new wxStaticText( AppSelectionPanel, wxID_ANY, _("X:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText4->Wrap( -1 );
 	bSizer6->Add( m_staticText4, 0, wxALL, 5 );
 
-	pos_x_slider = new wxSlider( m_panel1, wxID_ANY, 50, 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL );
+	pos_x_slider = new wxSlider( AppSelectionPanel, wxID_ANY, 50, 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL );
 	bSizer6->Add( pos_x_slider, 0, wxALL, 5 );
 
-	pos_x_text = new wxTextCtrl( m_panel1, wxID_ANY, _("0"), wxDefaultPosition, wxSize( 75,-1 ), wxTE_PROCESS_ENTER );
+	pos_x_text = new wxTextCtrl( AppSelectionPanel, wxID_ANY, _("0"), wxDefaultPosition, wxSize( 75,-1 ), wxTE_PROCESS_ENTER );
 	bSizer6->Add( pos_x_text, 0, wxALL, 5 );
 
 
@@ -219,14 +221,14 @@ ProcessSelection::ProcessSelection( wxWindow* parent, wxWindowID id, const wxStr
 	wxBoxSizer* bSizer61;
 	bSizer61 = new wxBoxSizer( wxHORIZONTAL );
 
-	m_staticText41 = new wxStaticText( m_panel1, wxID_ANY, _("Y:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText41 = new wxStaticText( AppSelectionPanel, wxID_ANY, _("Y:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText41->Wrap( -1 );
 	bSizer61->Add( m_staticText41, 0, wxALL, 5 );
 
-	pos_y_slider = new wxSlider( m_panel1, wxID_ANY, 50, 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL );
+	pos_y_slider = new wxSlider( AppSelectionPanel, wxID_ANY, 50, 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL );
 	bSizer61->Add( pos_y_slider, 0, wxALL, 5 );
 
-	pos_y_text = new wxTextCtrl( m_panel1, wxID_ANY, _("0"), wxDefaultPosition, wxSize( 75,-1 ), wxTE_PROCESS_ENTER );
+	pos_y_text = new wxTextCtrl( AppSelectionPanel, wxID_ANY, _("0"), wxDefaultPosition, wxSize( 75,-1 ), wxTE_PROCESS_ENTER );
 	bSizer61->Add( pos_y_text, 0, wxALL, 5 );
 
 
@@ -235,7 +237,7 @@ ProcessSelection::ProcessSelection( wxWindow* parent, wxWindowID id, const wxStr
 
 	bSizer14->Add( bSizer5, 1, wxEXPAND, 5 );
 
-	m_panel3 = new wxPanel( m_panel1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	m_panel3 = new wxPanel( AppSelectionPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer51;
 	bSizer51 = new wxBoxSizer( wxVERTICAL );
 
@@ -286,7 +288,7 @@ ProcessSelection::ProcessSelection( wxWindow* parent, wxWindowID id, const wxStr
 	wxBoxSizer* bSizer20;
 	bSizer20 = new wxBoxSizer( wxHORIZONTAL );
 
-	reset = new wxButton( m_panel1, wxID_ANY, _("Reset"), wxPoint( -1,-1 ), wxSize( 225,50 ), 0 );
+	reset = new wxButton( AppSelectionPanel, wxID_ANY, _("Reset"), wxPoint( -1,-1 ), wxSize( 225,50 ), 0 );
 
 	reset->SetBitmapPosition( wxRIGHT );
 	bSizer20->Add( reset, 0, wxALL, 5 );
@@ -298,10 +300,104 @@ ProcessSelection::ProcessSelection( wxWindow* parent, wxWindowID id, const wxStr
 	bSizer38->Add( bSizer14, 1, wxEXPAND, 5 );
 
 
-	m_panel1->SetSizer( bSizer38 );
-	m_panel1->Layout();
-	bSizer38->Fit( m_panel1 );
-	options_sizer->Add( m_panel1, 1, wxEXPAND | wxALL, 5 );
+	AppSelectionPanel->SetSizer( bSizer38 );
+	AppSelectionPanel->Layout();
+	bSizer38->Fit( AppSelectionPanel );
+	m_notebook1->AddPage( AppSelectionPanel, _("App Selection"), true );
+	VisualizerOptionsPanel = new wxPanel( m_notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxBoxSizer* bSizer23;
+	bSizer23 = new wxBoxSizer( wxVERTICAL );
+
+	wxString visualizer_layout_choiceChoices[] = { _("Circular Radar"), _("Horizontal Bar") };
+	int visualizer_layout_choiceNChoices = sizeof( visualizer_layout_choiceChoices ) / sizeof( wxString );
+	visualizer_layout_choice = new wxChoice( VisualizerOptionsPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, visualizer_layout_choiceNChoices, visualizer_layout_choiceChoices, 0 );
+	visualizer_layout_choice->SetSelection( 0 );
+	bSizer23->Add( visualizer_layout_choice, 0, wxALL|wxEXPAND, 5 );
+
+	wxStaticBoxSizer* AmplitudeBox;
+	AmplitudeBox = new wxStaticBoxSizer( new wxStaticBox( VisualizerOptionsPanel, wxID_ANY, _("Amplitude Groups") ), wxVERTICAL );
+
+	wxFlexGridSizer* fgSizer2;
+	fgSizer2 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer2->SetFlexibleDirection( wxBOTH );
+	fgSizer2->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+
+	m_staticText24 = new wxStaticText( AmplitudeBox->GetStaticBox(), wxID_ANY, _("Quiet"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText24->Wrap( -1 );
+	fgSizer2->Add( m_staticText24, 0, wxALIGN_CENTER|wxALL, 5 );
+
+	wxBoxSizer* bSizer31;
+	bSizer31 = new wxBoxSizer( wxHORIZONTAL );
+
+	amp_colorpicker_quiet = new wxColourPickerCtrl( AmplitudeBox->GetStaticBox(), wxID_ANY, wxColour( 0, 255, 0 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	bSizer31->Add( amp_colorpicker_quiet, 0, wxALL, 5 );
+
+	m_staticText30 = new wxStaticText( AmplitudeBox->GetStaticBox(), wxID_ANY, _("Min. Threshold:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText30->Wrap( -1 );
+	bSizer31->Add( m_staticText30, 0, wxALIGN_CENTER|wxALL, 5 );
+
+	amp_thresh_quiet = new wxSpinCtrlDouble( AmplitudeBox->GetStaticBox(), wxID_ANY, wxT("0.00005"), wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 1, 5e-05, 1 );
+	amp_thresh_quiet->SetDigits( 5 );
+	bSizer31->Add( amp_thresh_quiet, 0, wxALL, 5 );
+
+
+	fgSizer2->Add( bSizer31, 1, 0, 5 );
+
+	m_staticText241 = new wxStaticText( AmplitudeBox->GetStaticBox(), wxID_ANY, _("Medium"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText241->Wrap( -1 );
+	fgSizer2->Add( m_staticText241, 0, wxALIGN_CENTER|wxALL, 5 );
+
+	wxBoxSizer* bSizer311;
+	bSizer311 = new wxBoxSizer( wxHORIZONTAL );
+
+	amp_colorpicker_medium = new wxColourPickerCtrl( AmplitudeBox->GetStaticBox(), wxID_ANY, wxColour( 255, 255, 0 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	bSizer311->Add( amp_colorpicker_medium, 0, wxALL, 5 );
+
+	m_staticText301 = new wxStaticText( AmplitudeBox->GetStaticBox(), wxID_ANY, _("Min. Threshold:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText301->Wrap( -1 );
+	bSizer311->Add( m_staticText301, 0, wxALIGN_CENTER|wxALL, 5 );
+
+	amp_thresh_medium = new wxSpinCtrlDouble( AmplitudeBox->GetStaticBox(), wxID_ANY, wxT("0.01"), wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 1, 0.01, 1 );
+	amp_thresh_medium->SetDigits( 5 );
+	bSizer311->Add( amp_thresh_medium, 0, wxALL, 5 );
+
+
+	fgSizer2->Add( bSizer311, 1, 0, 5 );
+
+	m_staticText242 = new wxStaticText( AmplitudeBox->GetStaticBox(), wxID_ANY, _("Loud"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText242->Wrap( -1 );
+	fgSizer2->Add( m_staticText242, 0, wxALIGN_CENTER|wxALL, 5 );
+
+	wxBoxSizer* bSizer312;
+	bSizer312 = new wxBoxSizer( wxHORIZONTAL );
+
+	amp_colorpicker_loud = new wxColourPickerCtrl( AmplitudeBox->GetStaticBox(), wxID_ANY, wxColour( 255, 0, 0 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	bSizer312->Add( amp_colorpicker_loud, 0, wxALL, 5 );
+
+	m_staticText302 = new wxStaticText( AmplitudeBox->GetStaticBox(), wxID_ANY, _("Min. Threshold:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText302->Wrap( -1 );
+	bSizer312->Add( m_staticText302, 0, wxALIGN_CENTER|wxALL, 5 );
+
+	amp_thresh_loud = new wxSpinCtrlDouble( AmplitudeBox->GetStaticBox(), wxID_ANY, wxT("0.1"), wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 1, 0.1, 1 );
+	amp_thresh_loud->SetDigits( 5 );
+	bSizer312->Add( amp_thresh_loud, 0, wxALL|wxEXPAND, 5 );
+
+
+	fgSizer2->Add( bSizer312, 1, 0, 5 );
+
+
+	AmplitudeBox->Add( fgSizer2, 1, wxALIGN_CENTER_HORIZONTAL, 5 );
+
+
+	bSizer23->Add( AmplitudeBox, 1, wxALL|wxEXPAND, 5 );
+
+
+	VisualizerOptionsPanel->SetSizer( bSizer23 );
+	VisualizerOptionsPanel->Layout();
+	bSizer23->Fit( VisualizerOptionsPanel );
+	m_notebook1->AddPage( VisualizerOptionsPanel, _("Visualizer Options"), false );
+
+	options_sizer->Add( m_notebook1, 1, wxEXPAND | wxALL, 5 );
 
 
 	this->SetSizer( options_sizer );
@@ -310,6 +406,7 @@ ProcessSelection::ProcessSelection( wxWindow* parent, wxWindowID id, const wxStr
 	this->Centre( wxBOTH );
 
 	// Connect Events
+	this->Connect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( ProcessSelection::OnClose ) );
 	refresh->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProcessSelection::OnRefresh ), NULL, this );
 	confirm->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProcessSelection::OnConfirm ), NULL, this );
 	cancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProcessSelection::OnExit ), NULL, this );

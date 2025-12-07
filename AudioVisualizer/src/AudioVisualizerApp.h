@@ -26,6 +26,11 @@
 #include <wx/panel.h>
 #include <wx/frame.h>
 #include <wx/listbox.h>
+#include <wx/choice.h>
+#include <wx/clrpicker.h>
+#include <wx/spinctrl.h>
+#include <wx/statbox.h>
+#include <wx/notebook.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -80,7 +85,8 @@ class ProcessSelection : public wxFrame
 	private:
 
 	protected:
-		wxPanel* m_panel1;
+		wxNotebook* m_notebook1;
+		wxPanel* AppSelectionPanel;
 		wxStaticText* m_staticText2;
 		wxListBox* processes_list;
 		wxButton* refresh;
@@ -102,8 +108,23 @@ class ProcessSelection : public wxFrame
 		wxSlider* size_y_slider;
 		wxTextCtrl* size_y_text;
 		wxButton* reset;
+		wxPanel* VisualizerOptionsPanel;
+		wxChoice* visualizer_layout_choice;
+		wxStaticText* m_staticText24;
+		wxColourPickerCtrl* amp_colorpicker_quiet;
+		wxStaticText* m_staticText30;
+		wxSpinCtrlDouble* amp_thresh_quiet;
+		wxStaticText* m_staticText241;
+		wxColourPickerCtrl* amp_colorpicker_medium;
+		wxStaticText* m_staticText301;
+		wxSpinCtrlDouble* amp_thresh_medium;
+		wxStaticText* m_staticText242;
+		wxColourPickerCtrl* amp_colorpicker_loud;
+		wxStaticText* m_staticText302;
+		wxSpinCtrlDouble* amp_thresh_loud;
 
 		// Virtual event handlers, override them in your derived class
+		virtual void OnClose( wxCloseEvent& event ) { event.Skip(); }
 		virtual void OnRefresh( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnConfirm( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnExit( wxCommandEvent& event ) { event.Skip(); }
@@ -116,7 +137,7 @@ class ProcessSelection : public wxFrame
 
 	public:
 
-		ProcessSelection( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Directional Audio Visualizer"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 575,330 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
+		ProcessSelection( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Directional Audio Visualizer"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 575,420 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
 
 		~ProcessSelection();
 

@@ -58,6 +58,27 @@ void ProcessWindow::OnConfirm(wxCommandEvent& event)
 
 	std::cout << std::endl << "Selected index: " << selected << ", Name: " << data->name << ", ProcessID: " << data->processID << std::endl;
     
+	// get visualizer options
+	VisualizerOptions* selectedOptions = new VisualizerOptions();
+
+	// layout
+	selectedOptions->layout = static_cast<VisualizerLayout>(visualizer_layout_choice->GetCurrentSelection());
+
+	// amplitude thresholds
+	selectedOptions->amplitudeThresholds[0] = amp_thresh_quiet->GetValue();
+	selectedOptions->amplitudeThresholds[1] = amp_thresh_medium->GetValue();
+	selectedOptions->amplitudeThresholds[2] = amp_thresh_loud->GetValue();
+
+	// amplitude colors
+	wxColor c = amp_colorpicker_quiet->GetColour();
+	selectedOptions->amplitudeColors[0] = VisualizerColor((float)c.Red(), (float)c.Green(), (float)c.Blue(), (float)c.Alpha());
+	c = amp_colorpicker_medium->GetColour();
+	selectedOptions->amplitudeColors[1] = VisualizerColor((float)c.Red(), (float)c.Green(), (float)c.Blue(), (float)c.Alpha());
+	c = amp_colorpicker_loud->GetColour();
+	selectedOptions->amplitudeColors[2] = VisualizerColor((float)c.Red(), (float)c.Green(), (float)c.Blue(), (float)c.Alpha());
+
+	visualizer->options = selectedOptions;
+
     Hide();
 
 

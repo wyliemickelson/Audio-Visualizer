@@ -32,7 +32,7 @@ bool App::OnInit()
 	menu->Append(wxID_EXIT, "Exit");
 	menu->Bind(wxEVT_MENU, &App::OnExit, this, wxID_EXIT);
 	menu->Bind(wxEVT_MENU, &App::OnCustomize, this, wxID_PROPERTIES);
-	Tray *tray = new Tray(menu);
+	Tray* tray = new Tray(menu);
 
 
 	return true;

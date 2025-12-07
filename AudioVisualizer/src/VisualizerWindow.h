@@ -11,20 +11,20 @@
 #pragma comment(lib, "dwmapi.lib")
 
 
-struct Color
+struct VisualizerColor
 {
 	float r;
 	float g;
 	float b;
 	float a;
 
-	Color(float ri, float gi, float bi, float ai) {
+	VisualizerColor(float ri, float gi, float bi, float ai) {
 		r = ri;
 		g = gi;
 		b = bi;
 		a = ai;
 	}
-	Color() {
+	VisualizerColor() {
 		r = 0.0f;
 		g = 0.0f;
 		b = 0.0f;
@@ -44,6 +44,26 @@ struct VisualizerPosition
 	int y;
 	int size_x;
 	int size_y;
+};
+
+enum VisualizerLayout {
+	CIRCULAR,
+	HORIZONTAL,
+};
+
+struct VisualizerOptions {
+	enum VisualizerLayout layout;
+	VisualizerColor amplitudeColors[3];
+	float amplitudeThresholds[3];
+
+	VisualizerColor frequencyColors[5] = 
+	{
+		VisualizerColor(0.8f, 0.6f, 0.9f, 1.0f),
+		VisualizerColor(0.74f, 0.17f, 0.39f, 1.0f),
+		VisualizerColor(0.9, 0.2f, 0.2f, 1.0f),
+		VisualizerColor(1.0f, 0.5f, 0.2f, 1.0f),
+		VisualizerColor(1.0f, 0.70f, 0.3f, 1.0f)
+	};
 };
 
 /*
@@ -110,6 +130,8 @@ public:
 	static VisualizerPosition position;
 
 	void Render();
+	void RenderHorizontal();
+	void RenderCircular();
 
 	Shader* shader = nullptr;
 	wxGLContext* gl_context = nullptr;
@@ -123,9 +145,12 @@ public:
 	void OnSize(wxSizeEvent& event);
 	void OnClose(wxCloseEvent& event);
 	VisualizerCanvas* canvas;
+	static VisualizerOptions* options;
 
 	VisualizerWindow(wxWindow* parent, long style = wxSTAY_ON_TOP | wxNO_BORDER ) : wxFrame(parent, wxID_ANY, "", wxDefaultPosition, wxDefaultSize, style, wxFrameNameStr)
 	{
+		options = new VisualizerOptions();
+
 		wxDisplay* display = new wxDisplay();
 		wxSize size = (display->GetClientArea()).GetSize();
 		size.y = 50;
