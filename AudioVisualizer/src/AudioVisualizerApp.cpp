@@ -147,12 +147,14 @@ Customization::~Customization()
 
 ProcessSelection::ProcessSelection( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxFrame( parent, id, title, pos, size, style )
 {
-	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+	this->SetSizeHints( wxSize( 600,400 ), wxDefaultSize );
+	this->SetForegroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOW ) );
+	this->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_MENU ) );
 
 	wxBoxSizer* options_sizer;
 	options_sizer = new wxBoxSizer( wxVERTICAL );
 
-	m_notebook1 = new wxNotebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
+	m_notebook1 = new wxNotebook( this, wxID_ANY, wxDefaultPosition, wxSize( -1,300 ), 0 );
 	AppSelectionPanel = new wxPanel( m_notebook1, wxID_ANY, wxDefaultPosition, wxSize( -1,-1 ), wxTAB_TRAVERSAL );
 	AppSelectionPanel->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_MENU ) );
 
@@ -163,156 +165,170 @@ ProcessSelection::ProcessSelection( wxWindow* parent, wxWindowID id, const wxStr
 	bSizer3 = new wxBoxSizer( wxVERTICAL );
 
 	bSizer3->SetMinSize( wxSize( 320,400 ) );
-	m_staticText2 = new wxStaticText( AppSelectionPanel, wxID_ANY, _("Please select which application to visualize:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText2 = new wxStaticText( AppSelectionPanel, wxID_ANY, _("Select an application to visualize:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText2->Wrap( -1 );
 	bSizer3->Add( m_staticText2, 0, wxALL, 5 );
 
+	wxBoxSizer* bSizer75;
+	bSizer75 = new wxBoxSizer( wxVERTICAL );
+
 	processes_list = new wxListBox( AppSelectionPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, wxLB_ALWAYS_SB );
-	processes_list->SetMinSize( wxSize( 320,-1 ) );
+	processes_list->SetMinSize( wxSize( -1,200 ) );
 
-	bSizer3->Add( processes_list, 0, wxALL, 5 );
+	bSizer75->Add( processes_list, 0, wxALL|wxEXPAND, 5 );
 
-	wxBoxSizer* confirmation;
-	confirmation = new wxBoxSizer( wxHORIZONTAL );
-
-	refresh = new wxButton( AppSelectionPanel, wxID_ANY, _("Refresh List"), wxDefaultPosition, wxSize( 100,50 ), 0 );
-	confirmation->Add( refresh, 0, wxALL, 5 );
-
-	confirm = new wxButton( AppSelectionPanel, wxID_ANY, _("Ok"), wxDefaultPosition, wxSize( 100,50 ), 0 );
-	confirmation->Add( confirm, 0, wxALL, 5 );
-
-	cancel = new wxButton( AppSelectionPanel, wxID_ANY, _("Cancel"), wxDefaultPosition, wxSize( 100,50 ), 0 );
-	confirmation->Add( cancel, 0, wxALL, 5 );
+	refresh = new wxButton( AppSelectionPanel, wxID_ANY, _("Refresh List"), wxDefaultPosition, wxSize( 100,25 ), 0 );
+	bSizer75->Add( refresh, 0, wxALL, 5 );
 
 
-	bSizer3->Add( confirmation, 1, wxEXPAND, 5 );
+	bSizer3->Add( bSizer75, 1, wxEXPAND, 5 );
 
 
 	bSizer38->Add( bSizer3, 1, 0, 5 );
-
-	wxBoxSizer* bSizer14;
-	bSizer14 = new wxBoxSizer( wxVERTICAL );
-
-	wxBoxSizer* bSizer5;
-	bSizer5 = new wxBoxSizer( wxVERTICAL );
-
-	m_staticText3 = new wxStaticText( AppSelectionPanel, wxID_ANY, _("Position:"), wxPoint( -1,-1 ), wxSize( -1,-1 ), 0 );
-	m_staticText3->Wrap( -1 );
-	m_staticText3->SetFont( wxFont( 9, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, true, wxT("Arial") ) );
-
-	bSizer5->Add( m_staticText3, 0, wxALL, 5 );
-
-	wxBoxSizer* bSizer6;
-	bSizer6 = new wxBoxSizer( wxHORIZONTAL );
-
-	m_staticText4 = new wxStaticText( AppSelectionPanel, wxID_ANY, _("X:"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText4->Wrap( -1 );
-	bSizer6->Add( m_staticText4, 0, wxALL, 5 );
-
-	pos_x_slider = new wxSlider( AppSelectionPanel, wxID_ANY, 50, 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL );
-	bSizer6->Add( pos_x_slider, 0, wxALL, 5 );
-
-	pos_x_text = new wxTextCtrl( AppSelectionPanel, wxID_ANY, _("0"), wxDefaultPosition, wxSize( 75,-1 ), wxTE_PROCESS_ENTER );
-	bSizer6->Add( pos_x_text, 0, wxALL, 5 );
-
-
-	bSizer5->Add( bSizer6, 1, wxEXPAND, 5 );
-
-	wxBoxSizer* bSizer61;
-	bSizer61 = new wxBoxSizer( wxHORIZONTAL );
-
-	m_staticText41 = new wxStaticText( AppSelectionPanel, wxID_ANY, _("Y:"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText41->Wrap( -1 );
-	bSizer61->Add( m_staticText41, 0, wxALL, 5 );
-
-	pos_y_slider = new wxSlider( AppSelectionPanel, wxID_ANY, 50, 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL );
-	bSizer61->Add( pos_y_slider, 0, wxALL, 5 );
-
-	pos_y_text = new wxTextCtrl( AppSelectionPanel, wxID_ANY, _("0"), wxDefaultPosition, wxSize( 75,-1 ), wxTE_PROCESS_ENTER );
-	bSizer61->Add( pos_y_text, 0, wxALL, 5 );
-
-
-	bSizer5->Add( bSizer61, 1, wxEXPAND, 5 );
-
-
-	bSizer14->Add( bSizer5, 1, wxEXPAND, 5 );
-
-	m_panel3 = new wxPanel( AppSelectionPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	wxBoxSizer* bSizer51;
-	bSizer51 = new wxBoxSizer( wxVERTICAL );
-
-	m_staticText31 = new wxStaticText( m_panel3, wxID_ANY, _("Size:"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText31->Wrap( -1 );
-	m_staticText31->SetFont( wxFont( 9, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, true, wxT("Arial") ) );
-
-	bSizer51->Add( m_staticText31, 0, wxALL, 5 );
-
-	wxBoxSizer* bSizer62;
-	bSizer62 = new wxBoxSizer( wxHORIZONTAL );
-
-	m_staticText42 = new wxStaticText( m_panel3, wxID_ANY, _("X:"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText42->Wrap( -1 );
-	bSizer62->Add( m_staticText42, 0, wxALL, 5 );
-
-	size_x_slider = new wxSlider( m_panel3, wxID_ANY, 50, 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL );
-	bSizer62->Add( size_x_slider, 0, wxALL, 5 );
-
-	size_x_text = new wxTextCtrl( m_panel3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 75,-1 ), wxTE_PROCESS_ENTER );
-	bSizer62->Add( size_x_text, 0, wxALL, 5 );
-
-
-	bSizer51->Add( bSizer62, 1, wxEXPAND, 5 );
-
-	wxBoxSizer* bSizer611;
-	bSizer611 = new wxBoxSizer( wxHORIZONTAL );
-
-	m_staticText411 = new wxStaticText( m_panel3, wxID_ANY, _("Y:"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText411->Wrap( -1 );
-	bSizer611->Add( m_staticText411, 0, wxALL, 5 );
-
-	size_y_slider = new wxSlider( m_panel3, wxID_ANY, 50, 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL );
-	bSizer611->Add( size_y_slider, 0, wxALL, 5 );
-
-	size_y_text = new wxTextCtrl( m_panel3, wxID_ANY, _("50"), wxDefaultPosition, wxSize( 75,-1 ), wxTE_PROCESS_ENTER );
-	bSizer611->Add( size_y_text, 0, wxALL, 5 );
-
-
-	bSizer51->Add( bSizer611, 1, wxEXPAND, 5 );
-
-
-	m_panel3->SetSizer( bSizer51 );
-	m_panel3->Layout();
-	bSizer51->Fit( m_panel3 );
-	bSizer14->Add( m_panel3, 1, wxEXPAND | wxALL, 5 );
-
-	wxBoxSizer* bSizer20;
-	bSizer20 = new wxBoxSizer( wxHORIZONTAL );
-
-	reset = new wxButton( AppSelectionPanel, wxID_ANY, _("Reset"), wxPoint( -1,-1 ), wxSize( 225,50 ), 0 );
-
-	reset->SetBitmapPosition( wxRIGHT );
-	bSizer20->Add( reset, 0, wxALL, 5 );
-
-
-	bSizer14->Add( bSizer20, 1, wxEXPAND, 5 );
-
-
-	bSizer38->Add( bSizer14, 1, wxEXPAND, 5 );
 
 
 	AppSelectionPanel->SetSizer( bSizer38 );
 	AppSelectionPanel->Layout();
 	bSizer38->Fit( AppSelectionPanel );
 	m_notebook1->AddPage( AppSelectionPanel, _("App Selection"), true );
-	VisualizerOptionsPanel = new wxPanel( m_notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	VisualizerOptionsPanel = new wxScrolledWindow( m_notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxHSCROLL|wxVSCROLL );
+	VisualizerOptionsPanel->SetScrollRate( 5, 10 );
 	wxBoxSizer* bSizer23;
 	bSizer23 = new wxBoxSizer( wxVERTICAL );
 
-	wxString visualizer_layout_choiceChoices[] = { _("Circular Radar"), _("Horizontal Bar") };
+	wxStaticBoxSizer* sbSizer8;
+	sbSizer8 = new wxStaticBoxSizer( new wxStaticBox( VisualizerOptionsPanel, wxID_ANY, _("Visualizer Type") ), wxVERTICAL );
+
+	wxString visualizer_layout_choiceChoices[] = { _("Horizontal Bar"), _("Circular Radar") };
 	int visualizer_layout_choiceNChoices = sizeof( visualizer_layout_choiceChoices ) / sizeof( wxString );
-	visualizer_layout_choice = new wxChoice( VisualizerOptionsPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, visualizer_layout_choiceNChoices, visualizer_layout_choiceChoices, 0 );
+	visualizer_layout_choice = new wxChoice( sbSizer8->GetStaticBox(), wxID_ANY, wxDefaultPosition, wxDefaultSize, visualizer_layout_choiceNChoices, visualizer_layout_choiceChoices, 0 );
 	visualizer_layout_choice->SetSelection( 0 );
-	bSizer23->Add( visualizer_layout_choice, 0, wxALL|wxEXPAND, 5 );
+	sbSizer8->Add( visualizer_layout_choice, 0, wxALL|wxEXPAND, 5 );
+
+
+	bSizer23->Add( sbSizer8, 1, wxALL|wxEXPAND, 5 );
+
+	wxStaticBoxSizer* sbSizer2;
+	sbSizer2 = new wxStaticBoxSizer( new wxStaticBox( VisualizerOptionsPanel, wxID_ANY, _("Display Positioning") ), wxVERTICAL );
+
+	wxFlexGridSizer* fgSizer3;
+	fgSizer3 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer3->AddGrowableCol( 1 );
+	fgSizer3->SetFlexibleDirection( wxBOTH );
+	fgSizer3->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+
+	m_staticText36 = new wxStaticText( sbSizer2->GetStaticBox(), wxID_ANY, _("Preset:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText36->Wrap( -1 );
+	fgSizer3->Add( m_staticText36, 0, wxALIGN_CENTER|wxALL, 5 );
+
+	wxString display_choicesChoices[] = { _("Custom"), _("Center Radar"), _("Center Horizontal"), _("Top Horizontal"), _("Bottom Horizontal") };
+	int display_choicesNChoices = sizeof( display_choicesChoices ) / sizeof( wxString );
+	display_choices = new wxChoice( sbSizer2->GetStaticBox(), wxID_ANY, wxDefaultPosition, wxDefaultSize, display_choicesNChoices, display_choicesChoices, 0 );
+	display_choices->SetSelection( 0 );
+	fgSizer3->Add( display_choices, 0, wxALL|wxEXPAND, 5 );
+
+
+	sbSizer2->Add( fgSizer3, 1, wxEXPAND, 5 );
+
+
+	bSizer23->Add( sbSizer2, 0, wxALL|wxEXPAND, 5 );
+
+	wxStaticBoxSizer* sbSizer21;
+	sbSizer21 = new wxStaticBoxSizer( new wxStaticBox( VisualizerOptionsPanel, wxID_ANY, _("Manual Position") ), wxVERTICAL );
+
+	wxBoxSizer* bSizer52;
+	bSizer52 = new wxBoxSizer( wxVERTICAL );
+
+	m_staticText32 = new wxStaticText( sbSizer21->GetStaticBox(), wxID_ANY, _("Position:"), wxPoint( -1,-1 ), wxSize( -1,-1 ), 0 );
+	m_staticText32->Wrap( -1 );
+	m_staticText32->SetFont( wxFont( 9, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, true, wxT("Arial") ) );
+
+	bSizer52->Add( m_staticText32, 0, wxALL, 5 );
+
+	wxBoxSizer* bSizer63;
+	bSizer63 = new wxBoxSizer( wxHORIZONTAL );
+
+	m_staticText43 = new wxStaticText( sbSizer21->GetStaticBox(), wxID_ANY, _("X:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText43->Wrap( -1 );
+	bSizer63->Add( m_staticText43, 0, wxALL, 5 );
+
+	pos_x_slider = new wxSlider( sbSizer21->GetStaticBox(), wxID_ANY, 50, 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL );
+	bSizer63->Add( pos_x_slider, 0, wxALL, 5 );
+
+	pos_x_text = new wxTextCtrl( sbSizer21->GetStaticBox(), wxID_ANY, _("0"), wxDefaultPosition, wxSize( 75,-1 ), wxTE_PROCESS_ENTER );
+	bSizer63->Add( pos_x_text, 0, wxALL, 5 );
+
+
+	bSizer52->Add( bSizer63, 1, wxEXPAND, 5 );
+
+	wxBoxSizer* bSizer612;
+	bSizer612 = new wxBoxSizer( wxHORIZONTAL );
+
+	m_staticText412 = new wxStaticText( sbSizer21->GetStaticBox(), wxID_ANY, _("Y:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText412->Wrap( -1 );
+	bSizer612->Add( m_staticText412, 0, wxALL, 5 );
+
+	pos_y_slider = new wxSlider( sbSizer21->GetStaticBox(), wxID_ANY, 50, 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL );
+	bSizer612->Add( pos_y_slider, 0, wxALL, 5 );
+
+	pos_y_text = new wxTextCtrl( sbSizer21->GetStaticBox(), wxID_ANY, _("0"), wxDefaultPosition, wxSize( 75,-1 ), wxTE_PROCESS_ENTER );
+	bSizer612->Add( pos_y_text, 0, wxALL, 5 );
+
+
+	bSizer52->Add( bSizer612, 1, wxEXPAND, 5 );
+
+
+	sbSizer21->Add( bSizer52, 1, wxEXPAND, 5 );
+
+	wxBoxSizer* bSizer511;
+	bSizer511 = new wxBoxSizer( wxVERTICAL );
+
+	m_staticText311 = new wxStaticText( sbSizer21->GetStaticBox(), wxID_ANY, _("Size:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText311->Wrap( -1 );
+	m_staticText311->SetFont( wxFont( 9, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, true, wxT("Arial") ) );
+
+	bSizer511->Add( m_staticText311, 0, wxALL, 5 );
+
+	wxBoxSizer* bSizer621;
+	bSizer621 = new wxBoxSizer( wxHORIZONTAL );
+
+	m_staticText421 = new wxStaticText( sbSizer21->GetStaticBox(), wxID_ANY, _("X:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText421->Wrap( -1 );
+	bSizer621->Add( m_staticText421, 0, wxALL, 5 );
+
+	size_x_slider = new wxSlider( sbSizer21->GetStaticBox(), wxID_ANY, 50, 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL );
+	bSizer621->Add( size_x_slider, 0, wxALL, 5 );
+
+	size_x_text = new wxTextCtrl( sbSizer21->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 75,-1 ), wxTE_PROCESS_ENTER );
+	bSizer621->Add( size_x_text, 0, wxALL, 5 );
+
+
+	bSizer511->Add( bSizer621, 1, wxEXPAND, 5 );
+
+	wxBoxSizer* bSizer6111;
+	bSizer6111 = new wxBoxSizer( wxHORIZONTAL );
+
+	m_staticText4111 = new wxStaticText( sbSizer21->GetStaticBox(), wxID_ANY, _("Y:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText4111->Wrap( -1 );
+	bSizer6111->Add( m_staticText4111, 0, wxALL, 5 );
+
+	size_y_slider = new wxSlider( sbSizer21->GetStaticBox(), wxID_ANY, 50, 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL );
+	bSizer6111->Add( size_y_slider, 0, wxALL, 5 );
+
+	size_y_text = new wxTextCtrl( sbSizer21->GetStaticBox(), wxID_ANY, _("50"), wxDefaultPosition, wxSize( 75,-1 ), wxTE_PROCESS_ENTER );
+	bSizer6111->Add( size_y_text, 0, wxALL, 5 );
+
+
+	bSizer511->Add( bSizer6111, 1, wxEXPAND, 5 );
+
+
+	sbSizer21->Add( bSizer511, 1, wxEXPAND, 5 );
+
+	reset = new wxButton( sbSizer21->GetStaticBox(), wxID_ANY, _("Reset"), wxDefaultPosition, wxDefaultSize, 0 );
+	sbSizer21->Add( reset, 0, wxALL, 5 );
+
+
+	bSizer23->Add( sbSizer21, 0, wxALL|wxEXPAND, 5 );
 
 	wxStaticBoxSizer* AmplitudeBox;
 	AmplitudeBox = new wxStaticBoxSizer( new wxStaticBox( VisualizerOptionsPanel, wxID_ANY, _("Amplitude Groups") ), wxVERTICAL );
@@ -386,10 +402,10 @@ ProcessSelection::ProcessSelection( wxWindow* parent, wxWindowID id, const wxStr
 	fgSizer2->Add( bSizer312, 1, 0, 5 );
 
 
-	AmplitudeBox->Add( fgSizer2, 1, wxALIGN_CENTER_HORIZONTAL, 5 );
+	AmplitudeBox->Add( fgSizer2, 1, 0, 5 );
 
 
-	bSizer23->Add( AmplitudeBox, 1, wxALL|wxEXPAND, 5 );
+	bSizer23->Add( AmplitudeBox, 0, wxALL|wxEXPAND, 5 );
 
 
 	VisualizerOptionsPanel->SetSizer( bSizer23 );
@@ -397,7 +413,20 @@ ProcessSelection::ProcessSelection( wxWindow* parent, wxWindowID id, const wxStr
 	bSizer23->Fit( VisualizerOptionsPanel );
 	m_notebook1->AddPage( VisualizerOptionsPanel, _("Visualizer Options"), false );
 
-	options_sizer->Add( m_notebook1, 1, wxEXPAND | wxALL, 5 );
+	options_sizer->Add( m_notebook1, 0, wxALL|wxEXPAND, 5 );
+
+	wxBoxSizer* bSizer74;
+	bSizer74 = new wxBoxSizer( wxHORIZONTAL );
+
+	bSizer74->SetMinSize( wxSize( -1,100 ) );
+	confirm = new wxButton( this, wxID_ANY, _("Ok"), wxDefaultPosition, wxSize( 100,50 ), 0 );
+	bSizer74->Add( confirm, 0, wxALL, 5 );
+
+	cancel = new wxButton( this, wxID_ANY, _("Cancel"), wxDefaultPosition, wxSize( 100,50 ), 0 );
+	bSizer74->Add( cancel, 0, wxALL, 5 );
+
+
+	options_sizer->Add( bSizer74, 0, wxALIGN_RIGHT|wxALL, 5 );
 
 
 	this->SetSizer( options_sizer );
@@ -408,8 +437,6 @@ ProcessSelection::ProcessSelection( wxWindow* parent, wxWindowID id, const wxStr
 	// Connect Events
 	this->Connect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( ProcessSelection::OnClose ) );
 	refresh->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProcessSelection::OnRefresh ), NULL, this );
-	confirm->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProcessSelection::OnConfirm ), NULL, this );
-	cancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProcessSelection::OnExit ), NULL, this );
 	pos_x_slider->Connect( wxEVT_SLIDER, wxCommandEventHandler( ProcessSelection::OnSL_Pos ), NULL, this );
 	pos_x_text->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ProcessSelection::OnPos ), NULL, this );
 	pos_y_slider->Connect( wxEVT_SLIDER, wxCommandEventHandler( ProcessSelection::OnSL_Pos ), NULL, this );
@@ -419,6 +446,8 @@ ProcessSelection::ProcessSelection( wxWindow* parent, wxWindowID id, const wxStr
 	size_y_slider->Connect( wxEVT_SLIDER, wxCommandEventHandler( ProcessSelection::OnSL_Size ), NULL, this );
 	size_y_text->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ProcessSelection::OnSize ), NULL, this );
 	reset->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProcessSelection::OnReset ), NULL, this );
+	confirm->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProcessSelection::OnConfirm ), NULL, this );
+	cancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProcessSelection::OnExit ), NULL, this );
 }
 
 ProcessSelection::~ProcessSelection()

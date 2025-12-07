@@ -47,8 +47,8 @@ struct VisualizerPosition
 };
 
 enum VisualizerLayout {
-	CIRCULAR,
 	HORIZONTAL,
+	CIRCULAR,
 };
 
 struct VisualizerOptions {

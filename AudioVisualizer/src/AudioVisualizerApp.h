@@ -27,9 +27,10 @@
 #include <wx/frame.h>
 #include <wx/listbox.h>
 #include <wx/choice.h>
+#include <wx/statbox.h>
 #include <wx/clrpicker.h>
 #include <wx/spinctrl.h>
-#include <wx/statbox.h>
+#include <wx/scrolwin.h>
 #include <wx/notebook.h>
 
 ///////////////////////////////////////////////////////////////////////////
@@ -90,26 +91,25 @@ class ProcessSelection : public wxFrame
 		wxStaticText* m_staticText2;
 		wxListBox* processes_list;
 		wxButton* refresh;
-		wxButton* confirm;
-		wxButton* cancel;
-		wxStaticText* m_staticText3;
-		wxStaticText* m_staticText4;
+		wxScrolledWindow* VisualizerOptionsPanel;
+		wxChoice* visualizer_layout_choice;
+		wxStaticText* m_staticText36;
+		wxChoice* display_choices;
+		wxStaticText* m_staticText32;
+		wxStaticText* m_staticText43;
 		wxSlider* pos_x_slider;
 		wxTextCtrl* pos_x_text;
-		wxStaticText* m_staticText41;
+		wxStaticText* m_staticText412;
 		wxSlider* pos_y_slider;
 		wxTextCtrl* pos_y_text;
-		wxPanel* m_panel3;
-		wxStaticText* m_staticText31;
-		wxStaticText* m_staticText42;
+		wxStaticText* m_staticText311;
+		wxStaticText* m_staticText421;
 		wxSlider* size_x_slider;
 		wxTextCtrl* size_x_text;
-		wxStaticText* m_staticText411;
+		wxStaticText* m_staticText4111;
 		wxSlider* size_y_slider;
 		wxTextCtrl* size_y_text;
 		wxButton* reset;
-		wxPanel* VisualizerOptionsPanel;
-		wxChoice* visualizer_layout_choice;
 		wxStaticText* m_staticText24;
 		wxColourPickerCtrl* amp_colorpicker_quiet;
 		wxStaticText* m_staticText30;
@@ -122,22 +122,24 @@ class ProcessSelection : public wxFrame
 		wxColourPickerCtrl* amp_colorpicker_loud;
 		wxStaticText* m_staticText302;
 		wxSpinCtrlDouble* amp_thresh_loud;
+		wxButton* confirm;
+		wxButton* cancel;
 
 		// Virtual event handlers, override them in your derived class
 		virtual void OnClose( wxCloseEvent& event ) { event.Skip(); }
 		virtual void OnRefresh( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnConfirm( wxCommandEvent& event ) { event.Skip(); }
-		virtual void OnExit( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnSL_Pos( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnPos( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnSL_Size( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnSize( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnReset( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnConfirm( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnExit( wxCommandEvent& event ) { event.Skip(); }
 
 
 	public:
 
-		ProcessSelection( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Directional Audio Visualizer"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 575,420 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
+		ProcessSelection( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Directional Audio Visualizer"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 600,400 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
 
 		~ProcessSelection();
 

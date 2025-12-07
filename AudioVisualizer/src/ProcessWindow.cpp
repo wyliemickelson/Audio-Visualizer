@@ -77,6 +77,8 @@ void ProcessWindow::OnConfirm(wxCommandEvent& event)
 	c = amp_colorpicker_loud->GetColour();
 	selectedOptions->amplitudeColors[2] = VisualizerColor((float)c.Red(), (float)c.Green(), (float)c.Blue(), (float)c.Alpha());
 
+
+
 	visualizer->options = selectedOptions;
 
     Hide();
