@@ -237,14 +237,24 @@ HRESULT CLoopbackCapture::OnFinishCapture(IMFAsyncResult* pResult)
 
     // Free allocated resources used for FFT calculation
     fftw_destroy_plan(fft_data_left->p);
-    fftw_free(fft_data_left->in);
-    fftw_free(fft_data_left->out);
+    free(fft_data_left->in);
+    free(fft_data_left->out);
     free(fft_data_left);
 
     fftw_destroy_plan(fft_data_right->p);
-    fftw_free(fft_data_right->in);
-    fftw_free(fft_data_right->out);
+    free(fft_data_right->in);
+    free(fft_data_right->out);
     free(fft_data_right);
+
+    free(outputDataDirection);
+    free(outputDataMagnitude);
+
+    for (int i = 0; i < ROLLING_AVG_ITERATIONS; i++) {
+        free(bufferDataDirection[i]);
+        free(bufferDataMagnitude[i]);
+    }
+    free(bufferDataDirection);
+    free(bufferDataMagnitude);
 
     m_hCaptureStopped.SetEvent();
 
@@ -368,16 +378,14 @@ void CLoopbackCapture::CircularVisualizer(UINT32 FramesAvailable, BYTE* Data)
         right_signal_sum += std::abs(fullSamples[i + 1]);
     }
     float size = (right_signal_sum + left_signal_sum) / FramesAvailable / 2;
-    float dir = (right_signal_sum - left_signal_sum) / FramesAvailable / 2;
-    dir = dir / size;
+    float dir = (right_signal_sum - left_signal_sum) / FramesAvailable / 2 / size;
 
     //std::cout << "l: " << left_signal_sum << std::endl;
     //std::cout << "r: " << right_signal_sum << std::endl;
 
     //std::cout << "dir: " << dir << std::endl;
-    //std::cout << "size: " << size << std::endl;
-
-
+    float dB = 20 * std::log10(size);
+    //std::cout << "dB: " << dB << std::endl;
 
     newData.stereo_pos = dir;
     newData.size = size;
@@ -387,6 +395,7 @@ void CLoopbackCapture::CircularVisualizer(UINT32 FramesAvailable, BYTE* Data)
     }
     VisualizerCanvas::dataVector.insert(VisualizerCanvas::dataVector.begin(), newData);
 
+    free(fullSamples);
     return;
 }
 

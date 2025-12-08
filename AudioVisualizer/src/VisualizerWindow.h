@@ -52,6 +52,7 @@ enum VisualizerLayout {
 };
 
 struct VisualizerOptions {
+	DWORD processID;
 	enum VisualizerLayout layout;
 	VisualizerColor amplitudeColors[3];
 	float amplitudeThresholds[3];
@@ -73,7 +74,7 @@ class VisualizerCanvas : public wxGLCanvas
 {
 public:
 	void OnSize(wxSizeEvent& event);
-	void GetCircularCoords(float radius, float* x, float* y, FreqData data);
+	void GetCircularCoords(float* x, float* y, FreqData data);
 
 	VisualizerCanvas(wxWindow* parent, const wxGLAttributes display_attribs, wxSize size) : wxGLCanvas(parent, display_attribs, wxID_ANY, wxDefaultPosition, size, 0, wxGLCanvasName, wxNullPalette)
 	{
@@ -130,6 +131,7 @@ public:
 	static VisualizerPosition position;
 
 	void Render();
+	void Clear();
 	void RenderHorizontal();
 	void RenderCircular();
 

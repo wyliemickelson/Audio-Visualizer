@@ -13,6 +13,7 @@
 class ProcessWindow : public ProcessSelection
 {
 public:
+	wxFrame* preview_window;
 	void OnClose(wxCloseEvent& event);
 	ProcessWindow(wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Directional Audio Visualizer"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize(575, 330), long style = wxDEFAULT_FRAME_STYLE | wxTAB_TRAVERSAL) : ProcessSelection(parent, id, title, pos, size, style)
 	{
@@ -64,6 +65,5 @@ private:
 	void OnPos(wxCommandEvent& event) override;
 
 	void SetPreviewPos();
-	wxFrame* preview_window;
 	wxSize screen_size;
 };

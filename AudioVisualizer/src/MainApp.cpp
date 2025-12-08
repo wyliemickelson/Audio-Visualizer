@@ -11,13 +11,15 @@
 #include <MainApp.h>
 #include <Tray.h>
 
+
 bool App::OnInit()
 {
-	//#ifdef _DEBUG
-	//	AllocConsole();
-	//	freopen("CONOUT$", "w", stdout);
-	//#endif
+	#ifdef _DEBUG
+		AllocConsole();
+		freopen("CONOUT$", "w", stdout);
+	#endif
 
+	activateRenderLoop(true);
 	process_window = new ProcessWindow(NULL);
 	process_window->Show(true);
 
@@ -40,14 +42,41 @@ bool App::OnInit()
 
 void App::OnCustomize(wxCommandEvent& event)
 {
-	customization = new CustomizationWindow(process_window->visualizer);
-	customization->Show(true);
+	//customization = new CustomizationWindow(process_window->visualizer);
+	//customization->Show(true);
+	process_window->Show(true);
+	process_window->preview_window->Show(true);
+	activateRenderLoop(false);
 }
 
 void App::OnExit(wxCommandEvent& event)
 {
-	process_window->Close();
-	customization->Close();
+	//process_window->Close();
+	//customization->Close();
+}
+
+void App::activateRenderLoop(bool on)
+{
+	if (on && !render_loop_on)
+	{
+		Connect(wxID_ANY, wxEVT_IDLE, wxIdleEventHandler(App::onIdle));
+		render_loop_on = true;
+	}
+	else if (!on && render_loop_on)
+	{
+		Disconnect(wxEVT_IDLE, wxIdleEventHandler(App::onIdle));
+		process_window->visualizer->canvas->Clear();
+		render_loop_on = false;
+	}
+}
+
+void App::onIdle(wxIdleEvent& evt)
+{
+	if (render_loop_on)
+	{
+		process_window->visualizer->canvas->Render();
+		evt.RequestMore(); // render continuously, not only once on idle
+	}
 }
 
 wxIMPLEMENT_APP(App);

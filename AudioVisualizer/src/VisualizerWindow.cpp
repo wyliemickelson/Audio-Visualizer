@@ -6,7 +6,7 @@
 
 // initialize static variables
 int VisualizerCanvas::len = 5;
-int VisualizerCanvas::dataVectorMaxLen = 50;
+int VisualizerCanvas::dataVectorMaxLen = 75;
 VisualizerOptions* VisualizerWindow::options;
 std::vector<FreqData> VisualizerCanvas::dataVector;
 FreqData* VisualizerCanvas::data = new FreqData[5];
@@ -26,14 +26,18 @@ void VisualizerWindow::OnClose(wxCloseEvent& event)
 	Close(true);
 }
 
-void VisualizerCanvas::GetCircularCoords(float radius, float* x, float* y, FreqData data) {
-	// middle direction = 90 degrees
-	// range: +,- 150 degrees from 90
-	float angle = 90 + (data.stereo_pos * -150);
-	float radians = angle * std::numbers::pi / 180;
+void VisualizerCanvas::GetCircularCoords(float* x, float* y, FreqData data) {
+	float radius = 0.5 * (1 + data.size); // draw louder sounds futher out
+	float angle = 90 + (data.stereo_pos * -135); // center at 90 deg (top of circle) | range: +,- 135 degrees
+	float radians = angle * std::numbers::pi / 180; // angle to radians for cos/sin functions
 
 	*x = radius * cos(radians);
 	*y = radius * sin(radians);
+}
+
+void VisualizerCanvas::Clear() {
+	glClear(GL_COLOR_BUFFER_BIT);
+	SwapBuffers();
 }
 
 /*
@@ -42,7 +46,6 @@ void VisualizerCanvas::GetCircularCoords(float radius, float* x, float* y, FreqD
 * Each bucket is represented by a diamond.
 * Position is left/right channel presence,
 * Size is loudness,
-* Color separates different frequency buckets.
 */
 void VisualizerCanvas::Render()
 {
@@ -50,8 +53,9 @@ void VisualizerCanvas::Render()
 	SetCurrent(*gl_context);
 	glViewport(0, 0, size.x * GetContentScaleFactor(), size.y * GetContentScaleFactor());
 	glClear(GL_COLOR_BUFFER_BIT);
-	glClearColor(0, 0, 0, 0); //transparent
+	glClearColor(0, 0, 0, 0); // background transparent
 
+	// render differently based on layout
 	switch (VisualizerWindow::options->layout) {
 		case CIRCULAR:
 			RenderCircular();
@@ -71,36 +75,36 @@ void VisualizerCanvas::RenderCircular() {
 		FreqData audioData;
 		try {
 			audioData = dataVector.at(i);
-			//std::cout << "Size: " << audioData.size << std::endl;
-			//std::cout << "Pos: " << audioData.stereo_pos << std::endl;
 
+			// remove static noise when there's no audio
 			if (audioData.size <= 0.0001) {
 				continue;
 			}
 
+			// set diamond color based on amplitude
 			VisualizerColor c;
-			float radius = 0.5;
 			if (audioData.size <= VisualizerWindow::options->amplitudeThresholds[1]) {
 				c = VisualizerWindow::options->amplitudeColors[0];
 			}
 			else if (audioData.size <= VisualizerWindow::options->amplitudeThresholds[2]) {
 				c = VisualizerWindow::options->amplitudeColors[1];
-				radius /= 1.05;
 			}
 			else {
 				c = VisualizerWindow::options->amplitudeColors[2];
-				radius /= 1.1;
 			}
-			c.a = 1.0f - (i * 1.0 / dataVectorMaxLen);
+			c.a = 1.0f - (i * 1.0 / dataVectorMaxLen); // transparency based on age of data point
 
+			// get rendering coords
 			float x;
 			float y;
-			GetCircularCoords(radius, &x, &y, audioData);
+			GetCircularCoords(&x, &y, audioData);
 
+			// matrix last col: axis pos
+			// matrix diagonal: axis size
 			float transformation_mat[4][4] =
 			{
-				0.03f, 0.0f, 0.0f, x,
-				0.0f, 0.03f, (1.0f) / ((float)len), y,
+				0.05f, 0.0f, 0.0f, x,
+				0.0f, 0.05f, (1.0f) / ((float)len), y,
 				0.0f, 0.0f, 1.0f, 0.0f,
 				0.0 ,0.0f, 0.0f, 1.0f
 			};
@@ -109,7 +113,6 @@ void VisualizerCanvas::RenderCircular() {
 			//set transformation matrix uniform
 			shader->setMat4("transform", transformation_mat);
 
-			//std::cout << "a: " << c.a << std::endl;
 
 			//set color uniform
 			shader->setVec4("color", &c.r);
@@ -119,6 +122,7 @@ void VisualizerCanvas::RenderCircular() {
 			glDisable(GL_BLEND);
 		}
 		catch (const std::out_of_range) {
+			// make sure dataVector has data to use before rendering
 			continue;
 		}
 	}

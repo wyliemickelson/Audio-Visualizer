@@ -5,8 +5,12 @@
 #include <LoopbackCapture.h>
 #include <wx/taskbar.h>
 #include <Tray.h>
+#include "wx/app.h"
+#include <MainApp.h>
 
 CLoopbackCapture loopbackCapture;
+
+wxDECLARE_APP(App);
 
 void ProcessWindow::OnExit(wxCommandEvent& event)
 {
@@ -23,6 +27,7 @@ void ProcessWindow::OnRefresh(wxCommandEvent& event) {
 void ProcessWindow::OnClose(wxCloseEvent& event)
 {
 	is_rendering = false;
+	wxGetApp().activateRenderLoop(false);
 	preview_window->Close(true);
 	Destroy();
 }
@@ -52,17 +57,21 @@ void ProcessWindow::OnConfirm(wxCommandEvent& event)
 		return;
 	}
 
-	preview_window->Close(true);
+	preview_window->Hide();
 	ClientData* data = NULL;
 	data = static_cast<ClientData*>(listBox->GetClientObject(selected));
 
 	std::cout << std::endl << "Selected index: " << selected << ", Name: " << data->name << ", ProcessID: " << data->processID << std::endl;
     
 	// get visualizer options
+	//
 	VisualizerOptions* selectedOptions = new VisualizerOptions();
 
 	// layout
 	selectedOptions->layout = static_cast<VisualizerLayout>(visualizer_layout_choice->GetCurrentSelection());
+
+	// processID
+	selectedOptions->processID = data->processID;
 
 	// amplitude thresholds
 	selectedOptions->amplitudeThresholds[0] = amp_thresh_quiet->GetValue();
@@ -76,59 +85,47 @@ void ProcessWindow::OnConfirm(wxCommandEvent& event)
 	selectedOptions->amplitudeColors[1] = VisualizerColor((float)c.Red(), (float)c.Green(), (float)c.Blue(), (float)c.Alpha());
 	c = amp_colorpicker_loud->GetColour();
 	selectedOptions->amplitudeColors[2] = VisualizerColor((float)c.Red(), (float)c.Green(), (float)c.Blue(), (float)c.Alpha());
+	//
 
+	// start loopback on new process if processID changed, otherwise keep original loopback open
+	if (selectedOptions->processID != visualizer->options->processID) {
+		// stop current audio capture if one is open
+		HRESULT hr = loopbackCapture.StopCaptureAsync();
+		if (FAILED(hr))
+		{
+			wil::unique_hlocal_string message;
+			FormatMessageW(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS | FORMAT_MESSAGE_ALLOCATE_BUFFER, nullptr, hr,
+				MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (PWSTR)&message, 0, nullptr);
+			std::wcout << L"Failed to stop capture\n0x" << std::hex << hr << L": " << message.get() << L"\n";
+		}
 
+		// start new audio capture
+		hr = loopbackCapture.StartCaptureAsync(data->processID, visualizer);
+		if (FAILED(hr))
+		{
+			wil::unique_hlocal_string message;
+			FormatMessageW(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS | FORMAT_MESSAGE_ALLOCATE_BUFFER, nullptr, hr,
+				MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (PWSTR)&message, 0, nullptr);
+			std::wcout << L"Failed to start capture\n0x" << std::hex << hr << L": " << message.get() << L"\n";
+		}
+	}
 
 	visualizer->options = selectedOptions;
 
-    Hide();
+	//set visualizer window position from customization options
+	int x = pos_x_slider->GetValue();
+	int y = pos_y_slider->GetValue();
+	visualizer->SetPosition(wxPoint(x, y));
 
+	//resize visualizer
+	x = size_x_slider->GetValue();
+	y = size_y_slider->GetValue();
+	visualizer->SetSize(x, y);
+	visualizer->Show(true);
 
-    // start audio capture on selected process
-
-    HRESULT hr = loopbackCapture.StartCaptureAsync(data->processID, visualizer);
-    if (FAILED(hr))
-    {
-        wil::unique_hlocal_string message;
-        FormatMessageW(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS | FORMAT_MESSAGE_ALLOCATE_BUFFER, nullptr, hr,
-            MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (PWSTR)&message, 0, nullptr);
-        std::wcout << L"Failed to start capture\n0x" << std::hex << hr << L": " << message.get() << L"\n";
-    }
-    else
-    {
-		wxGLAttributes display_attributes;
-		display_attributes.PlatformDefaults();
-
-		//set visualizer window position from customization options
-		int x = pos_x_slider->GetValue();
-		int y = pos_y_slider->GetValue();
-		visualizer->SetPosition(wxPoint(x, y));
-
-		//resize visualizer
-		x = size_x_slider->GetValue();
-		y = size_y_slider->GetValue();
-		visualizer->SetSize(x, y);
-		visualizer->Show(true);
-
-        VisualizerCanvas* display_canvas = visualizer->canvas;
-
-        while (is_rendering) 
-		{
-            // run until program is terminated
-            //FreqData f_data;
-            //f_data.color = (0.7f, 0.0f, 0.0f, 1.0f);
-            //f_data.stereo_pos = (0.0f);
-            //f_data.size = (1.0f);
-            //display_canvas;
-            display_canvas->Render();
-			wxYield();
-        }
-
-        loopbackCapture.StopCaptureAsync();
-  
-        Close(true);
-    }
-
+	VisualizerCanvas* display_canvas = visualizer->canvas;
+	wxGetApp().activateRenderLoop(true);
+	Hide();
 }
 
 wxListBox* ProcessWindow::getProcessesList()

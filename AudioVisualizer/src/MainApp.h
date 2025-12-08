@@ -4,11 +4,16 @@
 class App : public wxApp
 {
 	public:
+		bool render_loop_on;
 		virtual bool OnInit();
+		void onIdle(wxIdleEvent& evt);
 		void OnCustomize(wxCommandEvent& event);
 		void OnExit(wxCommandEvent& event);
+		void activateRenderLoop(bool on);
 	private:
 		ProcessWindow* process_window;
 		CustomizationWindow* customization;
 };
+
+
 
