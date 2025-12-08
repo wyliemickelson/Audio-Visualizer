@@ -39,6 +39,16 @@ public:
 
 		//create preview window
 		preview_window = new wxFrame(NULL, wxID_ANY, "Preview", wxPoint(0,0), wxSize(screen_size.x, 50), wxFRAME_NO_TASKBAR, wxFrameNameStr);
+		
+		// preview window semi-transparent background + click through
+		HWND hWnd = preview_window->GetHandle();
+
+		DWORD style1 = ::GetWindowLong(hWnd, GWL_STYLE);
+		style1 |= (WS_POPUP | WS_EX_TRANSPARENT | WS_EX_LAYERED);
+		::SetWindowLongPtr(hWnd, GWL_EXSTYLE, style1);
+
+		preview_window->SetBackgroundColour(wxColour(255, 255, 255));
+		preview_window->SetTransparent(100);
 		preview_window->Show(true);
 
 		SetIcon(wxIcon("AAAA"));
@@ -48,7 +58,6 @@ public:
 	}
 	wxListBox* getProcessesList();
 	void populateProcessList();
-	boolean is_rendering = true;
 	VisualizerWindow* visualizer;
 
 private:

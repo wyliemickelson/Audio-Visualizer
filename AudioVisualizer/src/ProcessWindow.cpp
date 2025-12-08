@@ -14,7 +14,6 @@ wxDECLARE_APP(App);
 
 void ProcessWindow::OnExit(wxCommandEvent& event)
 {
-	is_rendering = false;
 	preview_window->Close(true);
 	Destroy();
 }
@@ -26,7 +25,6 @@ void ProcessWindow::OnRefresh(wxCommandEvent& event) {
 }
 void ProcessWindow::OnClose(wxCloseEvent& event)
 {
-	is_rendering = false;
 	wxGetApp().activateRenderLoop(false);
 	preview_window->Close(true);
 	Destroy();
