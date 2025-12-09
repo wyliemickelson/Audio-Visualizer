@@ -15,7 +15,7 @@ class ProcessWindow : public ProcessSelection
 public:
 	wxFrame* preview_window;
 	void OnClose(wxCloseEvent& event);
-	ProcessWindow(wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Directional Audio Visualizer"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize(575, 330), long style = wxDEFAULT_FRAME_STYLE | wxTAB_TRAVERSAL) : ProcessSelection(parent, id, title, pos, size, style)
+	ProcessWindow(wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Directional Audio Visualizer"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize(575, 330), long style = wxDEFAULT_FRAME_STYLE | wxTAB_TRAVERSAL | wxSTAY_ON_TOP) : ProcessSelection(parent, id, title, pos, size, style)
 	{
 		// Create and open Visualizer Window
 		visualizer = new VisualizerWindow(NULL);
@@ -23,6 +23,8 @@ public:
 		//get screen size
 		wxDisplay* display = new wxDisplay();
 		screen_size = (display->GetClientArea()).GetSize();
+		window_size = wxSize(screen_size.x, 50);
+		window_pos = wxPoint(0, 0);
 
 		pos_x_slider->SetMax(screen_size.x);
 		pos_x_slider->SetValue(0);
@@ -38,7 +40,7 @@ public:
 		size_y_text->SetValue(std::to_string(50));
 
 		//create preview window
-		preview_window = new wxFrame(NULL, wxID_ANY, "Preview", wxPoint(0,0), wxSize(screen_size.x, 50), wxFRAME_NO_TASKBAR, wxFrameNameStr);
+		preview_window = new wxFrame(NULL, wxID_ANY, "Preview", wxPoint(0,0), wxSize(screen_size.x, 50), wxFRAME_NO_TASKBAR | wxSTAY_ON_TOP, wxFrameNameStr);
 		
 		// preview window semi-transparent background + click through
 		HWND hWnd = preview_window->GetHandle();
@@ -72,7 +74,10 @@ private:
 	void OnSL_Size(wxCommandEvent& event) override;
 	void OnSize(wxCommandEvent& event) override;
 	void OnPos(wxCommandEvent& event) override;
+	void OnPositionPresetChoice(wxCommandEvent& event) override;
 
 	void SetPreviewPos();
 	wxSize screen_size;
+	wxSize window_size;
+	wxPoint window_pos;
 };

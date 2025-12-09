@@ -128,6 +128,7 @@ class ProcessSelection : public wxFrame
 		// Virtual event handlers, override them in your derived class
 		virtual void OnClose( wxCloseEvent& event ) { event.Skip(); }
 		virtual void OnRefresh( wxCommandEvent& event ) { event.Skip(); }
+		virtual void OnPositionPresetChoice( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnSL_Pos( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnPos( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnSL_Size( wxCommandEvent& event ) { event.Skip(); }

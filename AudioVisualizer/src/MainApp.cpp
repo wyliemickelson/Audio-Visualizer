@@ -14,10 +14,10 @@
 
 bool App::OnInit()
 {
-	#ifdef _DEBUG
-		AllocConsole();
-		freopen("CONOUT$", "w", stdout);
-	#endif
+	//#ifdef _DEBUG
+	//	AllocConsole();
+	//	freopen("CONOUT$", "w", stdout);
+	//#endif
 
 	activateRenderLoop(true);
 	process_window = new ProcessWindow(NULL);
@@ -42,8 +42,6 @@ bool App::OnInit()
 
 void App::OnCustomize(wxCommandEvent& event)
 {
-	//customization = new CustomizationWindow(process_window->visualizer);
-	//customization->Show(true);
 	process_window->preview_window->Show(true);
 	process_window->Show(true);
 	activateRenderLoop(false);
@@ -52,7 +50,6 @@ void App::OnCustomize(wxCommandEvent& event)
 void App::OnExit(wxCommandEvent& event)
 {
 	process_window->Close();
-	//customization->Close();
 }
 
 void App::activateRenderLoop(bool on)

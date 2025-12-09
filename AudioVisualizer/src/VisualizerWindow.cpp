@@ -27,7 +27,7 @@ void VisualizerWindow::OnClose(wxCloseEvent& event)
 }
 
 void VisualizerCanvas::GetCircularCoords(float* x, float* y, FreqData data) {
-	float radius = 0.5 * (1 + data.size); // draw louder sounds futher out
+	float radius = 0.8 / (1 + data.size); // draw louder sounds closer to center
 	float angle = 90 + (data.stereo_pos * -135); // center at 90 deg (top of circle) | range: +,- 135 degrees
 	float radians = angle * std::numbers::pi / 180; // angle to radians for cos/sin functions
 

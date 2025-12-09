@@ -7,6 +7,7 @@
 #include <Tray.h>
 #include "wx/app.h"
 #include <MainApp.h>
+#include <algorithm>
 
 CLoopbackCapture loopbackCapture;
 
@@ -110,15 +111,9 @@ void ProcessWindow::OnConfirm(wxCommandEvent& event)
 
 	visualizer->options = selectedOptions;
 
-	//set visualizer window position from customization options
-	int x = pos_x_slider->GetValue();
-	int y = pos_y_slider->GetValue();
-	visualizer->SetPosition(wxPoint(x, y));
-
-	//resize visualizer
-	x = size_x_slider->GetValue();
-	y = size_y_slider->GetValue();
-	visualizer->SetSize(x, y);
+	//set visualizer window position and size
+	visualizer->SetPosition(wxPoint(window_pos.x, window_pos.y));
+	visualizer->SetSize(window_size.x, window_size.y);
 	visualizer->Show(true);
 
 	VisualizerCanvas* display_canvas = visualizer->canvas;
@@ -135,45 +130,141 @@ wxListBox* ProcessWindow::getProcessesList()
 //sets text boxes to same number as slider & vice versa
 void ProcessWindow::OnSL_Pos(wxCommandEvent& event)
 {
-	pos_x_text->SetValue(std::to_string(pos_x_slider->GetValue()));
-	pos_y_text->SetValue(std::to_string(pos_y_slider->GetValue()));
+	window_pos.x = pos_x_slider->GetValue();
+	window_pos.y = pos_y_slider->GetValue();
 	SetPreviewPos();
 }
 void ProcessWindow::OnSL_Size(wxCommandEvent& event) 
 {
-	size_x_text->SetValue(std::to_string(size_x_slider->GetValue()));
-	size_y_text->SetValue(std::to_string(size_y_slider->GetValue()));
+	window_size.x = size_x_slider->GetValue();
+	// resize x position if too big
+	if (window_size.x + window_pos.x > screen_size.x) {
+		window_pos.x = screen_size.x - window_size.x;
+	}
+
+	window_size.y = size_y_slider->GetValue();
+	// resize y position if too big
+	if (window_size.y + window_pos.y > screen_size.y) {
+		window_pos.y = screen_size.y - window_size.y;
+	}
+
 	SetPreviewPos();
 }
 void ProcessWindow::OnPos(wxCommandEvent& event)
 {
 	int x = 0;
 	pos_x_text->GetValue().ToInt(&x);
-	pos_x_slider->SetValue(x);
+	x = std::min(x, screen_size.x - size_x_slider->GetValue());
+	window_pos.x = x;
+
 	int y = 0;
 	pos_y_text->GetValue().ToInt(&y);
-	pos_y_slider->SetValue(y);
+	y = std::min(y, screen_size.y - size_y_slider->GetValue());
+	window_pos.y = y;
+
 	SetPreviewPos();
 }
 void ProcessWindow::OnSize(wxCommandEvent& event)
 {
 	int x = 0;
 	size_x_text->GetValue().ToInt(&x);
-	size_x_slider->SetValue(x);
+	x = std::min(x, screen_size.x - pos_x_slider->GetValue());
+	window_size.x = x;
+
 	int y = 0;
 	size_y_text->GetValue().ToInt(&y);
-	size_y_slider->SetValue(y);
+	y = std::min(y, screen_size.y - pos_y_slider->GetValue());
+	window_size.y = y;
+
 	SetPreviewPos();
 }
 
 inline void ProcessWindow::SetPreviewPos()
 {
-	int x = pos_x_slider->GetValue();
-	int y = pos_y_slider->GetValue();
-	preview_window->SetPosition(wxPoint(x, y));
-	int size_x = size_x_slider->GetValue();
-	int size_y = size_y_slider->GetValue();
-	preview_window->SetSize(wxSize(size_x, size_y));
+	// update pos fields
+	pos_x_slider->SetValue(window_pos.x);
+	pos_x_text->SetValue(std::to_string(window_pos.x));
+	pos_y_slider->SetValue(window_pos.y);
+	pos_y_text->SetValue(std::to_string(window_pos.y));
+
+	pos_x_slider->SetMax(screen_size.x - window_size.x);
+	pos_y_slider->SetMax(screen_size.y - window_size.y);
+
+	size_x_slider->SetValue(window_size.x);
+	size_x_text->SetValue(std::to_string(window_size.x));
+	size_y_slider->SetValue(window_size.y);
+	size_y_text->SetValue(std::to_string(window_size.y));
+
+	// set preview window pos
+	if (preview_window) {
+		preview_window->SetSize(wxSize(std::min(window_size.x, screen_size.x - window_pos.x), std::min(window_size.y, screen_size.y - window_pos.y)));
+		preview_window->SetPosition(wxPoint(std::min(window_pos.x, screen_size.x - window_size.x), std::min(window_pos.y, screen_size.y - window_size.y)));
+	}
+}
+
+void ProcessWindow::OnPositionPresetChoice(wxCommandEvent& event) {
+	enum PositionPreset {
+		CUSTOM,
+		CENTER_RADAR,
+		CENTER_HORIZONTAL,
+		TOP_HORIZONTAL,
+		BOTTOM_HORIZONTAL
+	};
+
+	enum PositionPreset choice = static_cast<PositionPreset>(display_choices->GetCurrentSelection());
+
+	pos_x_text->Disable();
+	pos_x_slider->Disable();
+	pos_y_text->Disable();
+	pos_y_slider->Disable();
+
+	size_x_text->Disable();
+	size_x_slider->Disable();
+	size_y_text->Disable();
+	size_y_slider->Disable();
+
+	switch (choice) {
+		case (CUSTOM):
+			pos_x_text->Enable();
+			pos_x_slider->Enable();
+			pos_y_text->Enable();
+			pos_y_slider->Enable();
+			
+			size_x_text->Enable();
+			size_x_slider->Enable();
+			size_y_text->Enable();
+			size_y_slider->Enable();
+			break;
+
+		case (CENTER_RADAR):
+			window_size.x = 750;
+			window_size.y = 750;
+			window_pos.x = (screen_size.x - window_size.x) / 2;
+			window_pos.y = (screen_size.y - window_size.y) / 2;
+			break;
+
+		case (CENTER_HORIZONTAL):
+			window_size.x = screen_size.x;
+			window_size.y = 50;
+			window_pos.x = (screen_size.x - window_size.x) / 2;
+			window_pos.y = (screen_size.y - window_size.y) / 2;
+			break;
+
+		case (TOP_HORIZONTAL):
+			window_size.x = screen_size.x;
+			window_size.y = 50;
+			window_pos.x = 0;
+			window_pos.y = 0;
+			break;
+
+		case (BOTTOM_HORIZONTAL):
+			window_size.x = screen_size.x;
+			window_size.y = 50;
+			window_pos.x = 0;
+			window_pos.y = screen_size.y - window_size.y;
+	}
+
+	SetPreviewPos();
 }
 
 void ProcessWindow::populateProcessList()

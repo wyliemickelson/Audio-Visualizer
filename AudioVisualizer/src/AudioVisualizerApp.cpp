@@ -224,7 +224,7 @@ ProcessSelection::ProcessSelection( wxWindow* parent, wxWindowID id, const wxStr
 	wxString display_choicesChoices[] = { _("Custom"), _("Center Radar"), _("Center Horizontal"), _("Top Horizontal"), _("Bottom Horizontal") };
 	int display_choicesNChoices = sizeof( display_choicesChoices ) / sizeof( wxString );
 	display_choices = new wxChoice( sbSizer2->GetStaticBox(), wxID_ANY, wxDefaultPosition, wxDefaultSize, display_choicesNChoices, display_choicesChoices, 0 );
-	display_choices->SetSelection( 0 );
+	display_choices->SetSelection( 1 );
 	fgSizer3->Add( display_choices, 0, wxALL|wxEXPAND, 5 );
 
 
@@ -437,6 +437,7 @@ ProcessSelection::ProcessSelection( wxWindow* parent, wxWindowID id, const wxStr
 	// Connect Events
 	this->Connect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( ProcessSelection::OnClose ) );
 	refresh->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProcessSelection::OnRefresh ), NULL, this );
+	display_choices->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( ProcessSelection::OnPositionPresetChoice ), NULL, this );
 	pos_x_slider->Connect( wxEVT_SLIDER, wxCommandEventHandler( ProcessSelection::OnSL_Pos ), NULL, this );
 	pos_x_text->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( ProcessSelection::OnPos ), NULL, this );
 	pos_y_slider->Connect( wxEVT_SLIDER, wxCommandEventHandler( ProcessSelection::OnSL_Pos ), NULL, this );
