@@ -1,6 +1,7 @@
 #pragma once
 #include <ProcessWindow.h>
 #include <CustomizationWindow.h>
+#include <Tray.h>
 class App : public wxApp
 {
 	public:
@@ -12,6 +13,7 @@ class App : public wxApp
 		void activateRenderLoop(bool on);
 	private:
 		ProcessWindow* process_window;
+		Tray* tray;
 		CustomizationWindow* customization;
 };
 

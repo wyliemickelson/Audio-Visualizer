@@ -69,65 +69,57 @@ void VisualizerCanvas::Render()
 }
 
 void VisualizerCanvas::RenderCircular() {
-	for (int i = 0; i < dataVectorMaxLen; ++i)
+	int size = dataVector.size();
+	for (int i = 0; i < size; ++i)
 	{
 		//translate and scale according to FreqData
 		FreqData audioData;
-		try {
-			audioData = dataVector.at(i);
+		audioData = dataVector.at(i);
 
-			// remove static noise when there's no audio
-			if (audioData.size <= 0.0001) {
-				continue;
-			}
-
-			// set diamond color based on amplitude
-			VisualizerColor c;
-			if (audioData.size <= VisualizerWindow::options->amplitudeThresholds[1]) {
-				c = VisualizerWindow::options->amplitudeColors[0];
-			}
-			else if (audioData.size <= VisualizerWindow::options->amplitudeThresholds[2]) {
-				c = VisualizerWindow::options->amplitudeColors[1];
-			}
-			else {
-				c = VisualizerWindow::options->amplitudeColors[2];
-			}
-			c.a = 1.0f - (i * 1.0 / dataVectorMaxLen); // transparency based on age of data point
-
-			// get rendering coords
-			float x;
-			float y;
-			GetCircularCoords(&x, &y, audioData);
-
-			// matrix last col: axis pos
-			// matrix diagonal: axis size
-			float transformation_mat[4][4] =
-			{
-				0.05f, 0.0f, 0.0f, x,
-				0.0f, 0.05f, (1.0f) / ((float)len), y,
-				0.0f, 0.0f, 1.0f, 0.0f,
-				0.0 ,0.0f, 0.0f, 1.0f
-			};
-
-			shader->Use();
-			//set transformation matrix uniform
-			shader->setMat4("transform", transformation_mat);
-
-
-			//set color uniform
-			shader->setVec4("color", &c.r);
-			glEnable(GL_BLEND);
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-			glDisable(GL_BLEND);
-		}
-		catch (const std::out_of_range) {
-			// make sure dataVector has data to use before rendering
+		// remove static noise when there's no audio
+		if (audioData.size <= 0.0001) {
 			continue;
 		}
-	}
 
-	return;
+		// set diamond color based on amplitude
+		VisualizerColor c;
+		if (audioData.size <= VisualizerWindow::options->amplitudeThresholds[1]) {
+			c = VisualizerWindow::options->amplitudeColors[0];
+		}
+		else if (audioData.size <= VisualizerWindow::options->amplitudeThresholds[2]) {
+			c = VisualizerWindow::options->amplitudeColors[1];
+		}
+		else {
+			c = VisualizerWindow::options->amplitudeColors[2];
+		}
+		c.a = 1.0f - (i * 1.0 / dataVectorMaxLen); // transparency based on age of data point
+
+		// get rendering coords
+		float x;
+		float y;
+		GetCircularCoords(&x, &y, audioData);
+
+		// matrix last col: axis pos
+		// matrix diagonal: axis size
+		float transformation_mat[4][4] =
+		{
+			0.05f, 0.0f, 0.0f, x,
+			0.0f, 0.05f, (1.0f) / ((float)len), y,
+			0.0f, 0.0f, 1.0f, 0.0f,
+			0.0 ,0.0f, 0.0f, 1.0f
+		};
+
+		shader->Use();
+		//set transformation matrix uniform
+		shader->setMat4("transform", transformation_mat);
+
+		//set color uniform
+		shader->setVec4("color", &c.r);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		glDisable(GL_BLEND);
+	}
 }
 
 void VisualizerCanvas::RenderHorizontal() {

@@ -34,7 +34,7 @@ bool App::OnInit()
 	menu->Append(wxID_EXIT, "Exit");
 	menu->Bind(wxEVT_MENU, &App::OnExit, this, wxID_EXIT);
 	menu->Bind(wxEVT_MENU, &App::OnCustomize, this, wxID_PROPERTIES);
-	Tray* tray = new Tray(menu);
+	tray = new Tray(menu);
 
 
 	return true;
@@ -49,7 +49,10 @@ void App::OnCustomize(wxCommandEvent& event)
 
 void App::OnExit(wxCommandEvent& event)
 {
+	activateRenderLoop(false);
+	tray->Destroy();
 	process_window->Close();
+	Exit();
 }
 
 void App::activateRenderLoop(bool on)
