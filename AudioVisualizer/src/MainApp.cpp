@@ -74,7 +74,15 @@ void App::onIdle(wxIdleEvent& evt)
 {
 	if (render_loop_on)
 	{
-		process_window->visualizer->canvas->Render();
+		// check when last render was, and only render if enough time has passed based on FPS
+		Clock::time_point now = Clock::now();
+		milliseconds ms_since = std::chrono::duration_cast<milliseconds>(now - last_render);
+		milliseconds RENDER_THRESHOLD(1000 / FPS);
+		if (ms_since > RENDER_THRESHOLD) {
+			process_window->visualizer->canvas->Render();
+			last_render = now; // update
+		}
+
 		evt.RequestMore(); // render continuously, not only once on idle
 	}
 }
